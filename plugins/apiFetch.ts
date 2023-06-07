@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   let baseRoute = config.public.API_BASE_URL;
   if (process.client) {
     const { cookies } = useCookies();
-    const bearerToken = cookies.get("userToken");
+    const bearerToken = cookies.get("theUserToken");
     const fetchOptions = {
       baseURL: baseRoute,
       headers: {

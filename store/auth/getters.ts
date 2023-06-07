@@ -6,19 +6,19 @@ import { useCookies } from "vue3-cookies";
 export const getters: GetterTree<AuthState, RootState> = {
   isAuth: (state) => {
     const { cookies } = useCookies();
-    if (state.userToken || cookies.get("userToken")) {
+    if (state.theUserToken || cookies.get("theUserToken")) {
       return true;
     } else {
       return false;
     }
   },
-  userToken: (state) => {
+  theUserToken: (state) => {
     const { cookies } = useCookies();
 
-    if (state.userToken) {
-      return state.userToken;
-    } else if (cookies.get("userToken")) {
-      return cookies.get("userToken");
+    if (state.theUserToken) {
+      return state.theUserToken;
+    } else if (cookies.get("theUserToken")) {
+      return cookies.get("theUserToken");
     } else {
       return "";
     }

@@ -15,20 +15,20 @@ export const mutations: MutationTree<AuthState> = {
   [AuthMutationTypes.setAuthUserInfo]: (state, authUser: AuthUser) => {
     state.authUser = authUser;
   },
-  [AuthMutationTypes.setToken]: (state, userToken: string) => {
-    state.userToken = userToken;
+  [AuthMutationTypes.setToken]: (state, theUserToken: string) => {
+    state.theUserToken = theUserToken;
 
     const { cookies } = useCookies();
 
-    cookies.set("userToken", userToken);
+    cookies.set("theUserToken", theUserToken);
   },
   [AuthMutationTypes.cleanAuthInfo]: (state) => {
     const { cookies } = useCookies();
     state.authUser = null;
     state.isLoggingIn = false;
     state.status = null;
-    state.userToken = null;
-    cookies.remove("userToken");
+    state.theUserToken = null;
+    cookies.remove("theUserToken");
   },
 
   [AuthMutationTypes.setLoadingAuthOrganizations]: (
