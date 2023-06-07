@@ -24,12 +24,7 @@
         </span>
       </span>
       <template v-slot:actions>
-        <v-btn
-          text
-          class="font-3"
-          v-bind="attrs"
-          @click.stop="toast.show = false"
-        >
+        <v-btn text class="font-3" @click.stop="toast.show = false">
           Close
         </v-btn>
       </template>

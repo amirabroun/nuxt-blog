@@ -16,11 +16,6 @@ export interface RegisterPayload {
   password: string;
   password_confirmation: string;
 }
-
-// import {
-//   showToastErrorMessage,
-//   showToastSuccessMessage,
-// } from "../app/mutations";
 export const actions: ActionTree<AuthState, RootState> = {
   [AuthActionTypes.login]: ({ commit }, payload: LoginPayload) => {
     const { email, password } = payload;
@@ -28,13 +23,12 @@ export const actions: ActionTree<AuthState, RootState> = {
       isLoggingIn: true,
       status: null,
     });
-    const { $apiFetch } = useNuxtApp();
+    const { $httpsRequest } = useNuxtApp();
     //@ts-ignore
-    $apiFetch(`auth/login`, {
+    $httpsRequest(`auth/login`, {
       method: "POST",
       body: { email: email, password: password },
     }).then((res: any) => {
-      console.log(res);
       commit(AuthMutationTypes.setLoggingInState, {
         isLoggingIn: false,
         status: Status.success,
@@ -44,9 +38,9 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
   },
   [AuthActionTypes.logOut]: ({ commit }) => {
-    const { $apiFetch } = useNuxtApp();
+    const { $httpsRequest } = useNuxtApp();
     //@ts-ignore
-    $apiFetch(`auth/logout`).then(() => {
+    $httpsRequest(`auth/logout`).then(() => {
       commit(AuthMutationTypes.cleanAuthInfo);
     });
   },
@@ -56,9 +50,9 @@ export const actions: ActionTree<AuthState, RootState> = {
       isLoggingIn: true,
       status: null,
     });
-    const { $apiFetch } = useNuxtApp();
+    const { $httpsRequest } = useNuxtApp();
     //@ts-ignore
-    $apiFetch(`auth/register`, {
+    $httpsRequest(`auth/register`, {
       method: "POST",
       body: { email, password, password_confirmation },
     }).then((res: any) => {
@@ -74,20 +68,21 @@ export const actions: ActionTree<AuthState, RootState> = {
       isLoggingIn: true,
       status: null,
     });
-    const { $apiFetch } = useNuxtApp();
-    //@ts-ignore
-    $apiFetch(`auth/account`)
+    const { $httpsRequest } = useNuxtApp();
+    $httpsRequest(`auth/account`, { method: "GET" })
       .then((res: any) => {
         console.log(res);
-        showToastSuccessMessage(commit, "test");
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
           status: Status.success,
         });
-        // commit(AuthMutationTypes.setAuthUserInfo,)
       })
       .catch((res: any) => {
-        showToastErrorMessage(commit, "test");
+        console.log(res);
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: Status.failed,
+        });
       });
   },
 };
