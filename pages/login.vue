@@ -31,7 +31,9 @@
               logout</v-btn
             >
           </div>
-          <a href="/register">don't have an account? Register here</a>
+          <NuxtLink to="/register"
+            >don't have an account? Register here</NuxtLink
+          >
         </v-form>
       </v-card>
     </div>

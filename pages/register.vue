@@ -40,7 +40,7 @@
               getUserInfo</v-btn
             >
           </div>
-          <a href="/login">have an account? Login here</a>
+          <NuxtLink to="/login">have an account? Login here</NuxtLink>
         </v-form>
       </v-card>
     </div>
