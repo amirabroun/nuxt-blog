@@ -24,7 +24,6 @@ export const actions: ActionTree<AuthState, RootState> = {
       status: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    //@ts-ignore
     $httpsRequest(`auth/login`, {
       method: "POST",
       body: { email: email, password: password },
@@ -39,7 +38,6 @@ export const actions: ActionTree<AuthState, RootState> = {
   },
   [AuthActionTypes.logOut]: ({ commit }) => {
     const { $httpsRequest } = useNuxtApp();
-    //@ts-ignore
     $httpsRequest(`auth/logout`).then(() => {
       commit(AuthMutationTypes.cleanAuthInfo);
     });
@@ -51,7 +49,6 @@ export const actions: ActionTree<AuthState, RootState> = {
       status: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    //@ts-ignore
     $httpsRequest(`auth/register`, {
       method: "POST",
       body: { email, password, password_confirmation },
