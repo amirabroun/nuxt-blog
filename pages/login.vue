@@ -1,51 +1,159 @@
 <template>
-  <div class="d-flex justify-center align-center" style="height: 100vh">
-    <div class="mx-auto" style="width: 300px">
-      <v-card class="pa-6">
-        <v-card-title primary-title> Login </v-card-title>
-        <v-form ref="formRef">
-          <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="Email"
-            variant="outlined"
-            density="compact"
-            required
-            class="my-2"
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :rules="passwordRules"
-            label="Password"
-            variant="outlined"
-            density="compact"
-            required
-            class="my-2"
-          ></v-text-field>
-          <div class="d-flex flex-column mb-4">
-            <v-btn color="success" class="mt-4" block @click="login">
-              login
-            </v-btn>
-
-            <v-btn color="error" class="mt-4" block @click="logout">
-              logout</v-btn
+  <ClientOnly>
+    <div
+      class="d-flex justify-center align-center"
+      style="height: 100vh; overflow: hidden"
+    >
+      <v-row class="pa-md-9" style="height: 100%">
+        <v-col
+          class="d-none d-md-block"
+          cols="4"
+          style="background: #3573fd; border-radius: 16px; color: white"
+        >
+          <login-slogan />
+        </v-col>
+        <v-col cols="12" md="8" style="margin-top: 80px"
+          ><div
+            class="d-md-none"
+            style="position: fixed; top: 16px; left: 12px; color: black"
+          >
+            <NuxtLink
+              to="/"
+              style="text-decoration: none; color: black; opacity: 60%"
+              ><v-icon size="small">
+                <font-awesome-icon icon="fa-solid fa-chevron-left" /></v-icon
+              >Home</NuxtLink
             >
           </div>
-          <NuxtLink to="/register"
-            >don't have an account? Register here</NuxtLink
+          <v-row justify="center"
+            ><v-col cols="10">
+              <div>
+                <div
+                  style="font-style: normal; font-weight: 700; font-size: 40px"
+                >
+                  Login
+                </div>
+                <div
+                  style=" normal;
+font-weight: 400;
+font-size: 20px;"
+                >
+                  Don’t have an account?
+                  <NuxtLink
+                    to="/register"
+                    style="color: #1167e4; text-decoration: none"
+                    >Register</NuxtLink
+                  >
+                </div>
+              </div>
+              <div style="margin-top: 44px">
+                <v-form ref="formRef">
+                  <label
+                    style="
+                      margin-bottom: 14px;
+                      font-style: normal;
+                      font-weight: 400;
+                      font-size: 24px;
+                      opacity: 60%;
+                    "
+                    >Email</label
+                  >
+                  <v-text-field
+                    v-model="email"
+                    :rules="emailRules"
+                    required
+                    style="margin-top: 14px"
+                    variant="outlined"
+                    placeholder="Example@hotmail.com"
+                    color="#1167E4"
+                  />
+                  <label
+                    style="
+                margin-bottom: 14px;margin-top: 30px
+                font-style: normal;
+                font-weight: 400;
+                font-size: 24px;
+                opacity: 60%;
+              "
+                    >Password</label
+                  >
+                  <v-text-field
+                    v-model="password"
+                    :rules="passwordRules"
+                    required
+                    style="margin-top: 14px"
+                    variant="outlined"
+                    placeholder="****"
+                    :append-inner-icon="
+                      showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                    "
+                    :type="showPassword ? 'text' : 'password'"
+                    @click:append-inner="showPassword = !showPassword"
+                    color="#1167E4"
+                  />
+                </v-form>
+              </div>
+              <div
+                class="d-none d-md-block"
+                style="position: absolute; bottom: 200px"
+              >
+                <v-btn
+                  @click="login"
+                  style="
+                    height: 60px;
+                    border-radius: 16px;
+                    color: white;
+                    padding-inline: 69px;
+                  "
+                  color="#1167E4
+"
+                >
+                  Login
+                </v-btn>
+              </div>
+              <div
+                class="d-md-none d-flex"
+                style="
+                  position: fixed;
+                  bottom: 12px;
+                  width: 94%;
+                  left: 0;
+                  margin: 12px;
+                  display: flex;
+                  justify-content: center;
+                "
+              >
+                <v-btn
+                  @click="login"
+                  style="
+                    height: 60px;
+                    border-radius: 16px;
+                    color: white;
+                    padding-inline: 69px;
+                    width: 90%;
+                  "
+                  color="#1167E4
+"
+                >
+                  Login
+                </v-btn>
+              </div></v-col
+            ></v-row
           >
-        </v-form>
-      </v-card>
+        </v-col>
+      </v-row>
     </div>
-  </div>
+  </ClientOnly>
 </template>
 <script lang="ts" setup>
 import { store, RootState, Status } from "@/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
+import LoginSlogan from "./components/LoginSlogan.vue";
 const valid = ref<boolean>(true);
 const email = ref<string>();
 const password = ref<string>();
 const formRef = ref();
+const showPassword = ref(false);
 const emailRules = [
   (v: any) => !!v || "Email is required",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
@@ -76,3 +184,9 @@ const resetValidation = () => {
   formRef.value.resetValidation();
 };
 </script>
+<style lang="scss">
+.swiper-pagination {
+  position: relative;
+  bottom: auto !important;
+}
+</style>
