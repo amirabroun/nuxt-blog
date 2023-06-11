@@ -3,10 +3,6 @@ import { AuthState } from ".";
 import { RootState, Status } from "..";
 import { AuthActionTypes } from "./action-types";
 import { AuthMutationTypes } from "./mutation-types";
-import {
-  showToastErrorMessage,
-  showToastSuccessMessage,
-} from "../app/mutations";
 export interface LoginPayload {
   email: string;
   password: string;
@@ -27,14 +23,21 @@ export const actions: ActionTree<AuthState, RootState> = {
     $httpsRequest(`auth/login`, {
       method: "POST",
       body: { email: email, password: password },
-    }).then((res: any) => {
-      commit(AuthMutationTypes.setLoggingInState, {
-        isLoggingIn: false,
-        status: Status.success,
+    })
+      .then((res: any) => {
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: Status.success,
+        });
+        commit(AuthMutationTypes.setAuthUserInfo, res.user);
+        commit(AuthMutationTypes.setToken, res.token);
+      })
+      .finally(() => {
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: null,
+        });
       });
-      commit(AuthMutationTypes.setAuthUserInfo, res.user);
-      commit(AuthMutationTypes.setToken, res.token);
-    });
   },
   [AuthActionTypes.logOut]: ({ commit }) => {
     const { $httpsRequest } = useNuxtApp();
@@ -52,13 +55,23 @@ export const actions: ActionTree<AuthState, RootState> = {
     $httpsRequest(`auth/register`, {
       method: "POST",
       body: { email, password, password_confirmation },
-    }).then((res: any) => {
-      console.log(res);
-      commit(AuthMutationTypes.setLoggingInState, {
-        isLoggingIn: false,
-        status: Status.success,
+    })
+      .then((res: any) => {
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: Status.success,
+        });
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: Status.success,
+        });
+      })
+      .finally(() => {
+        commit(AuthMutationTypes.setLoggingInState, {
+          isLoggingIn: false,
+          status: null,
+        });
       });
-    });
   },
   [AuthActionTypes.fetchAuthUser]: ({ commit }) => {
     commit(AuthMutationTypes.setLoggingInState, {

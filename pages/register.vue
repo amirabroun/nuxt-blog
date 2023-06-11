@@ -156,6 +156,7 @@ font-size: 20px;"
                   "
                   color="#1167E4
 "
+                  :loading="loading"
                 >
                   Register
                 </v-btn>
@@ -183,6 +184,7 @@ font-size: 20px;"
                   "
                   color="#1167E4
 "
+                  :loading="loading"
                 >
                   Register
                 </v-btn>
@@ -205,6 +207,7 @@ const password_confirmation = ref<string>();
 const formRef = ref();
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+const loading = computed(() => store.state.auth?.isLoggingIn);
 const emailRules = [
   (v: any) => !!v || "Email is required",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",

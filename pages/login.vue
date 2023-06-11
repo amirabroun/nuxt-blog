@@ -122,6 +122,7 @@
                   "
                   color="#1167E4
 "
+                  :loading="loading"
                 >
                   Login
                 </v-btn>
@@ -149,6 +150,7 @@
                   "
                   color="#1167E4
 "
+                  :loading="loading"
                 >
                   Login
                 </v-btn>
@@ -169,6 +171,7 @@ const email = ref<string>();
 const password = ref<string>();
 const formRef = ref();
 const showPassword = ref(false);
+const loading = computed(() => store.state.auth?.isLoggingIn);
 const emailRules = [
   (v: any) => !!v || "Email is required",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
