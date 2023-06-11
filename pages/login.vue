@@ -12,10 +12,18 @@
         >
           <login-slogan />
         </v-col>
-        <v-col cols="12" md="8" style="margin-top: 80px"
+        <v-col cols="12" md="8"
           ><div
             class="d-md-none"
-            style="position: fixed; top: 16px; left: 12px; color: black"
+            style="
+              position: relative;
+              top: 0;
+              padding: 16px 0;
+              left: 12px;
+              color: black;
+              width: 100%;
+              background: white;
+            "
           >
             <NuxtLink
               to="/"
@@ -25,78 +33,85 @@
               >Home</NuxtLink
             >
           </div>
-          <v-row justify="center"
-            ><v-col cols="10">
+          <v-row justify="center" style="height: 100%"
+            ><v-col
+              cols="10"
+              class="d-block d-md-flex"
+              style="
+                height: 100%;
+                flex-direction: column;
+                justify-content: space-around;
+              "
+            >
               <div>
-                <div
-                  style="font-style: normal; font-weight: 700; font-size: 40px"
-                >
-                  Login
-                </div>
-                <div
-                  style=" normal;
-font-weight: 400;
-font-size: 20px;"
-                >
-                  Don’t have an account?
-                  <NuxtLink
-                    to="/register"
-                    style="color: #1167e4; text-decoration: none"
-                    >Register</NuxtLink
-                  >
-                </div>
-              </div>
-              <div style="margin-top: 44px">
-                <v-form ref="formRef">
-                  <label
+                <div>
+                  <div
                     style="
-                      margin-bottom: 14px;
                       font-style: normal;
-                      font-weight: 400;
-                      font-size: 24px;
-                      opacity: 60%;
+                      font-weight: 700;
+                      font-size: 40px;
                     "
-                    >Email</label
                   >
-                  <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    required
-                    style="margin-top: 14px"
-                    variant="outlined"
-                    placeholder="Example@hotmail.com"
-                    color="#1167E4"
-                  />
-                  <label
-                    style="
+                    Login
+                  </div>
+                  <div style=" normal;font-weight: 400;font-size: 20px;">
+                    Don’t have an account?
+                    <NuxtLink
+                      to="/register"
+                      style="color: #1167e4; text-decoration: none"
+                      >Register</NuxtLink
+                    >
+                  </div>
+                </div>
+                <div style="margin-top: 44px">
+                  <v-form ref="formRef">
+                    <label
+                      style="
+                        margin-bottom: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 24px;
+                        opacity: 60%;
+                      "
+                      >Email</label
+                    >
+                    <v-text-field
+                      v-model="email"
+                      :rules="emailRules"
+                      required
+                      style="margin-top: 14px"
+                      variant="outlined"
+                      placeholder="Example@hotmail.com"
+                      color="#1167E4"
+                    />
+                    <label
+                      style="
                 margin-bottom: 14px;margin-top: 30px
                 font-style: normal;
                 font-weight: 400;
                 font-size: 24px;
                 opacity: 60%;
               "
-                    >Password</label
-                  >
-                  <v-text-field
-                    v-model="password"
-                    :rules="passwordRules"
-                    required
-                    style="margin-top: 14px"
-                    variant="outlined"
-                    placeholder="****"
-                    :append-inner-icon="
-                      showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                    "
-                    :type="showPassword ? 'text' : 'password'"
-                    @click:append-inner="showPassword = !showPassword"
-                    color="#1167E4"
-                  />
-                </v-form>
+                      >Password</label
+                    >
+                    <v-text-field
+                      v-model="password"
+                      :rules="passwordRules"
+                      required
+                      style="margin-top: 14px"
+                      variant="outlined"
+                      placeholder="****"
+                      :append-inner-icon="
+                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                      "
+                      :type="showPassword ? 'text' : 'password'"
+                      @click:append-inner="showPassword = !showPassword"
+                      color="#1167E4"
+                    />
+                  </v-form>
+                </div>
               </div>
-              <div
-                class="d-none d-md-block"
-                style="position: absolute; bottom: 200px"
-              >
+              <div class="d-none d-md-block">
                 <v-btn
                   @click="login"
                   style="

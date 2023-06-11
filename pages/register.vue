@@ -2,7 +2,11 @@
   <ClientOnly>
     <div
       class="d-flex justify-center align-center"
-      style="height: 100vh; overflow: hidden"
+      style="
+        height: 100vh;
+        overflow: hidden;
+        min-height: -webkit-fill-available;
+      "
     >
       <v-row class="pa-md-9" style="height: 100%">
         <v-col
@@ -12,10 +16,18 @@
         >
           <login-slogan />
         </v-col>
-        <v-col cols="12" md="8" style="margin-top: 80px"
+        <v-col cols="12" md="8" style="overflow: hidden"
           ><div
             class="d-md-none"
-            style="position: fixed; top: 16px; left: 12px; color: black"
+            style="
+              position: relative;
+              top: 0;
+              padding: 16px 0;
+              left: 12px;
+              color: black;
+              width: 100%;
+              background: white;
+            "
           >
             <NuxtLink
               to="/"
@@ -25,104 +37,115 @@
               >Home</NuxtLink
             >
           </div>
-          <v-row justify="center"
-            ><v-col cols="10">
+          <v-row justify="center" style="height: 100%"
+            ><v-col
+              cols="10"
+              class="d-block d-md-flex"
+              style="
+                height: 100%;
+                flex-direction: column;
+                justify-content: space-around;
+              "
+            >
               <div>
-                <div
-                  style="font-style: normal; font-weight: 700; font-size: 40px"
-                >
-                  Register
-                </div>
-                <div
-                  style=" normal;
+                <div>
+                  <div
+                    style="
+                      font-style: normal;
+                      font-weight: 700;
+                      font-size: 40px;
+                    "
+                  >
+                    Register
+                  </div>
+                  <div
+                    style=" normal;
 font-weight: 400;
 font-size: 20px;"
-                >
-                  Have an account?
-                  <NuxtLink
-                    to="/login"
-                    style="color: #1167e4; text-decoration: none"
-                    >Login</NuxtLink
                   >
+                    Have an account?
+                    <NuxtLink
+                      to="/login"
+                      style="color: #1167e4; text-decoration: none"
+                      >Login</NuxtLink
+                    >
+                  </div>
+                </div>
+                <div style="margin-top: 44px">
+                  <v-form ref="formRef">
+                    <label
+                      style="
+                        margin-bottom: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 24px;
+                        opacity: 60%;
+                      "
+                      >Email</label
+                    >
+                    <v-text-field
+                      v-model="email"
+                      :rules="emailRules"
+                      required
+                      style="margin-top: 14px"
+                      variant="outlined"
+                      color="#1167E4"
+                      placeholder="Example@hotmail.com"
+                    />
+                    <label
+                      style="
+                margin-bottom: 14px;margin-top: 30px
+                font-style: normal;
+                font-weight: 400;
+                font-size: 24px;
+                opacity: 60%;
+              "
+                      >Password</label
+                    >
+                    <v-text-field
+                      v-model="password"
+                      :rules="passwordRules"
+                      required
+                      style="margin-top: 14px"
+                      variant="outlined"
+                      placeholder="****"
+                      :append-inner-icon="
+                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                      "
+                      :type="showPassword ? 'text' : 'password'"
+                      @click:append-inner="showPassword = !showPassword"
+                      color="#1167E4"
+                    />
+                    <label
+                      style="
+                margin-bottom: 14px;margin-top: 30px
+                font-style: normal;
+                font-weight: 400;
+                font-size: 24px;
+                opacity: 60%;
+              "
+                      >Confirm Password</label
+                    >
+                    <v-text-field
+                      v-model="password_confirmation"
+                      :rules="confirmPasswordRules"
+                      required
+                      style="margin-top: 14px"
+                      variant="outlined"
+                      placeholder="****"
+                      :append-inner-icon="
+                        showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
+                      "
+                      :type="showConfirmPassword ? 'text' : 'password'"
+                      @click:append-inner="
+                        showConfirmPassword = !showConfirmPassword
+                      "
+                      color="#1167E4"
+                    />
+                  </v-form>
                 </div>
               </div>
-              <div style="margin-top: 44px">
-                <v-form ref="formRef">
-                  <label
-                    style="
-                      margin-bottom: 14px;
-                      font-style: normal;
-                      font-weight: 400;
-                      font-size: 24px;
-                      opacity: 60%;
-                    "
-                    >Email</label
-                  >
-                  <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    required
-                    style="margin-top: 14px"
-                    variant="outlined"
-                    color="#1167E4"
-                    placeholder="Example@hotmail.com"
-                  />
-                  <label
-                    style="
-                margin-bottom: 14px;margin-top: 30px
-                font-style: normal;
-                font-weight: 400;
-                font-size: 24px;
-                opacity: 60%;
-              "
-                    >Password</label
-                  >
-                  <v-text-field
-                    v-model="password"
-                    :rules="passwordRules"
-                    required
-                    style="margin-top: 14px"
-                    variant="outlined"
-                    placeholder="****"
-                    :append-inner-icon="
-                      showPassword ? 'mdi-eye' : 'mdi-eye-off'
-                    "
-                    :type="showPassword ? 'text' : 'password'"
-                    @click:append-inner="showPassword = !showPassword"
-                    color="#1167E4"
-                  />
-                  <label
-                    style="
-                margin-bottom: 14px;margin-top: 30px
-                font-style: normal;
-                font-weight: 400;
-                font-size: 24px;
-                opacity: 60%;
-              "
-                    >Confirm Password</label
-                  >
-                  <v-text-field
-                    v-model="password_confirmation"
-                    :rules="confirmPasswordRules"
-                    required
-                    style="margin-top: 14px"
-                    variant="outlined"
-                    placeholder="****"
-                    :append-inner-icon="
-                      showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'
-                    "
-                    :type="showConfirmPassword ? 'text' : 'password'"
-                    @click:append-inner="
-                      showConfirmPassword = !showConfirmPassword
-                    "
-                    color="#1167E4"
-                  />
-                </v-form>
-              </div>
-              <div
-                class="d-none d-md-block"
-                style="position: absolute; bottom: 200px"
-              >
+              <div class="d-none d-md-block">
                 <v-btn
                   @click="register"
                   style="
