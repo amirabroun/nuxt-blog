@@ -29,8 +29,8 @@ export const actions: ActionTree<AuthState, RootState> = {
           isLoggingIn: false,
           status: Status.success,
         });
-        commit(AuthMutationTypes.setAuthUserInfo, res.user);
-        commit(AuthMutationTypes.setToken, res.token);
+        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+        commit(AuthMutationTypes.setToken, res.data.user.token);
       })
       .finally(() => {
         commit(AuthMutationTypes.setLoggingInState, {
@@ -61,10 +61,8 @@ export const actions: ActionTree<AuthState, RootState> = {
           isLoggingIn: false,
           status: Status.success,
         });
-        commit(AuthMutationTypes.setLoggingInState, {
-          isLoggingIn: false,
-          status: Status.success,
-        });
+        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+        commit(AuthMutationTypes.setToken, res.data.user.token);
       })
       .finally(() => {
         commit(AuthMutationTypes.setLoggingInState, {
@@ -80,15 +78,13 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
     const { $httpsRequest } = useNuxtApp();
     $httpsRequest(`auth/account`, { method: "GET" })
-      .then((res: any) => {
-        console.log(res);
+      .then(() => {
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
           status: Status.success,
         });
       })
-      .catch((res: any) => {
-        console.log(res);
+      .catch(() => {
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
           status: Status.failed,

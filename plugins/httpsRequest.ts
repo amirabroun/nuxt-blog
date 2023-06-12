@@ -22,12 +22,12 @@ export default defineNuxtPlugin(() => {
               },
             };
             $fetch(url, { ...fetchOptions, ...options })
-              .then((res) => {
-                showToastSuccessMessage(store.commit, "success");
+              .then((res: any) => {
+                showToastSuccessMessage(store.commit, res.message);
                 resolve(res);
               })
-              .catch((error) => {
-                showToastErrorMessage(store.commit, "failed");
+              .catch((error: any) => {
+                showToastErrorMessage(store.commit, error.message);
                 reject(error);
               });
           } else {
