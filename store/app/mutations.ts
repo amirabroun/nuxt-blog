@@ -37,7 +37,7 @@ export const showToastSuccessMessage = (commit: Commit, message: string) => {
       color: "success",
       message: message,
       show: true,
-      timeout: 2000,
+      timeout: 3000,
     } as Toast,
     { root: true }
   );
