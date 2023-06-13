@@ -166,12 +166,15 @@
 import { store, RootState, Status } from "@/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
 import LoginSlogan from "./components/LoginSlogan.vue";
+const router = useRouter();
 const valid = ref<boolean>(true);
 const email = ref<string>();
 const password = ref<string>();
 const formRef = ref();
 const showPassword = ref(false);
 const loading = computed(() => store.state.auth?.isLoggingIn);
+const loginStatus = computed(() => store.state.auth?.status);
+const user = computed(() => store.state.auth?.authUser);
 const emailRules = [
   (v: any) => !!v || "Email is required",
   (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
@@ -201,6 +204,16 @@ const reset = () => {
 const resetValidation = () => {
   formRef.value.resetValidation();
 };
+watch(
+  () => loginStatus.value,
+  () => {
+    if (loginStatus.value == Status.success) {
+      setTimeout(() => {
+        router.push(`/user/${user.value?.uuid}/resume`);
+      }, 1000);
+    }
+  }
+);
 </script>
 <style lang="scss">
 .swiper-pagination {
