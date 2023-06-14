@@ -10,9 +10,9 @@ WORKDIR /usr/src/nuxt-app
 # Copy the contents of the current directory to /usr/src/nuxt-app/ inside the container
 COPY . /usr/src/nuxt-app/
 
-# Copy the .env.production file to /usr/src/nuxt-app/.env inside the container
+# Copy the .env file to /usr/src/nuxt-app/.env inside the container
 # This file is used for environment-specific configuration
-COPY .env.production /usr/src/nuxt-app/.env
+COPY .env /usr/src/nuxt-app/.env
 
 # Run npm install inside the container to install the project dependencies
 RUN npm install
