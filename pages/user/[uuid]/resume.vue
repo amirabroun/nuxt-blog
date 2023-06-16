@@ -5,23 +5,40 @@
       <div style="max-width: 595px">
         <v-card
           ><v-row style="margin: 30px 0">
-            <v-col cols="4"
-              ><v-row justify="end">
+            <v-col md="4" cols="12"
+              ><v-row class="justify-md-end justify-center">
                 <v-col cols="10" style="background: #202a30; border-radius: 8px"
                   ><v-row justify="center"
                     ><v-col cols="10"
-                      ><div class="contact-info">
+                      ><v-row
+                        ><v-col
+                          md="12"
+                          cols="6"
+                          order="2"
+                          order-md="1"
+                          class="pa-0"
+                        >
+                          <div class="contact-info">
                         {{ user_info.full_name }}
                       </div>
-                      <div class="job-title">Backend developer</div>
-                      <div class="avatar">
+                          <div class="job-title pa-0">
+                            Backend developer
+                          </div></v-col
+                        >
+                        <v-col
+                          md="12"
+                          cols="6"
+                          order="1"
+                          order-md="2"
+                          class="avatar pa-0"
+                        >
                         <img
                           :src="user_info.avatar"
                           alt=""
                           style="border-radius: 8px; height: 90%; width: 90%"
                         />
-                      </div>
-                      <div class="education">
+                        </v-col>
+                        <v-col cols="12" order="3" class="education pa-0">
                         <div class="header">EDUCATION</div>
                         <div class="items">
                           <div class="item">
@@ -39,8 +56,8 @@
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="contact">
+                        </v-col>
+                        <v-col cols="12" order="4" class="contact pa-0">
                         <div class="header">CONTACT</div>
                         <div class="items">
                           <div class="item">
@@ -59,17 +76,18 @@
                             >
                           </div>
                         </div>
-                      </div>
-                      <div class="social">
+                        </v-col>
+                        <v-col cols="12" order="5" class="social">
                         <v-icon> mdi-github</v-icon
                         ><v-icon> mdi-linkedin</v-icon>
-                      </div>
+                        </v-col></v-row
+                      >
                     </v-col></v-row
                   ></v-col
                 ></v-row
               ></v-col
             >
-            <v-col cols="8" style="padding: 30px"
+            <v-col md="8" cols="12" style="padding: 30px"
               ><div class="profile">
                 <div class="d-flex align-center">
                   <span class="title">PROFILE</span>
@@ -266,7 +284,7 @@ const formattedDate = (date: any) => {
     font-weight: 500;
     font-size: 9px;
     line-height: 14px;
-    color: #a2a2a2;
+    color: #484848;
     margin: 10px 0;
   }
 }
