@@ -19,8 +19,8 @@
                           class="pa-0"
                         >
                           <div class="contact-info">
-                        {{ user_info.full_name }}
-                      </div>
+                            {{ user_info.full_name }}
+                          </div>
                           <div class="job-title pa-0">
                             Backend developer
                           </div></v-col
@@ -31,64 +31,92 @@
                           order="1"
                           order-md="2"
                           class="avatar pa-0"
+                          v-if="user_info.avatar"
                         >
-                        <img
-                          :src="user_info.avatar"
-                          alt=""
-                          style="border-radius: 8px; height: 90%; width: 90%"
-                        />
+                          <img
+                            :src="user_info.avatar"
+                            alt=""
+                            style="border-radius: 8px; height: 90%; width: 90%"
+                          />
                         </v-col>
-                        <v-col cols="12" order="3" class="education pa-0">
-                        <div class="header">EDUCATION</div>
-                        <div class="items">
-                          <div class="item">
-                            <div class="title">Computer Science</div>
-                            <div class="description">
-                              <div>Azad Tehran Markaz / Tehran</div>
-                              <div>2016 - 2020</div>
-                            </div>
-                          </div>
-                          <div class="item">
-                            <div class="title">Software Engineer</div>
-                            <div class="description">
-                              <div>Azad Tehran Markaz / Tehran</div>
-                              <div>2020 - now</div>
-                            </div>
-                          </div>
-                        </div>
+                        <v-col
+                          cols="12"
+                          order="3"
+                          class="education pa-0"
+                          v-if="user_info.resume.education"
+                        >
+                          <div class="header">EDUCATION</div>
+                          <v-row class="items">
+                            <v-col
+                              md="12"
+                              cols="6"
+                              class="item"
+                              v-for="(item, index) in user_info.resume
+                                .education"
+                              :key="index"
+                            >
+                              <div class="title">{{ item.field }}</div>
+                              <div class="description">
+                                <div>
+                                  {{ item.university }} / {{ item.location }}
+                                </div>
+                                <div>
+                                  {{ formattedDate(started_at) }} -
+                                  {{ formattedDate(finished_at) }}
+                                </div>
+                              </div>
+                            </v-col>
+                          </v-row>
                         </v-col>
                         <v-col cols="12" order="4" class="contact pa-0">
-                        <div class="header">CONTACT</div>
-                        <div class="items">
-                          <div class="item">
-                            <span class="title">P : </span
-                            ><span class="detail">09123931233</span>
-                          </div>
-                          <div class="item">
-                            <span class="title">E : </span
-                            ><span class="detail">{{ user_info.email }}</span>
-                          </div>
-                          <div class="item">
-                            <span class="title">A : </span
-                            ><span class="detail"
-                              >Ye khiaboon hamin tarafa, yekam oonvar tar
-                              ,Tehran</span
+                          <div class="header">CONTACT</div>
+                          <div class="items">
+                            <div
+                              v-for="(item, index) in user_info.resume.contact"
+                              :key="index"
                             >
+                              <div class="item" v-if="item.title == 'phone'">
+                                <span class="title">P : </span
+                                ><span class="detail">{{ item.link }}</span>
+                              </div>
+                              <div class="item" v-if="item.title == 'email'">
+                                <span class="title">E : </span
+                                ><span class="detail">{{ item.link }}</span>
+                              </div>
+                              <div class="item" v-if="item.title == 'address'">
+                                <span class="title">A : </span
+                                ><span class="detail">{{ item.link }}</span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
                         </v-col>
                         <v-col cols="12" order="5" class="social">
-                        <v-icon> mdi-github</v-icon
-                        ><v-icon> mdi-linkedin</v-icon>
-                        </v-col></v-row
-                      >
+                          <div
+                            v-for="(item, index) in user_info.resume.contact"
+                            :key="index"
+                          >
+                            <v-btn
+                              v-if="item.title == 'github'"
+                              variant="text"
+                              :href="item.link"
+                              ><v-icon> mdi-github</v-icon></v-btn
+                            >
+                            <v-btn
+                              v-if="item.title == 'linkedin'"
+                              variant="text"
+                              :href="item.link"
+                              ><v-icon> mdi-linkedin</v-icon></v-btn
+                            >
+                          </div></v-col
+                        >
+                      </v-row>
                     </v-col></v-row
                   ></v-col
                 ></v-row
               ></v-col
             >
             <v-col md="8" cols="12" style="padding: 30px"
-              ><div class="profile">
+              ><div class="profile" v-if="user_info.resume.summary">
                 <div class="d-flex align-center">
                   <span class="title">PROFILE</span>
                   <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
@@ -98,7 +126,10 @@
                 </div>
               </div>
               <v-divider style="color: #3573fd; opacity: 1" />
-              <div class="work-experience">
+              <div
+                class="work-experience"
+                v-if="user_info.resume.experiences.length > 0"
+              >
                 <div class="title">WORK EXPERIENCE</div>
                 <div class="work-items">
                   <div
@@ -119,10 +150,7 @@
                           >{{ job.company }}
                         </div>
                         <div class="description">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi.
+                          {{ job.desciption ? job.desciption : "---" }}
                         </div>
                         <v-divider
                           class="my-2"
@@ -135,7 +163,7 @@
                   </div>
                 </div>
               </div>
-              <div class="skills">
+              <div class="skills" v-if="user_info.resume.skills.length > 0">
                 <div class="title">SKILLS</div>
                 <v-row class="mt-2">
                   <v-col
