@@ -18,10 +18,17 @@
                           order-md="1"
                           class="pa-0"
                         >
-                          <div class="contact-info">
+                          <div
+                            class="contact-info"
+                            :class="editMode ? 'editCursor' : ''"
+                            :contenteditable="editMode"
+                            @input="
+                              onInput('full_name', $event, undefined, undefined)
+                            "
+                          >
                             {{ user_info.full_name }}
                           </div>
-                          <div class="job-title pa-0">
+                          <div class="job-title pa-0" contenteditable="true">
                             Backend developer
                           </div></v-col
                         >
@@ -55,14 +62,77 @@
                                 .education"
                               :key="index"
                             >
-                              <div class="title">{{ item.field }}</div>
+                              <div
+                                class="title"
+                                :class="editMode ? 'editCursor' : ''"
+                                :contenteditable="editMode"
+                                @input="
+                                  onInput('field', $event, index, 'education')
+                                "
+                              >
+                                {{ item.field }}
+                              </div>
                               <div class="description">
                                 <div>
-                                  {{ item.university }} / {{ item.location }}
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'university',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{ item.university }}</span
+                                  >
+                                  /
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'location',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                    >{{ item.location }}</span
+                                  >
                                 </div>
                                 <div>
-                                  {{ formattedDate(started_at) }} -
-                                  {{ formattedDate(finished_at) }}
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'started_at',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{ formattedDate(item.started_at) }}</span
+                                  >
+                                  -
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'finished_at',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{ formattedDate(item.finished_at) }}
+                                  </span>
                                 </div>
                               </div>
                             </v-col>
@@ -77,15 +147,33 @@
                             >
                               <div class="item" v-if="item.title == 'phone'">
                                 <span class="title">P : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('phone', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                               <div class="item" v-if="item.title == 'email'">
                                 <span class="title">E : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('email', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                               <div class="item" v-if="item.title == 'address'">
                                 <span class="title">A : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('address', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                             </div>
                           </div>
@@ -121,7 +209,12 @@
                   <span class="title">PROFILE</span>
                   <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
                 </div>
-                <div class="profile-details">
+                <div
+                  class="profile-details"
+                  :class="editMode ? 'editCursor' : ''"
+                  :contenteditable="editMode"
+                  @input="onInput('summary', $event)"
+                >
                   {{ user_info.resume.summary }}
                 </div>
               </div>
@@ -139,17 +232,40 @@
                   >
                     <v-row>
                       <v-col cols="3" class="date"
-                        >{{ formattedDate(job.finished_at) }}<work-date />{{
-                          formattedDate(job.started_at)
-                        }}</v-col
+                        ><span
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('finish', $event, index, 'work')"
+                          >{{ formattedDate(job.finished_at) }}</span
+                        ><work-date /><span
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('start', $event, index, 'work')"
+                          >{{ formattedDate(job.started_at) }}</span
+                        ></v-col
                       >
                       <v-col cols="9" class="work-details">
                         <div class="job-title">
-                          {{ job.position
-                          }}<span style="color: #3573fd"> at </span
-                          >{{ job.company }}
+                          <span
+                            :class="editMode ? 'editCursor' : ''"
+                            :contenteditable="editMode"
+                            @input="onInput('position', $event, index, 'work')"
+                          >
+                            {{ job.position }}</span
+                          ><span style="color: #3573fd"> at </span
+                          ><span
+                            :class="editMode ? 'editCursor' : ''"
+                            :contenteditable="editMode"
+                            @input="onInput('company', $event, index, 'work')"
+                            >{{ job.company }}</span
+                          >
                         </div>
-                        <div class="description">
+                        <div
+                          class="description"
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('desciption', $event, index, 'work')"
+                        >
                           {{ job.desciption ? job.desciption : "---" }}
                         </div>
                         <v-divider
@@ -173,7 +289,13 @@
                     class="d-flex align-center"
                   >
                     <v-row class="item">
-                      <v-col cols="5">{{ item.title }}</v-col>
+                      <v-col
+                        cols="5"
+                        :class="editMode ? 'editCursor' : ''"
+                        :contenteditable="editMode"
+                        @input="onInput('title', $event, index, 'skills')"
+                        >{{ item.title }}</v-col
+                      >
                       <v-col cols="7" class="d-flex align-center"
                         ><v-progress-linear
                           :model-value="item.percent"
@@ -187,6 +309,40 @@
         ></v-card>
       </div>
     </div>
+    <div style="width: 100%" class="d-flex justify-center" v-if="editMode">
+      <v-btn width="300" color="#3573fd" style="color: white" @click="save"
+        >Save</v-btn
+      >
+    </div>
+    <v-btn
+      :icon="editMode ? 'mdi-close' : 'mdi-pencil'"
+      style="position: fixed; right: 12px; bottom: 12px; color: white"
+      color="#3573fd"
+      @click="onEditMode()"
+    />
+    <v-dialog v-model="editDialog" width="auto">
+      <v-card>
+        <v-card-text> You can edit items by selecting them. </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="editDialog = false"
+            >continue</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="saveAlert" width="auto">
+      <v-card>
+        <v-card-text>
+          You haven't saved your resume. Continue to discard
+          changes.</v-card-text
+        >
+        <v-card-actions
+          ><v-spacer />
+          <v-btn @click="onCloseSaveAlert">continue</v-btn>
+          <v-btn color="primary" @click="saveAlert = false">close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -194,12 +350,70 @@ import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
+import { UserInfo } from "~/store/user";
+interface EditedData {
+  full_name?: string;
+  education?: {
+    field?: string;
+    finished_at?: string;
+    location?: string;
+    started_at?: string;
+    university?: string;
+  }[];
+  phone?: string;
+  email?: string;
+  address?: string;
+  samary?: string;
+  work?: {
+    company?: string;
+    position?: string;
+    started_at?: string;
+    finished_at?: string;
+    desciption?: string;
+  }[];
+  skills?: { title?: string; percent?: number }[];
+}
 const route = useRoute();
 const user_info = computed(() => store.state.user?.user_info);
 const loading = computed(() => store.state.user?.loading);
+const editMode = ref(false);
+const editDialog = ref(false);
+const saveAlert = ref(false);
+const hasChanged = ref(false);
+const editedData = ref<EditedData>({
+  full_name: user_info.value?.full_name,
+  education: [],
+  phone: "",
+  email: "",
+  address: "",
+  samary: "",
+  work: [],
+  skills: [],
+});
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 });
+watch(
+  () => user_info.value,
+  () => {
+    editedData.value = {
+      full_name: user_info.value?.full_name,
+      education: user_info.value?.resume?.education,
+      phone: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "phone"
+      )?.link,
+      email: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "email"
+      )?.link,
+      address: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "address"
+      )?.link,
+      samary: user_info.value?.resume?.summary,
+      work: user_info.value?.resume?.experiences,
+      skills: user_info.value?.resume?.skills,
+    };
+  }
+);
 const formattedDate = (date: any) => {
   if (date) {
     const [year, month, day] = date.split("-");
@@ -212,6 +426,45 @@ const formattedDate = (date: any) => {
   } else {
     return "now";
   }
+};
+const onEditMode = () => {
+  if (!editMode.value) {
+    editDialog.value = true;
+    editMode.value = !editMode.value;
+  } else if (editMode.value && hasChanged.value == true) {
+    saveAlert.value = true;
+  } else {
+    editMode.value = !editMode.value;
+  }
+};
+const onInput = (
+  key: EditedData,
+  event: { target: { textContent: any } },
+  index?: number,
+  parent?: string
+) => {
+  hasChanged.value = true;
+  if (index == 0 || (index && index > 0)) {
+    //@ts-ignore
+    const parentArray = editedData.value[parent];
+    const childProperty = key;
+    const item = parentArray[index];
+    item[childProperty] = event.target.textContent;
+    //@ts-ignore
+    console.log(editedData.value, editedData.value[parent]);
+  } else {
+    //@ts-ignore
+    editedData.value[key] = event.target.textContent;
+  }
+};
+const save = () => {
+  console.log(editedData.value);
+};
+const onCloseSaveAlert = () => {
+  editMode.value = false;
+  saveAlert.value = false;
+  hasChanged.value = false;
+  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 };
 </script>
 <style lang="scss">
@@ -373,5 +626,8 @@ const formattedDate = (date: any) => {
   .item .v-col {
     padding: 0 12px;
   }
+}
+.editCursor {
+  cursor: url("@/assets/svg/pencil.svg"), auto;
 }
 </style>
