@@ -7,18 +7,27 @@ import { UserMutationTypes } from "./mutation-types";
 export interface UserInfo {
   uuid?: string;
   full_name?: string;
-  email?: string;
+  username?: string;
   avatar?: string;
   is_admin?: number;
   created_at?: string;
   updated_at?: string;
   resume?: {
+    contact?: { title?: string; link?: string }[];
+    education?: {
+      field?: string;
+      finished_at?: string;
+      location?: string;
+      started_at?: string;
+      university?: string;
+    }[];
     summary?: string;
     experiences?: {
       company?: string;
       position?: string;
       started_at?: string;
       finished_at?: string;
+      description?: string;
     }[];
     skills?: { title?: string; percent?: number }[];
     created_at?: string;
@@ -30,20 +39,22 @@ export interface UserInfo {
 export interface UserState {
   loading: boolean;
   user_info: UserInfo;
+  updateResumeStatus: Status | null;
 }
 
 const state: UserState = {
   loading: false,
-
   user_info: {
     uuid: undefined,
     full_name: undefined,
-    email: undefined,
+    username: undefined,
     avatar: undefined,
     is_admin: undefined,
     created_at: undefined,
     updated_at: undefined,
     resume: {
+      contact: [],
+      education: [],
       summary: undefined,
       experiences: [],
       skills: [],
@@ -52,6 +63,7 @@ const state: UserState = {
     },
     media: [],
   },
+  updateResumeStatus: null,
 };
 
 export const user: Module<UserState, RootState> = {

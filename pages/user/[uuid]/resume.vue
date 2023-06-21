@@ -18,10 +18,17 @@
                           order-md="1"
                           class="pa-0"
                         >
-                          <div class="contact-info">
+                          <div
+                            class="contact-info"
+                            :class="editMode ? 'editCursor' : ''"
+                            :contenteditable="editMode"
+                            @input="
+                              onInput('full_name', $event, undefined, undefined)
+                            "
+                          >
                             {{ user_info.full_name }}
                           </div>
-                          <div class="job-title pa-0">
+                          <div class="job-title pa-0" contenteditable="true">
                             Backend developer
                           </div></v-col
                         >
@@ -45,7 +52,15 @@
                           class="education pa-0"
                           v-if="user_info.resume.education"
                         >
-                          <div class="header">EDUCATION</div>
+                          <div class="header">
+                            <div>EDUCATION</div>
+                            <v-icon
+                              v-if="editMode"
+                              size="20"
+                              @click="addEducation"
+                              >mdi-plus</v-icon
+                            >
+                          </div>
                           <v-row class="items">
                             <v-col
                               md="12"
@@ -55,14 +70,94 @@
                                 .education"
                               :key="index"
                             >
-                              <div class="title">{{ item.field }}</div>
+                              <div
+                                class="title"
+                                :class="editMode ? 'editCursor' : ''"
+                                :contenteditable="editMode"
+                                @input="
+                                  onInput('field', $event, index, 'education')
+                                "
+                              >
+                                <div>{{ item.field }}</div>
+                                <v-icon
+                                  v-if="editMode"
+                                  @click="deleteEducation(index)"
+                                  size="16"
+                                  color="red"
+                                  >mdi-delete</v-icon
+                                >
+                              </div>
                               <div class="description">
                                 <div>
-                                  {{ item.university }} / {{ item.location }}
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'university',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{ item.university }}</span
+                                  >
+                                  /
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'location',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                    >{{ item.location }}</span
+                                  >
                                 </div>
                                 <div>
-                                  {{ formattedDate(started_at) }} -
-                                  {{ formattedDate(finished_at) }}
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'started_at',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      editMode
+                                        ? item.started_at
+                                        : formattedDate(item.started_at)
+                                    }}</span
+                                  >
+                                  -
+                                  <span
+                                    :class="editMode ? 'editCursor' : ''"
+                                    :contenteditable="editMode"
+                                    @input="
+                                      onInput(
+                                        'finished_at',
+                                        $event,
+                                        index,
+                                        'education'
+                                      )
+                                    "
+                                  >
+                                    {{
+                                      editMode
+                                        ? item.finished_at
+                                          ? item.finished_at
+                                          : "now"
+                                        : formattedDate(item.finished_at)
+                                    }}
+                                  </span>
                                 </div>
                               </div>
                             </v-col>
@@ -77,15 +172,33 @@
                             >
                               <div class="item" v-if="item.title == 'phone'">
                                 <span class="title">P : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('phone', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                               <div class="item" v-if="item.title == 'email'">
                                 <span class="title">E : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('email', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                               <div class="item" v-if="item.title == 'address'">
                                 <span class="title">A : </span
-                                ><span class="detail">{{ item.link }}</span>
+                                ><span
+                                  class="detail"
+                                  :class="editMode ? 'editCursor' : ''"
+                                  :contenteditable="editMode"
+                                  @input="onInput('address', $event)"
+                                  >{{ item.link }}</span
+                                >
                               </div>
                             </div>
                           </div>
@@ -121,16 +234,26 @@
                   <span class="title">PROFILE</span>
                   <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
                 </div>
-                <div class="profile-details">
+                <div
+                  class="profile-details"
+                  :class="editMode ? 'editCursor' : ''"
+                  :contenteditable="editMode"
+                  @input="onInput('summary', $event)"
+                >
                   {{ user_info.resume.summary }}
                 </div>
               </div>
               <v-divider style="color: #3573fd; opacity: 1" />
               <div
                 class="work-experience"
-                v-if="user_info.resume.experiences.length > 0"
+                v-if="user_info.resume.experiences.length > 0 || editMode"
               >
-                <div class="title">WORK EXPERIENCE</div>
+                <div class="title">
+                  <div>WORK EXPERIENCE</div>
+                  <v-icon v-if="editMode" size="20" @click="addExperience"
+                    >mdi-plus</v-icon
+                  >
+                </div>
                 <div class="work-items">
                   <div
                     class="details"
@@ -139,32 +262,79 @@
                   >
                     <v-row>
                       <v-col cols="3" class="date"
-                        >{{ formattedDate(job.finished_at) }}<work-date />{{
-                          formattedDate(job.started_at)
-                        }}</v-col
+                        ><span
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('finished_at', $event, index, 'work')"
+                          >{{
+                            editMode
+                              ? job.finished_at
+                                ? job.finished_at
+                                : "now"
+                              : formattedDate(job.finished_at)
+                          }}</span
+                        ><work-date /><span
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('started_at', $event, index, 'work')"
+                          >{{
+                            editMode
+                              ? job.started_at
+                              : formattedDate(job.started_at)
+                          }}</span
+                        ></v-col
                       >
                       <v-col cols="9" class="work-details">
                         <div class="job-title">
-                          {{ job.position
-                          }}<span style="color: #3573fd"> at </span
-                          >{{ job.company }}
+                          <div>
+                            <span
+                              :class="editMode ? 'editCursor' : ''"
+                              :contenteditable="editMode"
+                              @input="
+                                onInput('position', $event, index, 'work')
+                              "
+                            >
+                              {{ job.position }}</span
+                            ><span style="color: #3573fd"> at </span
+                            ><span
+                              :class="editMode ? 'editCursor' : ''"
+                              :contenteditable="editMode"
+                              @input="onInput('company', $event, index, 'work')"
+                              >{{ job.company }}</span
+                            >
+                          </div>
+                          <v-icon
+                            v-if="editMode"
+                            @click="deleteExperience(index)"
+                            size="16"
+                            color="red"
+                            >mdi-delete</v-icon
+                          >
                         </div>
-                        <div class="description">
-                          {{ job.desciption ? job.desciption : "---" }}
+                        <div
+                          class="description"
+                          :class="editMode ? 'editCursor' : ''"
+                          :contenteditable="editMode"
+                          @input="onInput('description', $event, index, 'work')"
+                        >
+                          {{ job.description ? job.description : "---" }}
                         </div>
-                        <v-divider
-                          class="my-2"
-                          v-if="
-                            index != user_info.resume.experiences.length - 1
-                          "
-                        />
                       </v-col>
                     </v-row>
+                    <v-divider
+                      class="mt-2 mb-4"
+                      v-if="index != user_info.resume.experiences.length - 1"
+                    />
                   </div>
                 </div>
               </div>
               <div class="skills" v-if="user_info.resume.skills.length > 0">
-                <div class="title">SKILLS</div>
+                <div class="title">
+                  <div>SKILLS</div>
+                  <v-icon v-if="editMode" size="20" @click="addSkill"
+                    >mdi-plus</v-icon
+                  >
+                </div>
                 <v-row class="mt-2">
                   <v-col
                     cols="6"
@@ -173,20 +343,80 @@
                     class="d-flex align-center"
                   >
                     <v-row class="item">
-                      <v-col cols="5">{{ item.title }}</v-col>
+                      <v-col
+                        cols="5"
+                        :class="editMode ? 'editCursor' : ''"
+                        :contenteditable="editMode"
+                        @input="onInput('title', $event, index, 'skills')"
+                        >{{ item.title }}</v-col
+                      >
                       <v-col cols="7" class="d-flex align-center"
                         ><v-progress-linear
-                          :model-value="item.percent"
+                          :clickable="editMode"
+                          v-model="item.percent"
                           rounded
                           color="#3573FD"
+                          @click="
+                            setScore('percent', item.percent, index, 'skills')
+                          "
+                          :style="
+                            editMode
+                              ? 'transform:none;left:0'
+                              : 'pointer-events: none'
+                          "
                         ></v-progress-linear
-                      ></v-col>
+                        ><v-icon
+                          v-if="editMode"
+                          @click="deleteSkill(index)"
+                          size="16"
+                          color="red"
+                          class="ml-0"
+                          >mdi-close</v-icon
+                        ></v-col
+                      >
                     </v-row>
                   </v-col>
-                </v-row></div></v-col></v-row
-        ></v-card>
+                </v-row>
+              </div></v-col
+            ></v-row
+          ></v-card
+        >
       </div>
     </div>
+    <div style="width: 100%" class="d-flex justify-center" v-if="editMode">
+      <v-btn width="300" color="#3573fd" style="color: white" @click="save"
+        >Save</v-btn
+      >
+    </div>
+    <v-btn
+      :icon="editMode ? 'mdi-close' : 'mdi-pencil'"
+      style="position: fixed; right: 12px; bottom: 12px; color: white"
+      color="#3573fd"
+      @click="onEditMode()"
+    />
+    <v-dialog v-model="editDialog" width="auto">
+      <v-card>
+        <v-card-text> You can edit items by selecting them. </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" block @click="editDialog = false"
+            >continue</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="saveAlert" width="auto">
+      <v-card>
+        <v-card-text>
+          You haven't saved your resume. Continue to discard
+          changes.</v-card-text
+        >
+        <v-card-actions
+          ><v-spacer />
+          <v-btn @click="onCloseSaveAlert">continue</v-btn>
+          <v-btn color="primary" @click="saveAlert = false">close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -194,24 +424,205 @@ import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
+import { UserInfo } from "~/store/user";
+import { UserResume } from "~/store/user/actions";
+interface EditedData {
+  full_name?: string;
+  education?: {
+    field?: string;
+    finished_at?: string;
+    location?: string;
+    started_at?: string;
+    university?: string;
+  }[];
+  phone?: string;
+  email?: string;
+  address?: string;
+  samary?: string;
+  work?: {
+    company?: string;
+    position?: string;
+    started_at?: string;
+    finished_at?: string;
+    description?: string;
+  }[];
+  skills?: { title?: string; percent?: number }[];
+}
 const route = useRoute();
 const user_info = computed(() => store.state.user?.user_info);
 const loading = computed(() => store.state.user?.loading);
+const updateResumeStatus = computed(() => store.state.user?.updateResumeStatus);
+const editMode = ref(false);
+const editDialog = ref(false);
+const saveAlert = ref(false);
+const hasChanged = ref(false);
+const editedData = ref<EditedData>({
+  full_name: user_info.value?.full_name,
+  education: [],
+  phone: "",
+  email: "",
+  address: "",
+  samary: "",
+  work: [],
+  skills: [],
+});
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 });
+watch(
+  () => user_info.value,
+  () => {
+    editedData.value = {
+      full_name: user_info.value?.full_name,
+      education: user_info.value?.resume?.education,
+      phone: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "phone"
+      )?.link,
+      email: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "email"
+      )?.link,
+      address: user_info.value?.resume?.contact?.find(
+        (item) => item.title == "address"
+      )?.link,
+      samary: user_info.value?.resume?.summary,
+      work: user_info.value?.resume?.experiences,
+      skills: user_info.value?.resume?.skills,
+    };
+  }
+);
+watch(
+  () => updateResumeStatus.value,
+  () => {
+    if (updateResumeStatus.value) {
+      store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+      editMode.value = false;
+      hasChanged.value = false;
+    }
+  }
+);
 const formattedDate = (date: any) => {
   if (date) {
-    const [year, month, day] = date.split("-");
-    const formattedMonth = new Date(year, month - 1, day).toLocaleString(
-      "default",
-      { month: "short" }
-    );
+    const [year, month] = date.split("-");
+    const formattedMonth = new Date(year, month - 1).toLocaleString("default", {
+      month: "short",
+    });
 
     return `${formattedMonth} ${year} `;
   } else {
     return "now";
   }
+};
+const onEditMode = () => {
+  if (!editMode.value) {
+    editDialog.value = true;
+    editMode.value = !editMode.value;
+  } else if (editMode.value && hasChanged.value == true) {
+    saveAlert.value = true;
+  } else {
+    editMode.value = !editMode.value;
+  }
+};
+const onInput = (
+  key: EditedData,
+  event: { target: { textContent: any } },
+  index?: number,
+  parent?: string
+) => {
+  hasChanged.value = true;
+  if (index == 0 || (index && index > 0)) {
+    //@ts-ignore
+    const parentArray = editedData.value[parent];
+    const childProperty = key;
+    const item = parentArray[index];
+    item[childProperty] = event.target.textContent;
+  } else {
+    //@ts-ignore
+    editedData.value[key] = event.target.textContent;
+  }
+};
+const save = () => {
+  const payload = <UserResume>{
+    uuid: route.params.uuid,
+    summary: editedData.value.samary,
+    skills: editedData.value.skills,
+    experiences: editedData.value.work,
+    education: editedData.value.education?.map((item) => {
+      return {
+        field: item.field,
+        finished_at:
+          item.finished_at?.toLowerCase() == "now"
+            ? null
+            : item.finished_at?.substring(0, 7),
+        location: item.location,
+        started_at: item.started_at?.substring(0, 7),
+        university: item.university,
+      };
+    }),
+    contact: [
+      { title: "phone", link: editedData.value.phone },
+      { title: "email", link: editedData.value.email },
+      { title: "address", link: editedData.value.address },
+    ],
+  };
+  store.dispatch(`user/${UserActionTypes.updateUserResume}`, payload);
+};
+const onCloseSaveAlert = () => {
+  editMode.value = false;
+  saveAlert.value = false;
+  hasChanged.value = false;
+  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+};
+const addEducation = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.education?.push({
+    field: "field",
+    finished_at: "finished at",
+    location: "City",
+    started_at: "started at",
+    university: "university",
+  });
+};
+const deleteEducation = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.education?.splice(index, 1);
+};
+const addExperience = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.experiences?.push({
+    company: "company",
+    position: "position",
+    started_at: "started at",
+    finished_at: "finished at",
+    description: "description",
+  });
+};
+const deleteExperience = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.experiences?.splice(index, 1);
+};
+const addSkill = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.skills?.push({
+    title: "skill",
+    percent: 50,
+  });
+};
+const deleteSkill = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.skills?.splice(index, 1);
+};
+const setScore = (
+  key: EditedData,
+  event: number,
+  index?: number,
+  parent?: string
+) => {
+  hasChanged.value = true;
+  //@ts-ignore
+  const parentArray = editedData.value[parent];
+  const childProperty = key;
+  const item = parentArray[index];
+  item[childProperty] = event;
 };
 </script>
 <style lang="scss">
@@ -244,6 +655,9 @@ const formattedDate = (date: any) => {
     font-size: 16px;
     line-height: 24px;
     color: #3573fd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .items {
     .item {
@@ -255,6 +669,9 @@ const formattedDate = (date: any) => {
         font-size: 12px;
         line-height: 18px;
         color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
       .description {
         font-style: normal;
@@ -323,6 +740,9 @@ const formattedDate = (date: any) => {
     font-size: 16px;
     line-height: 24px;
     margin: 19px 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .work-items {
     .details {
@@ -345,6 +765,9 @@ const formattedDate = (date: any) => {
           font-size: 12px;
           line-height: 18px;
           color: black;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         .description {
           font-style: normal;
@@ -369,9 +792,15 @@ const formattedDate = (date: any) => {
     font-size: 16px;
     line-height: 24px;
     color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .item .v-col {
     padding: 0 12px;
   }
+}
+.editCursor {
+  cursor: url("@/assets/svg/pencil.svg"), auto;
 }
 </style>
