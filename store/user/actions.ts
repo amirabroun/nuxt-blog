@@ -3,6 +3,35 @@ import { UserState } from ".";
 import { RootState, Status } from "..";
 import { UserActionTypes } from "./action-types";
 import { UserMutationTypes } from "./mutation-types";
+
+export interface UserResume {
+  uuid: string;
+  summary: string;
+  skills: {
+    title: string;
+    percent: number;
+  }[];
+  experiences: {
+    company: string;
+    position: string;
+    desciption: string;
+    started_at: string;
+  }[];
+  education:
+    | {
+        field?: string;
+        university?: string;
+        started_at?: string;
+        finished_at?: string;
+        location?: string;
+      }[]
+    | undefined;
+  contact: {
+    title: string;
+    link: string;
+  }[];
+}
+
 export const actions: ActionTree<UserState, RootState> = {
   [UserActionTypes.fetchUser]: ({ commit }, uuid: string) => {
     commit(UserMutationTypes.fetchUser, {
@@ -18,5 +47,31 @@ export const actions: ActionTree<UserState, RootState> = {
         user: res.data,
       });
     });
+  },
+  [UserActionTypes.updateUserResume]: ({ commit }, payload: UserResume) => {
+    commit(UserMutationTypes.updateResumeStatus, {
+      loading: true,
+      sttaus: null,
+    });
+    const uuid = payload.uuid;
+    //@ts-ignore
+    delete payload.uuid;
+    const { $httpsRequest } = useNuxtApp();
+    $httpsRequest(`users/${uuid}/update-resume`, {
+      method: "PUT",
+      body: payload,
+    })
+      .then((res: any) => {
+        commit(UserMutationTypes.updateResumeStatus, {
+          loading: false,
+          status: Status.success,
+        });
+      })
+      .catch(() => {
+        commit(UserMutationTypes.updateResumeStatus, {
+          loading: false,
+          status: Status.failed,
+        });
+      });
   },
 };

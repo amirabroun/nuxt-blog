@@ -52,7 +52,15 @@
                           class="education pa-0"
                           v-if="user_info.resume.education"
                         >
-                          <div class="header">EDUCATION</div>
+                          <div class="header">
+                            <div>EDUCATION</div>
+                            <v-icon
+                              v-if="editMode"
+                              size="20"
+                              @click="addEducation"
+                              >mdi-plus</v-icon
+                            >
+                          </div>
                           <v-row class="items">
                             <v-col
                               md="12"
@@ -70,7 +78,14 @@
                                   onInput('field', $event, index, 'education')
                                 "
                               >
-                                {{ item.field }}
+                                <div>{{ item.field }}</div>
+                                <v-icon
+                                  v-if="editMode"
+                                  @click="deleteEducation(index)"
+                                  size="16"
+                                  color="red"
+                                  >mdi-delete</v-icon
+                                >
                               </div>
                               <div class="description">
                                 <div>
@@ -116,7 +131,11 @@
                                       )
                                     "
                                   >
-                                    {{ formattedDate(item.started_at) }}</span
+                                    {{
+                                      editMode
+                                        ? item.started_at
+                                        : formattedDate(item.started_at)
+                                    }}</span
                                   >
                                   -
                                   <span
@@ -131,7 +150,13 @@
                                       )
                                     "
                                   >
-                                    {{ formattedDate(item.finished_at) }}
+                                    {{
+                                      editMode
+                                        ? item.finished_at
+                                          ? item.finished_at
+                                          : "now"
+                                        : formattedDate(item.finished_at)
+                                    }}
                                   </span>
                                 </div>
                               </div>
@@ -221,9 +246,14 @@
               <v-divider style="color: #3573fd; opacity: 1" />
               <div
                 class="work-experience"
-                v-if="user_info.resume.experiences.length > 0"
+                v-if="user_info.resume.experiences.length > 0 || editMode"
               >
-                <div class="title">WORK EXPERIENCE</div>
+                <div class="title">
+                  <div>WORK EXPERIENCE</div>
+                  <v-icon v-if="editMode" size="20" @click="addExperience"
+                    >mdi-plus</v-icon
+                  >
+                </div>
                 <div class="work-items">
                   <div
                     class="details"
@@ -235,29 +265,50 @@
                         ><span
                           :class="editMode ? 'editCursor' : ''"
                           :contenteditable="editMode"
-                          @input="onInput('finish', $event, index, 'work')"
-                          >{{ formattedDate(job.finished_at) }}</span
+                          @input="onInput('finished_at', $event, index, 'work')"
+                          >{{
+                            editMode
+                              ? job.finished_at
+                                ? job.finished_at
+                                : "now"
+                              : formattedDate(job.finished_at)
+                          }}</span
                         ><work-date /><span
                           :class="editMode ? 'editCursor' : ''"
                           :contenteditable="editMode"
-                          @input="onInput('start', $event, index, 'work')"
-                          >{{ formattedDate(job.started_at) }}</span
+                          @input="onInput('started_at', $event, index, 'work')"
+                          >{{
+                            editMode
+                              ? job.started_at
+                              : formattedDate(job.started_at)
+                          }}</span
                         ></v-col
                       >
                       <v-col cols="9" class="work-details">
                         <div class="job-title">
-                          <span
-                            :class="editMode ? 'editCursor' : ''"
-                            :contenteditable="editMode"
-                            @input="onInput('position', $event, index, 'work')"
-                          >
-                            {{ job.position }}</span
-                          ><span style="color: #3573fd"> at </span
-                          ><span
-                            :class="editMode ? 'editCursor' : ''"
-                            :contenteditable="editMode"
-                            @input="onInput('company', $event, index, 'work')"
-                            >{{ job.company }}</span
+                          <div>
+                            <span
+                              :class="editMode ? 'editCursor' : ''"
+                              :contenteditable="editMode"
+                              @input="
+                                onInput('position', $event, index, 'work')
+                              "
+                            >
+                              {{ job.position }}</span
+                            ><span style="color: #3573fd"> at </span
+                            ><span
+                              :class="editMode ? 'editCursor' : ''"
+                              :contenteditable="editMode"
+                              @input="onInput('company', $event, index, 'work')"
+                              >{{ job.company }}</span
+                            >
+                          </div>
+                          <v-icon
+                            v-if="editMode"
+                            @click="deleteExperience(index)"
+                            size="16"
+                            color="red"
+                            >mdi-delete</v-icon
                           >
                         </div>
                         <div
@@ -268,19 +319,22 @@
                         >
                           {{ job.desciption ? job.desciption : "---" }}
                         </div>
-                        <v-divider
-                          class="my-2"
-                          v-if="
-                            index != user_info.resume.experiences.length - 1
-                          "
-                        />
                       </v-col>
                     </v-row>
+                    <v-divider
+                      class="mt-2 mb-4"
+                      v-if="index != user_info.resume.experiences.length - 1"
+                    />
                   </div>
                 </div>
               </div>
               <div class="skills" v-if="user_info.resume.skills.length > 0">
-                <div class="title">SKILLS</div>
+                <div class="title">
+                  <div>SKILLS</div>
+                  <v-icon v-if="editMode" size="20" @click="addSkill"
+                    >mdi-plus</v-icon
+                  >
+                </div>
                 <v-row class="mt-2">
                   <v-col
                     cols="6"
@@ -298,15 +352,35 @@
                       >
                       <v-col cols="7" class="d-flex align-center"
                         ><v-progress-linear
-                          :model-value="item.percent"
+                          :clickable="editMode"
+                          v-model="item.percent"
                           rounded
                           color="#3573FD"
+                          @click="
+                            setScore('percent', item.percent, index, 'skills')
+                          "
+                          :style="
+                            editMode
+                              ? 'transform:none;left:0'
+                              : 'pointer-events: none'
+                          "
                         ></v-progress-linear
-                      ></v-col>
+                        ><v-icon
+                          v-if="editMode"
+                          @click="deleteSkill(index)"
+                          size="16"
+                          color="red"
+                          class="ml-0"
+                          >mdi-close</v-icon
+                        ></v-col
+                      >
                     </v-row>
                   </v-col>
-                </v-row></div></v-col></v-row
-        ></v-card>
+                </v-row>
+              </div></v-col
+            ></v-row
+          ></v-card
+        >
       </div>
     </div>
     <div style="width: 100%" class="d-flex justify-center" v-if="editMode">
@@ -351,6 +425,7 @@ import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
 import { UserInfo } from "~/store/user";
+import { UserResume } from "~/store/user/actions";
 interface EditedData {
   full_name?: string;
   education?: {
@@ -376,6 +451,7 @@ interface EditedData {
 const route = useRoute();
 const user_info = computed(() => store.state.user?.user_info);
 const loading = computed(() => store.state.user?.loading);
+const updateResumeStatus = computed(() => store.state.user?.updateResumeStatus);
 const editMode = ref(false);
 const editDialog = ref(false);
 const saveAlert = ref(false);
@@ -414,13 +490,22 @@ watch(
     };
   }
 );
+watch(
+  () => updateResumeStatus.value,
+  () => {
+    if (updateResumeStatus.value) {
+      store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+      editMode.value = false;
+      hasChanged.value = false;
+    }
+  }
+);
 const formattedDate = (date: any) => {
   if (date) {
-    const [year, month, day] = date.split("-");
-    const formattedMonth = new Date(year, month - 1, day).toLocaleString(
-      "default",
-      { month: "short" }
-    );
+    const [year, month] = date.split("-");
+    const formattedMonth = new Date(year, month - 1).toLocaleString("default", {
+      month: "short",
+    });
 
     return `${formattedMonth} ${year} `;
   } else {
@@ -450,21 +535,94 @@ const onInput = (
     const childProperty = key;
     const item = parentArray[index];
     item[childProperty] = event.target.textContent;
-    //@ts-ignore
-    console.log(editedData.value, editedData.value[parent]);
   } else {
     //@ts-ignore
     editedData.value[key] = event.target.textContent;
   }
 };
 const save = () => {
-  console.log(editedData.value);
+  const payload = <UserResume>{
+    uuid: route.params.uuid,
+    summary: editedData.value.samary,
+    skills: editedData.value.skills,
+    experiences: editedData.value.work,
+    education: editedData.value.education?.map((item) => {
+      return {
+        field: item.field,
+        finished_at:
+          item.finished_at?.toLowerCase() == "now"
+            ? null
+            : item.finished_at?.substring(0, 7),
+        location: item.location,
+        started_at: item.started_at?.substring(0, 7),
+        university: item.university,
+      };
+    }),
+    contact: [
+      { title: "phone", link: editedData.value.phone },
+      { title: "email", link: editedData.value.email },
+      { title: "address", link: editedData.value.address },
+    ],
+  };
+  store.dispatch(`user/${UserActionTypes.updateUserResume}`, payload);
 };
 const onCloseSaveAlert = () => {
   editMode.value = false;
   saveAlert.value = false;
   hasChanged.value = false;
   store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+};
+const addEducation = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.education?.push({
+    field: "field",
+    finished_at: "finished at",
+    location: "City",
+    started_at: "started at",
+    university: "university",
+  });
+};
+const deleteEducation = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.education?.splice(index, 1);
+};
+const addExperience = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.experiences?.push({
+    company: "company",
+    position: "position",
+    started_at: "started at",
+    finished_at: "finished at",
+    desciption: "description",
+  });
+};
+const deleteExperience = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.experiences?.splice(index, 1);
+};
+const addSkill = () => {
+  hasChanged.value = true;
+  user_info.value?.resume?.skills?.push({
+    title: "skill",
+    percent: 50,
+  });
+};
+const deleteSkill = (index: number) => {
+  hasChanged.value = true;
+  user_info.value?.resume?.skills?.splice(index, 1);
+};
+const setScore = (
+  key: EditedData,
+  event: number,
+  index?: number,
+  parent?: string
+) => {
+  hasChanged.value = true;
+  //@ts-ignore
+  const parentArray = editedData.value[parent];
+  const childProperty = key;
+  const item = parentArray[index];
+  item[childProperty] = event;
 };
 </script>
 <style lang="scss">
@@ -497,6 +655,9 @@ const onCloseSaveAlert = () => {
     font-size: 16px;
     line-height: 24px;
     color: #3573fd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .items {
     .item {
@@ -508,6 +669,9 @@ const onCloseSaveAlert = () => {
         font-size: 12px;
         line-height: 18px;
         color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
       .description {
         font-style: normal;
@@ -576,6 +740,9 @@ const onCloseSaveAlert = () => {
     font-size: 16px;
     line-height: 24px;
     margin: 19px 0 !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .work-items {
     .details {
@@ -598,6 +765,9 @@ const onCloseSaveAlert = () => {
           font-size: 12px;
           line-height: 18px;
           color: black;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         .description {
           font-style: normal;
@@ -622,6 +792,9 @@ const onCloseSaveAlert = () => {
     font-size: 16px;
     line-height: 24px;
     color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .item .v-col {
     padding: 0 12px;

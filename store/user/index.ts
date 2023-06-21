@@ -39,11 +39,11 @@ export interface UserInfo {
 export interface UserState {
   loading: boolean;
   user_info: UserInfo;
+  updateResumeStatus: Status | null;
 }
 
 const state: UserState = {
   loading: false,
-
   user_info: {
     uuid: undefined,
     full_name: undefined,
@@ -63,6 +63,7 @@ const state: UserState = {
     },
     media: [],
   },
+  updateResumeStatus: null,
 };
 
 export const user: Module<UserState, RootState> = {
