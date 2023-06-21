@@ -4,17 +4,17 @@ import { RootState, Status } from "..";
 import { AuthActionTypes } from "./action-types";
 import { AuthMutationTypes } from "./mutation-types";
 export interface LoginPayload {
-  email: string;
+  username: string;
   password: string;
 }
 export interface RegisterPayload {
-  email: string;
+  username: string;
   password: string;
   password_confirmation: string;
 }
 export const actions: ActionTree<AuthState, RootState> = {
   [AuthActionTypes.login]: ({ commit }, payload: LoginPayload) => {
-    const { email, password } = payload;
+    const { username, password } = payload;
     commit(AuthMutationTypes.setLoggingInState, {
       isLoggingIn: true,
       status: null,
@@ -22,7 +22,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     const { $httpsRequest } = useNuxtApp();
     $httpsRequest(`auth/login`, {
       method: "POST",
-      body: { email: email, password: password },
+      body: { username: username, password: password },
     })
       .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {
@@ -46,7 +46,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
   },
   [AuthActionTypes.register]: ({ commit }, payload: RegisterPayload) => {
-    const { email, password, password_confirmation } = payload;
+    const { username, password, password_confirmation } = payload;
     commit(AuthMutationTypes.setLoggingInState, {
       isLoggingIn: true,
       status: null,
@@ -54,7 +54,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     const { $httpsRequest } = useNuxtApp();
     $httpsRequest(`auth/register`, {
       method: "POST",
-      body: { email, password, password_confirmation },
+      body: { username, password, password_confirmation },
     })
       .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {

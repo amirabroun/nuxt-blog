@@ -73,15 +73,15 @@
                         font-size: 24px;
                         opacity: 60%;
                       "
-                      >Email</label
+                      >Username</label
                     >
                     <v-text-field
-                      v-model="email"
-                      :rules="emailRules"
+                      v-model="username"
+                      :rules="usernameRules"
                       required
                       style="margin-top: 14px"
                       variant="outlined"
-                      placeholder="Example@hotmail.com"
+                      placeholder="John"
                       color="#1167E4"
                     />
                     <label
@@ -168,17 +168,14 @@ import { AuthActionTypes } from "~/store/auth/action-types";
 import LoginSlogan from "./components/LoginSlogan.vue";
 const router = useRouter();
 const valid = ref<boolean>(true);
-const email = ref<string>();
+const username = ref<string>();
 const password = ref<string>();
 const formRef = ref();
 const showPassword = ref(false);
 const loading = computed(() => store.state.auth?.isLoggingIn);
 const loginStatus = computed(() => store.state.auth?.status);
 const user = computed(() => store.state.auth?.authUser);
-const emailRules = [
-  (v: any) => !!v || "Email is required",
-  (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
-];
+const usernameRules = [(v: any) => !!v || "Username is required"];
 const passwordRules = [
   (value: any) => {
     if (value) return true;
@@ -190,7 +187,7 @@ const login = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
     store.dispatch(`auth/${AuthActionTypes.login}`, {
-      email: email.value,
+      username: username.value,
       password: password.value,
     });
   }
