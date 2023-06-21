@@ -315,9 +315,9 @@
                           class="description"
                           :class="editMode ? 'editCursor' : ''"
                           :contenteditable="editMode"
-                          @input="onInput('desciption', $event, index, 'work')"
+                          @input="onInput('description', $event, index, 'work')"
                         >
-                          {{ job.desciption ? job.desciption : "---" }}
+                          {{ job.description ? job.description : "---" }}
                         </div>
                       </v-col>
                     </v-row>
@@ -444,7 +444,7 @@ interface EditedData {
     position?: string;
     started_at?: string;
     finished_at?: string;
-    desciption?: string;
+    description?: string;
   }[];
   skills?: { title?: string; percent?: number }[];
 }
@@ -593,7 +593,7 @@ const addExperience = () => {
     position: "position",
     started_at: "started at",
     finished_at: "finished at",
-    desciption: "description",
+    description: "description",
   });
 };
 const deleteExperience = (index: number) => {

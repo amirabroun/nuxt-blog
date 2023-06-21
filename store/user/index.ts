@@ -27,7 +27,7 @@ export interface UserInfo {
       position?: string;
       started_at?: string;
       finished_at?: string;
-      desciption?: string;
+      description?: string;
     }[];
     skills?: { title?: string; percent?: number }[];
     created_at?: string;

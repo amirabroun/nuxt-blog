@@ -14,7 +14,7 @@ export interface UserResume {
   experiences: {
     company: string;
     position: string;
-    desciption: string;
+    description: string;
     started_at: string;
   }[];
   education:
