@@ -206,7 +206,7 @@ watch(
   () => {
     if (loginStatus.value == Status.success) {
       setTimeout(() => {
-        router.push(`/user/${user.value?.uuid}/resume`);
+        router.push(`/users/${user.value?.uuid}/resume`);
       }, 1000);
     }
   }

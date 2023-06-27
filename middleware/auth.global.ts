@@ -1,7 +1,7 @@
 import { store } from "~~/store";
 
 export default defineNuxtRouteMiddleware((to) => {
-  if (to.fullPath.includes("/user")) {
+  if (to.fullPath.includes("/users")) {
     return;
   } else if (to.fullPath.includes("/dashboard")) {
     if (!store.getters["auth/isAuth"]) {

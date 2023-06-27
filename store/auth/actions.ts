@@ -3,6 +3,8 @@ import { AuthState } from ".";
 import { RootState, Status } from "..";
 import { AuthActionTypes } from "./action-types";
 import { AuthMutationTypes } from "./mutation-types";
+import { useCookies } from "vue3-cookies";
+
 export interface LoginPayload {
   username: string;
   password: string;
@@ -20,6 +22,7 @@ export const actions: ActionTree<AuthState, RootState> = {
       status: null,
     });
     const { $httpsRequest } = useNuxtApp();
+    const { cookies } = useCookies();
     $httpsRequest(`auth/login`, {
       method: "POST",
       body: { username: username, password: password },
@@ -30,6 +33,8 @@ export const actions: ActionTree<AuthState, RootState> = {
           status: Status.success,
         });
         commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+
+        cookies.set("theUserUuid", res.data.user.uuid);
         commit(AuthMutationTypes.setToken, res.data.user.token);
       })
       .finally(() => {
