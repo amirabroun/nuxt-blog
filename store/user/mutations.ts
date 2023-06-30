@@ -6,10 +6,11 @@ import { Status } from "..";
 export const mutations: MutationTree<UserState> = {
   [UserMutationTypes.fetchUser]: (
     state,
-    payload: { loading: boolean; user: UserInfo }
+    payload: { loading: boolean; user: UserInfo; savedData: UserInfo }
   ) => {
     state.loading = payload.loading;
     state.user_info = payload.user;
+    state.savedUserInfo = payload.savedData;
   },
   [UserMutationTypes.updateResumeStatus]: (
     state,

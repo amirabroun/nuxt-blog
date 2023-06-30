@@ -2,11 +2,14 @@
   <div style="width: 100%">
     <loading v-if="loading" />
     <div v-if="user_info" class="d-flex justify-center" style="margin: 50px 0">
-      <div style="max-width: 595px">
+      <div style="max-width: 900px">
         <v-card
           ><v-row style="margin: 30px 0">
             <v-col md="4" cols="12"
-              ><v-row class="justify-md-end justify-center">
+              ><v-row
+                class="justify-md-end justify-center"
+                style="height: 100%"
+              >
                 <v-col cols="10" style="background: #202a30; border-radius: 8px"
                   ><v-row justify="center"
                     ><v-col cols="10"
@@ -17,6 +20,7 @@
                           order="2"
                           order-md="1"
                           class="pa-0"
+                          style="height: 100%"
                         >
                           <div
                             class="contact-info"
@@ -120,43 +124,25 @@
                                 </div>
                                 <div>
                                   <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'started_at',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      editMode
-                                        ? item.started_at
-                                        : formattedDate(item.started_at)
-                                    }}</span
-                                  >
+                                    ><edit-time
+                                      :editMode="editMode"
+                                      :date="item.started_at"
+                                      :parent="'education'"
+                                      :keySelector="'started_at'"
+                                      :index="index"
+                                      @valueChange="valueChange"
+                                    />
+                                  </span>
                                   -
-                                  <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'finished_at',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      editMode
-                                        ? item.finished_at
-                                          ? item.finished_at
-                                          : "now"
-                                        : formattedDate(item.finished_at)
-                                    }}
+                                  <span>
+                                    <edit-time
+                                      :editMode="editMode"
+                                      :date="item.finished_at"
+                                      :parent="'education'"
+                                      :keySelector="'finished_at'"
+                                      :index="index"
+                                      @valueChange="valueChange"
+                                    />
                                   </span>
                                 </div>
                               </div>
@@ -263,27 +249,26 @@
                     <v-row>
                       <v-col cols="3" class="date"
                         ><span
-                          :class="editMode ? 'editCursor' : ''"
-                          :contenteditable="editMode"
-                          @input="onInput('finished_at', $event, index, 'work')"
-                          >{{
-                            editMode
-                              ? job.finished_at
-                                ? job.finished_at
-                                : "now"
-                              : formattedDate(job.finished_at)
-                          }}</span
+                          ><edit-time
+                            :editMode="editMode"
+                            :date="
+                              job && job.finished_at ? job.finished_at : null
+                            "
+                            :parent="'work'"
+                            :keySelector="'finished_at'"
+                            :index="index"
+                            @valueChange="valueChange" /></span
                         ><work-date /><span
-                          :class="editMode ? 'editCursor' : ''"
-                          :contenteditable="editMode"
-                          @input="onInput('started_at', $event, index, 'work')"
-                          >{{
-                            editMode
-                              ? job.started_at
-                              : formattedDate(job.started_at)
-                          }}</span
-                        ></v-col
-                      >
+                          >{{}}<edit-time
+                            :editMode="editMode"
+                            :date="
+                              job && job.started_at ? job.started_at : null
+                            "
+                            :parent="'work'"
+                            :keySelector="'started_at'"
+                            :index="index"
+                            @valueChange="valueChange" /></span
+                      ></v-col>
                       <v-col cols="9" class="work-details">
                         <div class="job-title">
                           <div>
@@ -328,7 +313,10 @@
                   </div>
                 </div>
               </div>
-              <div class="skills" v-if="user_info.resume.skills.length > 0">
+              <div
+                class="skills mt-3"
+                v-if="user_info.resume.skills.length > 0"
+              >
                 <div class="title">
                   <div>SKILLS</div>
                   <v-icon v-if="editMode" size="20" @click="addSkill"
@@ -340,7 +328,7 @@
                     cols="6"
                     v-for="(item, index) in user_info.resume.skills"
                     :key="index"
-                    class="d-flex align-center"
+                    class="d-flex align-center mt-2"
                   >
                     <v-row class="item">
                       <v-col
@@ -383,12 +371,17 @@
         >
       </div>
     </div>
-    <div style="width: 100%" class="d-flex justify-center" v-if="editMode">
+    <div
+      style="width: 100%"
+      class="d-flex justify-center mt-4 mb-8"
+      v-if="editMode"
+    >
       <v-btn width="300" color="#3573fd" style="color: white" @click="save"
         >Save</v-btn
       >
     </div>
     <v-btn
+      v-if="isMainUser"
       :icon="editMode ? 'mdi-close' : 'mdi-pencil'"
       style="position: fixed; right: 12px; bottom: 12px; color: white"
       color="#3573fd"
@@ -420,12 +413,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { store } from "~/store";
+import { Status, store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
+import EditTime from "./components/EditTime.vue";
 import { UserInfo } from "~/store/user";
 import { UserResume } from "~/store/user/actions";
+import { useCookies } from "vue3-cookies";
 interface EditedData {
   full_name?: string;
   education?: {
@@ -448,6 +443,7 @@ interface EditedData {
   }[];
   skills?: { title?: string; percent?: number }[];
 }
+const { cookies } = useCookies();
 const route = useRoute();
 const user_info = computed(() => store.state.user?.user_info);
 const loading = computed(() => store.state.user?.loading);
@@ -456,6 +452,7 @@ const editMode = ref(false);
 const editDialog = ref(false);
 const saveAlert = ref(false);
 const hasChanged = ref(false);
+const isMainUser = ref();
 const editedData = ref<EditedData>({
   full_name: user_info.value?.full_name,
   education: [],
@@ -472,6 +469,9 @@ onMounted(() => {
 watch(
   () => user_info.value,
   () => {
+    if (user_info.value && cookies.get("theUserUuid") === user_info.value?.uuid)
+      isMainUser.value = true;
+
     editedData.value = {
       full_name: user_info.value?.full_name,
       education: user_info.value?.resume?.education,
@@ -493,8 +493,7 @@ watch(
 watch(
   () => updateResumeStatus.value,
   () => {
-    if (updateResumeStatus.value) {
-      store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+    if (updateResumeStatus.value == Status.success) {
       editMode.value = false;
       hasChanged.value = false;
     }
@@ -534,7 +533,8 @@ const onInput = (
     const parentArray = editedData.value[parent];
     const childProperty = key;
     const item = parentArray[index];
-    item[childProperty] = event.target.textContent;
+    item[childProperty] =
+      event.target.textContent == "now" ? undefined : event.target.textContent;
   } else {
     //@ts-ignore
     editedData.value[key] = event.target.textContent;
@@ -545,18 +545,41 @@ const save = () => {
     uuid: route.params.uuid,
     summary: editedData.value.samary,
     skills: editedData.value.skills,
-    experiences: editedData.value.work,
-    education: editedData.value.education?.map((item) => {
-      return {
-        field: item.field,
-        finished_at:
-          item.finished_at?.toLowerCase() == "now"
-            ? null
-            : item.finished_at?.substring(0, 7),
-        location: item.location,
-        started_at: item.started_at?.substring(0, 7),
-        university: item.university,
-      };
+    experiences: user_info.value?.resume?.experiences?.map((item) => {
+      if (item.finished_at) {
+        return {
+          company: item.company,
+          position: item.position,
+          started_at: item.started_at,
+          finished_at: item.finished_at,
+          description: item.description || "---",
+        };
+      } else {
+        return {
+          company: item.company,
+          position: item.position,
+          started_at: item.started_at,
+          description: item.description || "---",
+        };
+      }
+    }),
+    education: user_info.value?.resume?.education?.map((item) => {
+      if (item.finished_at) {
+        return {
+          field: item.field,
+          finished_at: item.finished_at,
+          location: item.location,
+          started_at: item.started_at,
+          university: item.university,
+        };
+      } else {
+        return {
+          field: item.field,
+          location: item.location,
+          started_at: item.started_at,
+          university: item.university,
+        };
+      }
     }),
     contact: [
       { title: "phone", link: editedData.value.phone },
@@ -611,6 +634,9 @@ const deleteSkill = (index: number) => {
   hasChanged.value = true;
   user_info.value?.resume?.skills?.splice(index, 1);
 };
+const valueChange = () => {
+  hasChanged.value = true;
+};
 const setScore = (
   key: EditedData,
   event: number,
@@ -630,14 +656,14 @@ const setScore = (
   margin-top: 50px;
   font-style: normal;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 30px;
   color: #3573fd;
 }
 .job-title {
   font-style: normal;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 17px;
   line-height: 20px;
   color: #ffffff;
 }
@@ -652,7 +678,7 @@ const setScore = (
   .header {
     font-style: normal;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 24px;
     color: #3573fd;
     display: flex;
@@ -666,7 +692,7 @@ const setScore = (
         font-family: "IRANSansX";
         font-style: normal;
         font-weight: 500;
-        font-size: 12px;
+        font-size: 16px;
         line-height: 18px;
         color: #ffffff;
         display: flex;
@@ -676,7 +702,7 @@ const setScore = (
       .description {
         font-style: normal;
         font-weight: 500;
-        font-size: 9px;
+        font-size: 13px;
         line-height: 14px;
         color: #a2a2a2;
       }
@@ -688,7 +714,7 @@ const setScore = (
   .header {
     font-style: normal;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 24px;
     color: #3573fd;
   }
@@ -697,14 +723,14 @@ const setScore = (
       .title {
         font-style: normal;
         font-weight: 500;
-        font-size: 9px;
+        font-size: 13px;
         line-height: 14px;
         color: #ffffff;
       }
       .detail {
         font-style: normal;
         font-weight: 500;
-        font-size: 9px;
+        font-size: 13px;
         line-height: 14px;
         color: #a2a2a2;
       }
@@ -721,13 +747,13 @@ const setScore = (
   .title {
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 24px;
   }
   .profile-details {
     font-style: normal;
     font-weight: 500;
-    font-size: 9px;
+    font-size: 13px;
     line-height: 14px;
     color: #484848;
     margin: 10px 0;
@@ -737,7 +763,7 @@ const setScore = (
   .title {
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 24px;
     margin: 19px 0 !important;
     display: flex;
@@ -749,7 +775,7 @@ const setScore = (
       .date {
         font-style: normal;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 16px;
         line-height: 18px;
         display: flex;
         flex-direction: column;
@@ -762,7 +788,7 @@ const setScore = (
         .job-title {
           font-style: normal;
           font-weight: 500;
-          font-size: 12px;
+          font-size: 16px;
           line-height: 18px;
           color: black;
           display: flex;
@@ -772,7 +798,7 @@ const setScore = (
         .description {
           font-style: normal;
           font-weight: 500;
-          font-size: 9px;
+          font-size: 13px;
           line-height: 14px;
           margin: 7px 0;
         }
@@ -783,13 +809,13 @@ const setScore = (
 .skills {
   font-style: normal;
   font-weight: 500;
-  font-size: 9px;
+  font-size: 13px;
   line-height: 14px;
   color: #747474;
   .title {
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 20px;
     line-height: 24px;
     color: black;
     display: flex;

@@ -39,6 +39,7 @@ export interface UserInfo {
 export interface UserState {
   loading: boolean;
   user_info: UserInfo;
+  savedUserInfo: UserInfo;
   updateResumeStatus: Status | null;
 }
 
@@ -63,6 +64,7 @@ const state: UserState = {
     },
     media: [],
   },
+  savedUserInfo: {},
   updateResumeStatus: null,
 };
 

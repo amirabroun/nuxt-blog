@@ -66,6 +66,10 @@ export const actions: ActionTree<UserState, RootState> = {
           loading: false,
           status: Status.success,
         });
+        commit(UserMutationTypes.fetchUser, {
+          loading: false,
+          user: res.data.user,
+        });
       })
       .catch(() => {
         commit(UserMutationTypes.updateResumeStatus, {
