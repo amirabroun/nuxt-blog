@@ -124,43 +124,25 @@
                                 </div>
                                 <div>
                                   <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'started_at',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      editMode
-                                        ? item.started_at
-                                        : formattedDate(item.started_at)
-                                    }}</span
-                                  >
+                                    ><edit-time
+                                      :editMode="editMode"
+                                      :date="item.started_at"
+                                      :parent="'education'"
+                                      :keySelector="'started_at'"
+                                      :index="index"
+                                      @valueChange="valueChange"
+                                    />
+                                  </span>
                                   -
-                                  <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'finished_at',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                  >
-                                    {{
-                                      editMode
-                                        ? item.finished_at
-                                          ? item.finished_at
-                                          : "now"
-                                        : formattedDate(item.finished_at)
-                                    }}
+                                  <span>
+                                    <edit-time
+                                      :editMode="editMode"
+                                      :date="item.finished_at"
+                                      :parent="'education'"
+                                      :keySelector="'finished_at'"
+                                      :index="index"
+                                      @valueChange="valueChange"
+                                    />
                                   </span>
                                 </div>
                               </div>
@@ -267,27 +249,26 @@
                     <v-row>
                       <v-col cols="3" class="date"
                         ><span
-                          :class="editMode ? 'editCursor' : ''"
-                          :contenteditable="editMode"
-                          @input="onInput('finished_at', $event, index, 'work')"
-                          >{{
-                            editMode
-                              ? job.finished_at
-                                ? job.finished_at
-                                : "now"
-                              : formattedDate(job.finished_at)
-                          }}</span
+                          ><edit-time
+                            :editMode="editMode"
+                            :date="
+                              job && job.finished_at ? job.finished_at : null
+                            "
+                            :parent="'work'"
+                            :keySelector="'finished_at'"
+                            :index="index"
+                            @valueChange="valueChange" /></span
                         ><work-date /><span
-                          :class="editMode ? 'editCursor' : ''"
-                          :contenteditable="editMode"
-                          @input="onInput('started_at', $event, index, 'work')"
-                          >{{
-                            editMode
-                              ? job.started_at
-                              : formattedDate(job.started_at)
-                          }}</span
-                        ></v-col
-                      >
+                          >{{}}<edit-time
+                            :editMode="editMode"
+                            :date="
+                              job && job.started_at ? job.started_at : null
+                            "
+                            :parent="'work'"
+                            :keySelector="'started_at'"
+                            :index="index"
+                            @valueChange="valueChange" /></span
+                      ></v-col>
                       <v-col cols="9" class="work-details">
                         <div class="job-title">
                           <div>
@@ -436,6 +417,7 @@ import { Status, store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
+import EditTime from "./components/EditTime.vue";
 import { UserInfo } from "~/store/user";
 import { UserResume } from "~/store/user/actions";
 import { useCookies } from "vue3-cookies";
@@ -563,37 +545,41 @@ const save = () => {
     uuid: route.params.uuid,
     summary: editedData.value.samary,
     skills: editedData.value.skills,
-    experiences: editedData.value.work,
-    education: editedData.value.education?.map((item) => {
+    experiences: user_info.value?.resume?.experiences?.map((item) => {
       if (item.finished_at) {
-        console.log("1");
-
+        return {
+          company: item.company,
+          position: item.position,
+          started_at: item.started_at,
+          finished_at: item.finished_at,
+          description: item.description || "---",
+        };
+      } else {
+        return {
+          company: item.company,
+          position: item.position,
+          started_at: item.started_at,
+          description: item.description || "---",
+        };
+      }
+    }),
+    education: user_info.value?.resume?.education?.map((item) => {
+      if (item.finished_at) {
         return {
           field: item.field,
-          finished_at: item.finished_at?.substring(0, 7),
+          finished_at: item.finished_at,
           location: item.location,
-          started_at: item.started_at?.substring(0, 7),
+          started_at: item.started_at,
           university: item.university,
         };
       } else {
-        console.log("2");
         return {
           field: item.field,
           location: item.location,
-          started_at: item.started_at?.substring(0, 7),
+          started_at: item.started_at,
           university: item.university,
         };
       }
-
-      return {
-        field: item.field,
-        finished_at: item.finished_at
-          ? item.finished_at?.substring(0, 7)
-          : undefined,
-        location: item.location,
-        started_at: item.started_at?.substring(0, 7),
-        university: item.university,
-      };
     }),
     contact: [
       { title: "phone", link: editedData.value.phone },
@@ -647,6 +633,9 @@ const addSkill = () => {
 const deleteSkill = (index: number) => {
   hasChanged.value = true;
   user_info.value?.resume?.skills?.splice(index, 1);
+};
+const valueChange = () => {
+  hasChanged.value = true;
 };
 const setScore = (
   key: EditedData,
