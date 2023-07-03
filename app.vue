@@ -29,7 +29,9 @@
         </v-btn>
       </template>
     </v-snackbar>
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage style="margin-top: 120px" />
+    </NuxtLayout>
   </div>
 </template>
 <script lang="ts" setup>

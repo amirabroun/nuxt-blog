@@ -166,6 +166,9 @@
 import { store, RootState, Status } from "@/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
 import LoginSlogan from "./components/LoginSlogan.vue";
+definePageMeta({
+  layout: false,
+});
 const router = useRouter();
 const valid = ref<boolean>(true);
 const username = ref<string>();

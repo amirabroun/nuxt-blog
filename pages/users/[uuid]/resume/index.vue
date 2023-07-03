@@ -417,6 +417,7 @@ import { Status, store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
+//@ts-ignore
 import EditTime from "./components/EditTime.vue";
 import { UserInfo } from "~/store/user";
 import { UserResume } from "~/store/user/actions";

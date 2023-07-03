@@ -45,10 +45,25 @@ export const actions: ActionTree<AuthState, RootState> = {
       });
   },
   [AuthActionTypes.logOut]: ({ commit }) => {
-    const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`auth/logout`).then(() => {
-      commit(AuthMutationTypes.cleanAuthInfo);
+    commit(AuthMutationTypes.setLoggingOutState, {
+      loggingOut: true,
+      status: null,
     });
+    const { $httpsRequest } = useNuxtApp();
+    $httpsRequest(`auth/logout`)
+      .then(() => {
+        commit(AuthMutationTypes.cleanAuthInfo);
+        commit(AuthMutationTypes.setLoggingOutState, {
+          loggingOut: false,
+          status: Status.success,
+        });
+      })
+      .catch(() => {
+        commit(AuthMutationTypes.setLoggingOutState, {
+          loggingOut: false,
+          status: Status.failed,
+        });
+      });
   },
   [AuthActionTypes.register]: ({ commit }, payload: RegisterPayload) => {
     const { username, password, password_confirmation } = payload;
@@ -83,11 +98,12 @@ export const actions: ActionTree<AuthState, RootState> = {
     });
     const { $httpsRequest } = useNuxtApp();
     $httpsRequest(`auth/account`, { method: "GET" })
-      .then(() => {
+      .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
           status: Status.success,
         });
+        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
       })
       .catch(() => {
         commit(AuthMutationTypes.setLoggingInState, {

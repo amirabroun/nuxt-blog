@@ -17,6 +17,8 @@ export interface AuthUser {
 
 export interface AuthState {
   isLoggingIn: boolean;
+  loggingOut: boolean;
+  loggingOutStatus: Status | null;
   authUser: AuthUser | null;
   theUserToken: string | null;
   organizationToken: string | null;
@@ -27,6 +29,8 @@ export interface AuthState {
 const state: AuthState = {
   authUser: null,
   isLoggingIn: false,
+  loggingOut: false,
+  loggingOutStatus: null,
   theUserToken: null,
   organizationToken: null,
   status: null,
