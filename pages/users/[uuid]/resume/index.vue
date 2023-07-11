@@ -1,7 +1,7 @@
 <template>
   <loading v-if="loading" />
-  <div v-if="user_info" class="d-flex justify-center" style="margin: 50px 0">
-    <div style="max-width: 900px">
+  <div v-if="user_info" class="d-flex justify-center" style="margin: 35px 0">
+    <div style="max-width: 800px">
       <v-card><v-row style="margin: 30px 0">
           <v-col md="4" cols="12"><v-row class="justify-md-end justify-center" style="height: 100%">
               <v-col cols="10" style="background: #202a30; border-radius: 8px"><v-row justify="center"><v-col
@@ -115,7 +115,7 @@
                   WORK EXPERIENCE
                 </span>
                 <v-divider
-                  style="margin-left: 225px; margin-top: -15px; margin-bottom: 30px; color: #3573fd; opacity: 2" />
+                  style="margin-left: 200px; margin-top: -15px; margin-bottom: 30px; color: #3573fd; opacity: 2" />
               </div>
 
               <div class="work-items">
@@ -151,9 +151,14 @@
             </div>
             <div class="skills mt-3" v-if="user_info.resume.skills.length > 0">
               <div class="title">
-                <div>SKILLS</div>
-                <v-icon v-if="editMode" size="20" @click="addSkill">mdi-plus</v-icon>
+                <span>
+                  <v-icon v-if="editMode" size="20" @click="addSkill">mdi-plus</v-icon>
+                  SKILLS
+                </span>
+                <v-divider
+                  style="margin-top: -10px; margin-left: 110px; margin-bottom: 40px; color: #3573fd; opacity: 2" />
               </div>
+
               <v-row class="mt-2">
                 <v-col cols="6" v-for="(item, index) in user_info.resume.skills" :key="index"
                   class="d-flex align-center mt-2">
@@ -627,9 +632,6 @@ const setScore = (
     font-size: 20px;
     line-height: 24px;
     color: black;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 
   .item .v-col {
