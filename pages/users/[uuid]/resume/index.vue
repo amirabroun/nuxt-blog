@@ -1,416 +1,204 @@
 <template>
-  <div style="width: 100%">
-    <loading v-if="loading" />
-    <div v-if="user_info" class="d-flex justify-center" style="margin: 50px 0">
-      <div style="max-width: 900px">
-        <v-card
-          ><v-row style="margin: 30px 0">
-            <v-col md="4" cols="12"
-              ><v-row
-                class="justify-md-end justify-center"
-                style="height: 100%"
-              >
-                <v-col cols="10" style="background: #202a30; border-radius: 8px"
-                  ><v-row justify="center"
-                    ><v-col cols="10"
-                      ><v-row
-                        ><v-col
-                          md="12"
-                          cols="6"
-                          order="2"
-                          order-md="1"
-                          class="pa-0"
-                          style="height: 100%"
-                        >
-                          <div
-                            class="contact-info"
-                            :class="editMode ? 'editCursor' : ''"
-                            :contenteditable="editMode"
-                            @input="
-                              onInput('full_name', $event, undefined, undefined)
-                            "
-                          >
-                            {{ user_info.full_name }}
-                          </div>
-                          <div class="job-title pa-0" contenteditable="true">
-                            Backend developer
-                          </div></v-col
-                        >
-                        <v-col
-                          md="12"
-                          cols="6"
-                          order="1"
-                          order-md="2"
-                          class="avatar pa-0"
-                          v-if="user_info.avatar"
-                        >
-                          <img
-                            :src="user_info.avatar"
-                            alt=""
-                            style="border-radius: 8px; height: 90%; width: 90%"
-                          />
-                        </v-col>
-                        <v-col
-                          cols="12"
-                          order="3"
-                          class="education pa-0"
-                          v-if="user_info.resume.education"
-                        >
-                          <div class="header">
-                            <div>EDUCATION</div>
-                            <v-icon
-                              v-if="editMode"
-                              size="20"
-                              @click="addEducation"
-                              >mdi-plus</v-icon
-                            >
-                          </div>
-                          <v-row class="items">
-                            <v-col
-                              md="12"
-                              cols="6"
-                              class="item"
-                              v-for="(item, index) in user_info.resume
-                                .education"
-                              :key="index"
-                            >
-                              <div
-                                class="title"
-                                :class="editMode ? 'editCursor' : ''"
-                                :contenteditable="editMode"
-                                @input="
-                                  onInput('field', $event, index, 'education')
-                                "
-                              >
-                                <div>{{ item.field }}</div>
-                                <v-icon
-                                  v-if="editMode"
-                                  @click="deleteEducation(index)"
-                                  size="16"
-                                  color="red"
-                                  >mdi-delete</v-icon
-                                >
+  <loading v-if="loading" />
+  <div v-if="user_info" class="d-flex justify-center" style="margin: 50px 0">
+    <div style="max-width: 900px">
+      <v-card><v-row style="margin: 30px 0">
+          <v-col md="4" cols="12"><v-row class="justify-md-end justify-center" style="height: 100%">
+              <v-col cols="10" style="background: #202a30; border-radius: 8px"><v-row justify="center"><v-col
+                    cols="10"><v-row><v-col md="12" cols="6" order="2" order-md="1" class="pa-0" style="height: 100%">
+                        <div class="contact-info" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                          @input="
+                            onInput('full_name', $event, undefined, undefined)
+                            ">
+                          {{ user_info.full_name }}
+                        </div>
+                        <div class="job-title pa-0" contenteditable="true">
+                          Backend developer
+                        </div>
+                      </v-col>
+                      <v-col md="12" cols="6" order="1" order-md="2" class="avatar pa-0" v-if="user_info.avatar">
+                        <img :src="user_info.avatar" alt="" style="border-radius: 8px; height: 100%; width: 100%" />
+                      </v-col>
+                      <v-col cols="12" order="3" class="education pa-0" v-if="user_info.resume.education">
+                        <div class="header">
+                          <div>EDUCATION</div>
+                          <v-icon v-if="editMode" size="20" @click="addEducation">mdi-plus</v-icon>
+                        </div>
+                        <v-row class="items">
+                          <v-col md="12" cols="6" class="item" v-for="(item, index) in user_info.resume
+                            .education" :key="index">
+                            <div class="title" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                              @input="onInput('field', $event, index, 'education')">
+                              <div>{{ item.field }}</div>
+                              <v-icon v-if="editMode" @click="deleteEducation(index)" size="16"
+                                color="red">mdi-delete</v-icon>
+                            </div>
+                            <div class="description">
+                              <div>
+                                <span :class="editMode ? 'editCursor' : ''" :contenteditable="editMode" @input="
+                                  onInput(
+                                    'university',
+                                    $event,
+                                    index,
+                                    'education'
+                                  )
+                                  ">
+                                  {{ item.university }}</span>
+                                /
+                                <span :class="editMode ? 'editCursor' : ''" :contenteditable="editMode" @input="
+                                  onInput(
+                                    'location',
+                                    $event,
+                                    index,
+                                    'education'
+                                  )
+                                  ">{{ item.location }}</span>
                               </div>
-                              <div class="description">
-                                <div>
-                                  <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'university',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                  >
-                                    {{ item.university }}</span
-                                  >
-                                  /
-                                  <span
-                                    :class="editMode ? 'editCursor' : ''"
-                                    :contenteditable="editMode"
-                                    @input="
-                                      onInput(
-                                        'location',
-                                        $event,
-                                        index,
-                                        'education'
-                                      )
-                                    "
-                                    >{{ item.location }}</span
-                                  >
-                                </div>
-                                <div>
-                                  <span
-                                    ><edit-time
-                                      :editMode="editMode"
-                                      :date="item.started_at"
-                                      :parent="'education'"
-                                      :keySelector="'started_at'"
-                                      :index="index"
-                                      @valueChange="valueChange"
-                                    />
-                                  </span>
-                                  -
-                                  <span>
-                                    <edit-time
-                                      :editMode="editMode"
-                                      :date="item.finished_at"
-                                      :parent="'education'"
-                                      :keySelector="'finished_at'"
-                                      :index="index"
-                                      @valueChange="valueChange"
-                                    />
-                                  </span>
-                                </div>
-                              </div>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-                        <v-col cols="12" order="4" class="contact pa-0">
-                          <div class="header">CONTACT</div>
-                          <div class="items">
-                            <div
-                              v-for="(item, index) in user_info.resume.contact"
-                              :key="index"
-                            >
-                              <div class="item" v-if="item.title == 'phone'">
-                                <span class="title">P : </span
-                                ><span
-                                  class="detail"
-                                  :class="editMode ? 'editCursor' : ''"
-                                  :contenteditable="editMode"
-                                  @input="onInput('phone', $event)"
-                                  >{{ item.link }}</span
-                                >
-                              </div>
-                              <div class="item" v-if="item.title == 'email'">
-                                <span class="title">E : </span
-                                ><span
-                                  class="detail"
-                                  :class="editMode ? 'editCursor' : ''"
-                                  :contenteditable="editMode"
-                                  @input="onInput('email', $event)"
-                                  >{{ item.link }}</span
-                                >
-                              </div>
-                              <div class="item" v-if="item.title == 'address'">
-                                <span class="title">A : </span
-                                ><span
-                                  class="detail"
-                                  :class="editMode ? 'editCursor' : ''"
-                                  :contenteditable="editMode"
-                                  @input="onInput('address', $event)"
-                                  >{{ item.link }}</span
-                                >
+                              <div>
+                                <span><edit-time :editMode="editMode" :date="item.started_at" :parent="'education'"
+                                    :keySelector="'started_at'" :index="index" @valueChange="valueChange" />
+                                </span>
+                                -
+                                <span>
+                                  <edit-time :editMode="editMode" :date="item.finished_at" :parent="'education'"
+                                    :keySelector="'finished_at'" :index="index" @valueChange="valueChange" />
+                                </span>
                               </div>
                             </div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col cols="12" order="4" class="contact pa-0">
+                        <div class="header">CONTACT</div>
+                        <div class="items">
+                          <div v-for="(item, index) in user_info.resume.contact" :key="index">
+                            <div class="item" v-if="item.title == 'phone'">
+                              <span class="title">P : </span><span class="detail" :class="editMode ? 'editCursor' : ''"
+                                :contenteditable="editMode" @input="onInput('phone', $event)">{{ item.link }}</span>
+                            </div>
+                            <div class="item" v-if="item.title == 'email'">
+                              <span class="title">E : </span><span class="detail" :class="editMode ? 'editCursor' : ''"
+                                :contenteditable="editMode" @input="onInput('email', $event)">{{ item.link }}</span>
+                            </div>
+                            <div class="item" v-if="item.title == 'address'">
+                              <span class="title">A : </span><span class="detail" :class="editMode ? 'editCursor' : ''"
+                                :contenteditable="editMode" @input="onInput('address', $event)">{{ item.link }}</span>
+                            </div>
                           </div>
-                        </v-col>
-                        <v-col cols="12" order="5" class="social">
-                          <div
-                            v-for="(item, index) in user_info.resume.contact"
-                            :key="index"
-                          >
-                            <v-btn
-                              v-if="item.title == 'github'"
-                              variant="text"
-                              :href="item.link"
-                              ><v-icon> mdi-github</v-icon></v-btn
-                            >
-                            <v-btn
-                              v-if="item.title == 'linkedin'"
-                              variant="text"
-                              :href="item.link"
-                              ><v-icon> mdi-linkedin</v-icon></v-btn
-                            >
-                          </div></v-col
-                        >
-                      </v-row>
-                    </v-col></v-row
-                  ></v-col
-                ></v-row
-              ></v-col
-            >
-            <v-col md="8" cols="12" style="padding: 30px"
-              ><div class="profile" v-if="user_info.resume.summary">
-                <div class="d-flex align-center">
-                  <span class="title">PROFILE</span>
-                  <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
-                </div>
-                <div
-                  class="profile-details"
-                  :class="editMode ? 'editCursor' : ''"
-                  :contenteditable="editMode"
-                  @input="onInput('summary', $event)"
-                >
-                  {{ user_info.resume.summary }}
-                </div>
-              </div>
-              <v-divider style="color: #3573fd; opacity: 1" />
-              <div
-                class="work-experience"
-                v-if="user_info.resume.experiences.length > 0 || editMode"
-              >
-                <div class="title">
-                  <div>WORK EXPERIENCE</div>
-                  <v-icon v-if="editMode" size="20" @click="addExperience"
-                    >mdi-plus</v-icon
-                  >
-                </div>
-                <div class="work-items">
-                  <div
-                    class="details"
-                    v-for="(job, index) in user_info.resume.experiences"
-                    :key="index"
-                  >
-                    <v-row>
-                      <v-col cols="3" class="date"
-                        ><span
-                          ><edit-time
-                            :editMode="editMode"
-                            :date="
-                              job && job.finished_at ? job.finished_at : null
-                            "
-                            :parent="'work'"
-                            :keySelector="'finished_at'"
-                            :index="index"
-                            @valueChange="valueChange" /></span
-                        ><work-date /><span
-                          >{{}}<edit-time
-                            :editMode="editMode"
-                            :date="
-                              job && job.started_at ? job.started_at : null
-                            "
-                            :parent="'work'"
-                            :keySelector="'started_at'"
-                            :index="index"
-                            @valueChange="valueChange" /></span
-                      ></v-col>
-                      <v-col cols="9" class="work-details">
-                        <div class="job-title">
-                          <div>
-                            <span
-                              :class="editMode ? 'editCursor' : ''"
-                              :contenteditable="editMode"
-                              @input="
-                                onInput('position', $event, index, 'work')
-                              "
-                            >
-                              {{ job.position }}</span
-                            ><span style="color: #3573fd"> at </span
-                            ><span
-                              :class="editMode ? 'editCursor' : ''"
-                              :contenteditable="editMode"
-                              @input="onInput('company', $event, index, 'work')"
-                              >{{ job.company }}</span
-                            >
-                          </div>
-                          <v-icon
-                            v-if="editMode"
-                            @click="deleteExperience(index)"
-                            size="16"
-                            color="red"
-                            >mdi-delete</v-icon
-                          >
                         </div>
-                        <div
-                          class="description"
-                          :class="editMode ? 'editCursor' : ''"
-                          :contenteditable="editMode"
-                          @input="onInput('description', $event, index, 'work')"
-                        >
-                          {{ job.description ? job.description : "---" }}
+                      </v-col>
+                      <v-col cols="12" order="5" class="social">
+                        <div v-for="(item, index) in user_info.resume.contact" :key="index">
+                          <v-btn v-if="item.title == 'github'" variant="text" :href="item.link"><v-icon>
+                              mdi-github</v-icon></v-btn>
+                          <v-btn v-if="item.title == 'linkedin'" variant="text" :href="item.link"><v-icon>
+                              mdi-linkedin</v-icon></v-btn>
                         </div>
                       </v-col>
                     </v-row>
-                    <v-divider
-                      class="mt-2 mb-4"
-                      v-if="index != user_info.resume.experiences.length - 1"
-                    />
-                  </div>
+                  </v-col></v-row></v-col></v-row></v-col>
+          <v-col md="8" cols="12" style="padding: 30px">
+            <div class="profile" v-if="user_info.resume.summary">
+              <div class="d-flex align-center">
+                <span class="title">PROFILE</span>
+                <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
+              </div>
+              <div class="profile-details" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                @input="onInput('summary', $event)">
+                {{ user_info.resume.summary }}
+              </div>
+            </div>
+            <div class="work-experience" v-if="user_info.resume.experiences.length > 0 || editMode">
+              <div>
+                <span class="title">
+                  <v-icon v-if="editMode" size="20" @click="addExperience">mdi-plus</v-icon>
+                  WORK EXPERIENCE
+                </span>
+                <v-divider
+                  style="margin-left: 225px; margin-top: -15px; margin-bottom: 30px; color: #3573fd; opacity: 2" />
+              </div>
+
+              <div class="work-items">
+                <div class="details" v-for="(job, index) in user_info.resume.experiences" :key="index">
+                  <v-row>
+                    <v-col cols="3" class="date"><span><edit-time :editMode="editMode" :date="job && job.finished_at ? job.finished_at : null
+                      " :parent="'work'" :keySelector="'finished_at'" :index="index"
+                          @valueChange="valueChange" /></span><work-date /><span>{{}}<edit-time :editMode="editMode"
+                          :date="job && job.started_at ? job.started_at : null
+                            " :parent="'work'" :keySelector="'started_at'" :index="index"
+                          @valueChange="valueChange" /></span></v-col>
+                    <v-col cols="9" class="work-details">
+                      <div class="job-title">
+                        <div>
+                          <span :class="editMode ? 'editCursor' : ''" :contenteditable="editMode" @input="
+                            onInput('position', $event, index, 'work')
+                            ">
+                            {{ job.position }}</span><span style="color: #3573fd"> at </span><span
+                            :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                            @input="onInput('company', $event, index, 'work')">{{ job.company }}</span>
+                        </div>
+                        <v-icon v-if="editMode" @click="deleteExperience(index)" size="16" color="red">mdi-delete</v-icon>
+                      </div>
+                      <div class="description" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                        @input="onInput('description', $event, index, 'work')">
+                        {{ job.description ? job.description : "---" }}
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-divider class="mt-2 mb-4" v-if="index != user_info.resume.experiences.length - 1" />
                 </div>
               </div>
-              <div
-                class="skills mt-3"
-                v-if="user_info.resume.skills.length > 0"
-              >
-                <div class="title">
-                  <div>SKILLS</div>
-                  <v-icon v-if="editMode" size="20" @click="addSkill"
-                    >mdi-plus</v-icon
-                  >
-                </div>
-                <v-row class="mt-2">
-                  <v-col
-                    cols="6"
-                    v-for="(item, index) in user_info.resume.skills"
-                    :key="index"
-                    class="d-flex align-center mt-2"
-                  >
-                    <v-row class="item">
-                      <v-col
-                        cols="5"
-                        :class="editMode ? 'editCursor' : ''"
-                        :contenteditable="editMode"
-                        @input="onInput('title', $event, index, 'skills')"
-                        >{{ item.title }}</v-col
-                      >
-                      <v-col cols="7" class="d-flex align-center"
-                        ><v-progress-linear
-                          :clickable="editMode"
-                          v-model="item.percent"
-                          rounded
-                          color="#3573FD"
-                          @click="
-                            setScore('percent', item.percent, index, 'skills')
-                          "
-                          :style="
-                            editMode
-                              ? 'transform:none;left:0'
-                              : 'pointer-events: none'
-                          "
-                        ></v-progress-linear
-                        ><v-icon
-                          v-if="editMode"
-                          @click="deleteSkill(index)"
-                          size="16"
-                          color="red"
-                          class="ml-0"
-                          >mdi-close</v-icon
-                        ></v-col
-                      >
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </div></v-col
-            ></v-row
-          ></v-card
-        >
-      </div>
+            </div>
+            <div class="skills mt-3" v-if="user_info.resume.skills.length > 0">
+              <div class="title">
+                <div>SKILLS</div>
+                <v-icon v-if="editMode" size="20" @click="addSkill">mdi-plus</v-icon>
+              </div>
+              <v-row class="mt-2">
+                <v-col cols="6" v-for="(item, index) in user_info.resume.skills" :key="index"
+                  class="d-flex align-center mt-2">
+                  <v-row class="item">
+                    <v-col cols="5" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
+                      @input="onInput('title', $event, index, 'skills')">{{ item.title }}</v-col>
+                    <v-col cols="7" class="d-flex align-center"><v-progress-linear :clickable="editMode"
+                        v-model="item.percent" rounded color="#3573FD" @click="
+                          setScore('percent', item.percent, index, 'skills')
+                          " :style="editMode
+    ? 'transform:none;left:0'
+    : 'pointer-events: none'
+    "></v-progress-linear><v-icon v-if="editMode" @click="deleteSkill(index)" size="16" color="red"
+                        class="ml-0">mdi-close</v-icon></v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </div>
+          </v-col></v-row></v-card>
     </div>
-    <div
-      style="width: 100%"
-      class="d-flex justify-center mt-4 mb-8"
-      v-if="editMode"
-    >
-      <v-btn width="300" color="#3573fd" style="color: white" @click="save"
-        >Save</v-btn
-      >
-    </div>
-    <v-btn
-      v-if="isMainUser"
-      :icon="editMode ? 'mdi-close' : 'mdi-pencil'"
-      style="position: fixed; right: 12px; bottom: 12px; color: white"
-      color="#3573fd"
-      @click="onEditMode()"
-    />
-    <v-dialog v-model="editDialog" width="auto">
-      <v-card>
-        <v-card-text> You can edit items by selecting them. </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" block @click="editDialog = false"
-            >continue</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="saveAlert" width="auto">
-      <v-card>
-        <v-card-text>
-          You haven't saved your resume. Continue to discard
-          changes.</v-card-text
-        >
-        <v-card-actions
-          ><v-spacer />
-          <v-btn @click="onCloseSaveAlert">continue</v-btn>
-          <v-btn color="primary" @click="saveAlert = false">close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
+  <div style="width: 100%" class="d-flex justify-center mt-4 mb-8" v-if="editMode">
+    <v-btn width="300" color="#3573fd" style="color: white" @click="save">Save</v-btn>
+  </div>
+  <v-btn v-if="isMainUser" :icon="editMode ? 'mdi-close' : 'mdi-pencil'"
+    style="position: fixed; right: 12px; bottom: 12px; color: white" color="#3573fd" @click="onEditMode()" />
+  <v-dialog v-model="editDialog" width="auto">
+    <v-card>
+      <v-card-text> You can edit items by selecting them. </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" block @click="editDialog = false">continue</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="saveAlert" width="auto">
+    <v-card>
+      <v-card-text>
+        You haven't saved your resume. Continue to discard
+        changes.</v-card-text>
+      <v-card-actions><v-spacer />
+        <v-btn @click="onCloseSaveAlert">continue</v-btn>
+        <v-btn color="primary" @click="saveAlert = false">close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
@@ -661,6 +449,7 @@ const setScore = (
   line-height: 30px;
   color: #3573fd;
 }
+
 .job-title {
   font-style: normal;
   font-weight: 300;
@@ -668,14 +457,18 @@ const setScore = (
   line-height: 20px;
   color: #ffffff;
 }
+
 .avatar {
   margin-top: 26px;
+
   img {
     border-top: 2px solid #3573fd;
   }
 }
+
 .education {
   margin-top: 26px;
+
   .header {
     font-style: normal;
     font-weight: 500;
@@ -686,9 +479,11 @@ const setScore = (
     justify-content: space-between;
     align-items: center;
   }
+
   .items {
     .item {
       margin-top: 12px;
+
       .title {
         font-family: "IRANSansX";
         font-style: normal;
@@ -700,6 +495,7 @@ const setScore = (
         justify-content: space-between;
         align-items: center;
       }
+
       .description {
         font-style: normal;
         font-weight: 500;
@@ -710,8 +506,10 @@ const setScore = (
     }
   }
 }
+
 .contact {
   margin-top: 26px;
+
   .header {
     font-style: normal;
     font-weight: 500;
@@ -719,6 +517,7 @@ const setScore = (
     line-height: 24px;
     color: #3573fd;
   }
+
   .items {
     .item {
       .title {
@@ -728,6 +527,7 @@ const setScore = (
         line-height: 14px;
         color: #ffffff;
       }
+
       .detail {
         font-style: normal;
         font-weight: 500;
@@ -738,12 +538,14 @@ const setScore = (
     }
   }
 }
+
 .social {
   margin-top: 50px;
   display: flex;
   justify-content: space-around;
   color: white;
 }
+
 .profile {
   .title {
     font-style: normal;
@@ -751,6 +553,7 @@ const setScore = (
     font-size: 20px;
     line-height: 24px;
   }
+
   .profile-details {
     font-style: normal;
     font-weight: 500;
@@ -759,18 +562,18 @@ const setScore = (
     color: #484848;
     margin: 10px 0;
   }
+
+  margin-bottom: 30px;
 }
+
 .work-experience {
   .title {
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
-    margin: 19px 0 !important;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
+
   .work-items {
     .details {
       .date {
@@ -784,8 +587,10 @@ const setScore = (
         align-items: center;
         padding-top: 0;
       }
+
       .work-details {
         min-height: 122px;
+
         .job-title {
           font-style: normal;
           font-weight: 500;
@@ -796,6 +601,7 @@ const setScore = (
           justify-content: space-between;
           align-items: center;
         }
+
         .description {
           font-style: normal;
           font-weight: 500;
@@ -807,12 +613,14 @@ const setScore = (
     }
   }
 }
+
 .skills {
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
   line-height: 14px;
   color: #747474;
+
   .title {
     font-style: normal;
     font-weight: 600;
@@ -823,10 +631,12 @@ const setScore = (
     justify-content: space-between;
     align-items: center;
   }
+
   .item .v-col {
     padding: 0 12px;
   }
 }
+
 .editCursor {
   cursor: url("@/assets/svg/pencil.svg"), auto;
 }
