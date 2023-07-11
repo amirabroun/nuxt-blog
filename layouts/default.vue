@@ -1,66 +1,35 @@
 <template>
   <client-only>
     <div>
-      <div class="d-flex justify-space-between align-center header-layout">
-        <div class="title">Personal Blog</div>
-        <div>
-          <NuxtLink
-            to="/"
-            style="text-decoration: none; color: black"
-            class="mr-4"
-            >Home</NuxtLink
-          >
-          <NuxtLink
-            v-if="authUser"
-            :to="`/users/${authUser.uuid}/resume`"
-            style="text-decoration: none; color: black"
-            class="mr-4"
-            >My Resume</NuxtLink
-          >
-          <v-avatar
-            size="52"
-            v-if="isLoggedIn && authUser"
-            style="cursor: pointer"
-            ><img
-              v-if="authUser"
-              :src="authUser.avatar"
-              width="52"
-              height="52"
-              @error="handleImageError"
-            />
-            <img
-              v-else
-              src="@/assets/images/avatar.png"
-              width="52"
-              height="52"
-            />
-            <v-menu activator="parent">
-              <v-list>
-                <v-list-item :to="`/users/${authUser.uuid}/settings`">
-                  <v-list-item-title class="text-black"
-                    ><v-icon size="small" class="mr-2">
-                      <font-awesome-icon icon="fa-solid fa-user" /></v-icon
-                    >Profile</v-list-item-title
-                  >
-                </v-list-item>
-                <v-list-item @click="logout">
-                  <v-list-item-title class="text-red"
-                    ><v-icon size="small" class="mr-2">
-                      <font-awesome-icon
-                        icon="fa-solid fa-right-from-bracket" /></v-icon
-                    >Logout</v-list-item-title
-                  >
-                </v-list-item>
-              </v-list>
-            </v-menu></v-avatar
-          >
-          <NuxtLink
-            v-else
-            to="/login"
-            style="text-decoration: none; color: black"
-            >Login/Register</NuxtLink
-          >
+      <div class="d-flex justify-content  header-layout">
+        <NuxtLink :to="`/users/${authUser.uuid}/resume`">
+          <img v-if="authUser" :src="authUser.avatar" width="40" height="40" style="border-radius: 10px; margin-top: 6px;"
+            @error="handleImageError" />
+          <img v-else src="@/assets/images/avatar.png" width="40" height="40"
+            style="border-radius: 10px; margin-top: 6px;" />
+        </NuxtLink>
+        <div style="color: #3573fd; margin-left: 20px; margin-top: 15px;">Personal Blog</div>
+        <NuxtLink v-if="!authUser" to="/login"
+          style="text-decoration: none; color: black; margin-top: auto; margin-left: 1%;">Login</NuxtLink>
+        <div v-if="!authUser" style="margin-top: auto; margin-left: 6px; margin-right: 6px;">
+          |
         </div>
+        <NuxtLink v-if="!authUser" to="/register" style="text-decoration: none; color: black; margin-top: auto;">Register
+        </NuxtLink>
+        <v-avatar size="52" v-if="isLoggedIn && authUser" style="cursor: pointer">
+          <v-menu activator="parent">
+            <v-list>
+              <v-list-item :to="`/users/${authUser.uuid}/settings`">
+                <v-list-item-title class="text-black"><v-icon size="small" class="mr-2">
+                    <font-awesome-icon icon="fa-solid fa-user" /></v-icon>Profile</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="logout">
+                <v-list-item-title class="text-red"><v-icon size="small" class="mr-2">
+                    <font-awesome-icon icon="fa-solid fa-right-from-bracket" /></v-icon>Logout</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu></v-avatar>
+
       </div>
       <slot />
     </div>
@@ -100,23 +69,14 @@ const handleImageError = (event: any) => {
 };
 </script>
 <style lang="scss">
-@font-face {
-  font-family: "Aladin";
-  src: url("@/assets/fonts/Aladin-Regular.ttf") format("truetype");
-}
 .header-layout {
-  padding: 20px;
+  padding: 10px;
   border-bottom: 1px solid rgb(0, 0, 0, 0.11);
-  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 999;
-  background: white;
-  .title {
-    font-family: "Aladin";
-    font-size: 36px;
-    color: #3573fd;
-  }
+  background: linear-gradient(to left, #3573fd, #E4E5E6);
+  box-shadow: 0 0rem 1rem 1rem #c9d9ff;
 }
 </style>
