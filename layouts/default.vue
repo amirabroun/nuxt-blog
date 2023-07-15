@@ -2,40 +2,44 @@
   <client-only>
     <div>
       <div class="d-flex justify-content  header-layout">
-        <NuxtLink :to="`/users/${authUser.uuid}/resume`">
-          <img v-if="authUser" :src="authUser.avatar" width="40" height="40" style="border-radius: 10px; margin-top: 6px;"
-            @error="handleImageError" />
-          <img v-else src="@/assets/images/avatar.png" width="40" height="40"
-            style="border-radius: 10px; margin-top: 6px;" />
-        </NuxtLink>
-        <div style="color: #3573fd; margin-left: 20px; margin-top: 15px;">Personal Blog</div>
-        <NuxtLink v-if="!authUser" to="/login"
-          style="text-decoration: none; color: black; margin-top: auto; margin-left: 1%;">Login</NuxtLink>
-        <div v-if="!authUser" style="margin-top: auto; margin-left: 6px; margin-right: 6px;">
-          |
-        </div>
-        <NuxtLink v-if="!authUser" to="/register" style="text-decoration: none; color: black; margin-top: auto;">Register
-        </NuxtLink>
-        <v-avatar size="52" v-if="isLoggedIn && authUser" style="cursor: pointer">
+        <v-avatar>
+          <NuxtLink v-if="authUser">
+            <img :src="authUser.avatar" width="40" height="40" style="padding: auto; border-radius: 10px; margin-top: 6px;"
+              @error="handleImageError" />
+          </NuxtLink>
+          <NuxtLink v-else>
+            <img src="@/assets/images/avatar.png" width="40" height="40" style="border-radius: 10px; margin-top: 6px;" />
+          </NuxtLink>
           <v-menu activator="parent">
             <v-list>
-              <v-list-item :to="`/users/${authUser.uuid}/settings`">
-                <v-list-item-title class="text-black"><v-icon size="small" class="mr-2">
+              <v-list-item :to="`/users/${authUser.uuid}/resume`">
+                <v-list-item-title class="text-black">
+                  <v-icon size="small" class="mr-2">
                     <font-awesome-icon icon="fa-solid fa-user" /></v-icon>Profile</v-list-item-title>
               </v-list-item>
               <v-list-item @click="logout">
-                <v-list-item-title class="text-red"><v-icon size="small" class="mr-2">
+                <v-list-item-title class="text-red">
+                  <v-icon size="small" class="mr-2">
                     <font-awesome-icon icon="fa-solid fa-right-from-bracket" /></v-icon>Logout</v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-menu></v-avatar>
-
+          </v-menu>
+        </v-avatar>
+        <NuxtLink to="/" style="color: #3573fd; text-decoration: none; margin-left: 20px; margin-top: 10px;">Personal Blog</NuxtLink>
+        <NuxtLink v-if="!authUser" to="/login"
+          style="text-decoration: none; color: black; margin-top: 10px; margin-left: 1%;">Login</NuxtLink>
+        <div v-if="!authUser" style="margin-top: 10px; margin-left: 6px; margin-right: 6px;">
+          |
+        </div>
+        <NuxtLink v-if="!authUser" to="/register" style="text-decoration: none; color: black; margin-top: 10px;">Register
+        </NuxtLink>
       </div>
       <slot />
     </div>
   </client-only>
 </template>
 <script lang="ts" setup>
+import { faMousePointer } from "@fortawesome/free-solid-svg-icons";
 import { useCookies } from "vue3-cookies";
 import { Status, store } from "~/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
