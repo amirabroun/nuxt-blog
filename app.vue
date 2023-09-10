@@ -30,7 +30,7 @@
       </template>
     </v-snackbar>
     <NuxtLayout>
-      <NuxtPage style="margin-top: 120px" />
+      <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
