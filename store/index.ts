@@ -2,6 +2,8 @@ import { Action, createStore, GetterTree, ModuleTree, Mutation } from "vuex";
 import { app, AppState } from "./app";
 import { AuthState, auth } from "./auth";
 import { UserState, user } from "./user";
+import { PostsState, posts } from "./posts";
+import { CategoriesState, categories } from "./categories";
 export const store = createStore({
   state: {
     isLoading: true,
@@ -15,6 +17,8 @@ export const store = createStore({
     app,
     auth,
     user,
+    posts,
+    categories,
   },
 });
 
@@ -23,6 +27,8 @@ export interface RootState {
   app?: AppState;
   auth?: AuthState;
   user?: UserState;
+  posts?: PostsState;
+  categories?: CategoriesState;
 }
 
 export enum Status {
