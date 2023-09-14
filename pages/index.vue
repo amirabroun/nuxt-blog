@@ -1,21 +1,18 @@
 <template>
-    <div class="row mt-6">
+    <div class="row mt-6 mx-2">
         <div class="col-lg-1"></div>
 
-        <div class="col-sm-12 col-md-12 col-lg-7 bg-light card p-4">
+        <div class="col-sm-12 col-md-12 col-lg-7 bg-light card p-3">
             <div v-for="post in posts" :key="post.id" class="mt-4">
-                <h2 class="text-dark">
-                    {{ post.title }}
-                </h2>
+                <h2 class="text-dark">{{ post.title }}</h2>
                 <br>
-                <p class="card-text">
-                    {{ post.body }}
-                </p>
-                <NuxtLink class="text-primary" :to="`/users/${post.user.uuid}/resume`">
-                    {{ post.user.full_name }}
-                </NuxtLink>
-                <span class="text-muted ml-1" style="font-size: 13px"> at </span>
-                <span class="text-muted ml-1" style="font-size: 13px">{{ post.created_at }}</span>
+                <p class="card-text">{{ post.body }}</p>
+
+                <span class="text-muted"> by </span>
+                <NuxtLink class="text-primary" :to="`/users/${post.user.uuid}`">{{ post.user.full_name }}</NuxtLink>
+                <span class="text-muted ml-1" style="font-size: 13px">at {{ post.created_at }}</span>
+
+                <br>
                 <br>
                 <hr>
             </div>
