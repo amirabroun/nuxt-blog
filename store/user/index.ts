@@ -4,14 +4,15 @@ import { actions } from "./actions";
 import { mutations } from "./mutations";
 import { UserActionTypes } from "./action-types";
 import { UserMutationTypes } from "./mutation-types";
-export interface UserInfo {
+export interface User {
+  id?: number;
   uuid?: string;
   full_name?: string;
   username?: string;
   avatar?: string;
-  is_admin?: number;
-  created_at?: string;
-  updated_at?: string;
+  is_admin?: boolean;
+  created_at?: Date;
+  updated_at?: Date;
   resume?: {
     contact?: { title?: string; link?: string }[];
     education?: {
@@ -38,17 +39,17 @@ export interface UserInfo {
 
 export interface UserState {
   loading: boolean;
-  user_info: UserInfo;
-  savedUserInfo: UserInfo;
+  user_info: User;
+  savedUser: User;
   updateResumeStatus: Status | null;
 }
 
 const state: UserState = {
   loading: false,
   user_info: {
-    uuid: undefined,
-    full_name: undefined,
-    username: undefined,
+    uuid: '',
+    full_name: '',
+    username: '',
     avatar: undefined,
     is_admin: undefined,
     created_at: undefined,
@@ -64,7 +65,7 @@ const state: UserState = {
     },
     media: [],
   },
-  savedUserInfo: {},
+  savedUser: {},
   updateResumeStatus: null,
 };
 

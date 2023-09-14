@@ -32,7 +32,7 @@ export const actions: ActionTree<AuthState, RootState> = {
           isLoggingIn: false,
           status: Status.success,
         });
-        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+        commit(AuthMutationTypes.setAuthUser, res.data.user);
 
         cookies.set("theUserUuid", res.data.user.uuid);
         commit(AuthMutationTypes.setToken, res.data.user.token);
@@ -81,7 +81,7 @@ export const actions: ActionTree<AuthState, RootState> = {
           isLoggingIn: false,
           status: Status.success,
         });
-        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+        commit(AuthMutationTypes.setAuthUser, res.data.user);
         commit(AuthMutationTypes.setToken, res.data.user.token);
       })
       .finally(() => {
@@ -103,7 +103,7 @@ export const actions: ActionTree<AuthState, RootState> = {
           isLoggingIn: false,
           status: Status.success,
         });
-        commit(AuthMutationTypes.setAuthUserInfo, res.data.user);
+        commit(AuthMutationTypes.setAuthUser, res.data.user);
       })
       .catch(() => {
         commit(AuthMutationTypes.setLoggingInState, {

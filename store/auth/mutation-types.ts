@@ -1,5 +1,5 @@
 export enum AuthMutationTypes {
-  setAuthUserInfo = "setAuthUserInfo",
+  setAuthUser = "setAuthUser",
   setLoggingInState = "setLoggingInState",
   setLoggingOutState = "setLoggingOutState",
   setToken = "setToken",

@@ -19,7 +19,7 @@ export const mutations: MutationTree<AuthState> = {
     state.isLoggingIn = loggingOut;
     state.loggingOutStatus = status;
   },
-  [AuthMutationTypes.setAuthUserInfo]: (state, authUser: AuthUser) => {
+  [AuthMutationTypes.setAuthUser]: (state, authUser: AuthUser) => {
     state.authUser = authUser;
   },
   [AuthMutationTypes.setToken]: (state, theUserToken: string) => {

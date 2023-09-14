@@ -2,6 +2,7 @@ import { Action, createStore, GetterTree, ModuleTree, Mutation } from "vuex";
 import { app, AppState } from "./app";
 import { AuthState, auth } from "./auth";
 import { UserState, user } from "./user";
+import { UsersState, users } from "./users";
 import { PostsState, posts } from "./posts";
 import { CategoriesState, categories } from "./categories";
 export const store = createStore({
@@ -17,6 +18,7 @@ export const store = createStore({
     app,
     auth,
     user,
+    users,
     posts,
     categories,
   },
@@ -27,6 +29,7 @@ export interface RootState {
   app?: AppState;
   auth?: AuthState;
   user?: UserState;
+  users?: UsersState;
   posts?: PostsState;
   categories?: CategoriesState;
 }

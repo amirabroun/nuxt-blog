@@ -242,7 +242,7 @@ const register = async () => {
     });
   }
 };
-const getUserInfo = async () => {
+const getUser = async () => {
   store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
 };
 const reset = () => {
