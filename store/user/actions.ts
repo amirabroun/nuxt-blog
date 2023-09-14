@@ -78,4 +78,21 @@ export const actions: ActionTree<UserState, RootState> = {
         });
       });
   },
+
+  [UserActionTypes.fetchUserPosts]: ({ commit }, uuid: string) => {
+    commit(UserMutationTypes.fetchUser, {
+      loading: true,
+      user: null,
+    });
+    const { $httpsRequest } = useNuxtApp();
+    $httpsRequest(`users/${uuid}/posts`, {
+      method: "GET",
+    }).then((res: any) => {
+      commit(UserMutationTypes.fetchUserPosts, {
+        loading: false,
+        user: res.data.user,
+        posts: res.data.user.posts,
+      });
+    });
+  },
 };

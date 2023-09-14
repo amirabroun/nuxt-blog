@@ -4,6 +4,7 @@ import { actions } from "./actions";
 import { mutations } from "./mutations";
 import { UserActionTypes } from "./action-types";
 import { UserMutationTypes } from "./mutation-types";
+import { Post } from "../posts";
 export interface User {
   id?: number;
   uuid?: string;
@@ -35,18 +36,19 @@ export interface User {
     updated_at?: string;
   };
   media?: [];
+  posts?: Post[];
 }
 
 export interface UserState {
   loading: boolean;
-  user_info: User;
+  user: User;
   savedUser: User;
   updateResumeStatus: Status | null;
 }
 
 const state: UserState = {
   loading: false,
-  user_info: {
+  user: {
     uuid: '',
     full_name: '',
     username: '',
@@ -64,6 +66,7 @@ const state: UserState = {
       updated_at: undefined,
     },
     media: [],
+    posts: [],
   },
   savedUser: {},
   updateResumeStatus: null,
