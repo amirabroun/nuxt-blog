@@ -1,48 +1,33 @@
 <template>
-    <div class="row main-section mt-6">
-        <div class="col-lg-2"></div>
-        <div class="col-sm-12 col-md-12 col-lg-7 bg-light card p-4">
+    <div class="row mt-6 mx-2">
+        <div class="col-lg-2 col-md-2"></div>
+
+        <div class="col-sm-12 col-md-8 col-lg-7 bg-light card py-6">
             <form enctype="multipart/form-data">
                 <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <select class="form-input" id="exampleFormControlSelect1" name="category_id">
-                                <option v-for="category in categories" :key="category.id" value="{{ category.id }}">
-                                    {{ category.title }}
-                                </option>
-                            </select>
-                        </div>
+                    <div class="col-sm-12 col-lg-4 mb-6">
+                        <select class="p-2 rounded w-100 shadow" name="category_id">
+                            <option v-for="category in categories" :key="category.id" value="{{ category.id }}">
+                                {{ category.title }}
+                            </option>
+                        </select>
                     </div>
 
-                    <div class="col-6 col-lg-9 mt-2">
-                        <input type="text" class="form-input" name="title" id="name" placeholder="title">
+                    <div class="col-sm-12 col-lg-8 mb-6">
+                        <input type="text" class="p-2 rounded w-100 shadow" name="title" id="name" placeholder="title">
                     </div>
 
-                    <div class="col-md-12 mb-3 mt-4">
-                        <span class="text bg-light p-1">Description</span>
-                        <textarea class="form-text-area mt-1" name="body" id="message" cols="30" rows="4"
-                            placeholder="Write your body"></textarea>
+                    <div class="col-sm-12 mb-6">
+                        <textarea class="form-text-area mt-1 p-2 rounded w-100 shadow" name="body" id="message" cols="30"
+                            rows="4" placeholder="Write your body" />
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6" id="one">
-                            <h5 class="mt-4">Upload image</h5>
-                            <div id="uploader form-input">
-                                <div class="row uploadDoc mt-4 ">
-                                    <div class="col-sm-3 ">
-                                        <div class="fileUpload btn btn-orange ">
-                                            <input name="image" type="file" class="upload up " />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-12 mb-6">
+                        <input name="image" type="file" />
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-12 form-group mt-5 mb-1">
-                            <input type="submit" value="Create" class="btn btn-info shadow py-2  px-4 rounded">
-                        </div>
+                    <div class="col-12">
+                        <input type="submit" value="Create" class="btn btn-info w-100 shadow-sm p-2 rounded mt-2">
                     </div>
                 </div>
             </form>
@@ -64,3 +49,15 @@ onMounted(() => {
 const categories = computed(() => store.state.categories?.categories);
 
 </script>
+
+<style>
+input[type=file]::file-selector-button {
+    margin-right: 20px;
+    border: none;
+    background: #343a40;
+    padding: 8px 30px;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+}
+</style>
