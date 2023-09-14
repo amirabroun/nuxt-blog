@@ -1,42 +1,39 @@
 <template>
   <client-only>
-    <div>
-      <div class="d-flex justify-content header-layout shadow-lg ">
-        <v-avatar>
-          <NuxtLink v-if="authUser">
-            <img :src="authUser.avatar" width="40" height="40"
-              style="padding: auto; border-radius: 10px; margin-top: 6px;" @error="handleImageError" />
-          </NuxtLink>
-          <NuxtLink v-else>
-            <img src="@/assets/images/avatar.png" width="40" height="40" style="border-radius: 10px; margin-top: 6px;" />
-          </NuxtLink>
-          <v-menu activator="parent">
-            <v-list>
-              <v-list-item :to="`/users/${authUser?.uuid}/resume`">
-                <v-list-item-title class="text-black">
-                  <v-icon size="small" class="mr-2">
-                    <font-awesome-icon icon="fa-solid fa-user" /></v-icon>Profile</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="logout">
-                <v-list-item-title class="text-red">
-                  <v-icon size="small" class="mr-2">
-                    <font-awesome-icon icon="fa-solid fa-right-from-bracket" /></v-icon>Logout</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-avatar>
-        <NuxtLink to="/" style="color: #3573fd; text-decoration: none; margin-left: 20px; margin-top: 10px;">Blog
+    <div class="d-flex justify-content p-2 shadow-lg">
+      <v-avatar>
+        <NuxtLink v-if="authUser">
+          <img :src="authUser.avatar" width="40" height="40" style="padding: auto; border-radius: 10px; margin-top: 6px;"
+            @error="handleImageError" />
         </NuxtLink>
-        <NuxtLink v-if="!authUser" to="/login"
-          style="text-decoration: none; color: black; margin-top: 10px; margin-left: 1%;">Login</NuxtLink>
-        <div v-if="!authUser" style="margin-top: 10px; margin-left: 6px; margin-right: 6px;">
-          |
-        </div>
-        <NuxtLink v-if="!authUser" to="/register" style="text-decoration: none; color: black; margin-top: 10px;">Register
+        <NuxtLink v-else>
+          <img src="@/assets/images/avatar.png" width="40" height="40" style="border-radius: 10px; margin-top: 6px;" />
         </NuxtLink>
-      </div>
-      <slot />
+        <v-menu activator="parent">
+          <v-list>
+            <v-list-item :to="`/users/${authUser?.uuid}/resume`">
+              <v-list-item-title class="text-black">
+                <v-icon size="small" class="mr-2">
+                  <font-awesome-icon icon="fa-solid fa-user" /></v-icon>Profile</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="logout">
+              <v-list-item-title class="text-red">
+                <v-icon size="small" class="mr-2"><font-awesome-icon icon="fa-solid fa-right-from-bracket" /></v-icon>
+                Logout
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-avatar>
+
+      <NuxtLink class="text-primary m-2 ml-5" to="/">Blog</NuxtLink>
+      <NuxtLink v-if="!authUser" to="/login" class="m-2 text-dark">Login</NuxtLink>
+      <div v-if="!authUser" class="mt-2 text-dark"> | </div>
+      <NuxtLink v-if="!authUser" to="/register" class="mt-2 ml-2 text-dark">Register</NuxtLink>
+      <NuxtLink v-if="authUser && authUser.is_admin == true" to="/users" class="mt-2 ml-2 text-dark">Users</NuxtLink>
+
     </div>
+    <slot />
   </client-only>
 </template>
 <script lang="ts" setup>
@@ -68,15 +65,6 @@ const handleImageError = (event: any) => {
 };
 </script>
 <style lang="scss">
-.header-layout {
-  padding: 10px;
-  border-bottom: 1px solid rgb(0, 0, 0, 0.11);
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 999;
-}
-
 body {
   font-family: 'ubuntu', sans-serif;
   background: linear-gradient(to left, #00416A, #E4E5E6);
