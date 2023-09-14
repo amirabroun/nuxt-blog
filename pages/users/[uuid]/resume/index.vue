@@ -1,6 +1,6 @@
 <template>
   <loading v-if="loading" />
-  <div v-if="user_info" class="d-flex justify-center" style="margin: 35px 0">
+  <div v-if="user" class="d-flex justify-center" style="margin: 35px 0">
     <div style="max-width: 800px">
       <v-card><v-row style="margin: 30px 0">
           <v-col md="4" cols="12"><v-row class="justify-md-end justify-center" style="height: 100%">
@@ -10,23 +10,22 @@
                           @input="
                             onInput('full_name', $event, undefined, undefined)
                             ">
-                          {{ user_info.full_name }}
+                          {{ user.full_name }}
                         </div>
                         <div class="job-title pa-0" contenteditable="true">
                           Backend developer
                         </div>
                       </v-col>
-                      <v-col md="12" cols="6" order="1" order-md="2" class="avatar pa-0" v-if="user_info.avatar">
-                        <img :src="user_info.avatar" alt="" style="border-radius: 8px; height: 100%; width: 100%" />
+                      <v-col md="12" cols="6" order="1" order-md="2" class="avatar pa-0" v-if="user.avatar">
+                        <img :src="user.avatar" alt="" style="border-radius: 8px; height: 100%; width: 100%" />
                       </v-col>
-                      <v-col cols="12" order="3" class="education pa-0" v-if="user_info.resume.education">
+                      <v-col cols="12" order="3" class="education pa-0" v-if="user?.resume?.education">
                         <div class="header">
                           <div>EDUCATION</div>
                           <v-icon v-if="editMode" size="20" @click="addEducation">mdi-plus</v-icon>
                         </div>
                         <v-row class="items">
-                          <v-col md="12" cols="6" class="item" v-for="(item, index) in user_info.resume
-                            .education" :key="index">
+                          <v-col md="12" cols="6" class="item" v-for="(item, index) in user?.resume?.education" :key="index">
                             <div class="title" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
                               @input="onInput('field', $event, index, 'education')">
                               <div>{{ item.field }}</div>
@@ -71,7 +70,7 @@
                       <v-col cols="12" order="4" class="contact pa-0">
                         <div class="header">CONTACT</div>
                         <div class="items">
-                          <div v-for="(item, index) in user_info.resume.contact" :key="index">
+                          <div v-for="(item, index) in user?.resume?.contact" :key="index">
                             <div class="item" v-if="item.title == 'phone'">
                               <span class="title">P : </span><span class="detail" :class="editMode ? 'editCursor' : ''"
                                 :contenteditable="editMode" @input="onInput('phone', $event)">{{ item.link }}</span>
@@ -88,7 +87,7 @@
                         </div>
                       </v-col>
                       <v-col cols="12" order="5" class="social">
-                        <div v-for="(item, index) in user_info.resume.contact" :key="index">
+                        <div v-for="(item, index) in user?.resume?.contact" :key="index">
                           <v-btn v-if="item.title == 'github'" variant="text" :href="item.link"><v-icon>
                               mdi-github</v-icon></v-btn>
                           <v-btn v-if="item.title == 'linkedin'" variant="text" :href="item.link"><v-icon>
@@ -98,17 +97,17 @@
                     </v-row>
                   </v-col></v-row></v-col></v-row></v-col>
           <v-col md="8" cols="12" style="padding: 30px">
-            <div class="profile" v-if="user_info.resume.summary">
+            <div class="profile" v-if="user?.resume?.summary">
               <div class="d-flex align-center">
                 <span class="title">PROFILE</span>
                 <v-divider class="ml-4" style="color: #3573fd; opacity: 1" />
               </div>
               <div class="profile-details" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
                 @input="onInput('summary', $event)">
-                {{ user_info.resume.summary }}
+                {{ user?.resume?.summary }}
               </div>
             </div>
-            <div class="work-experience" v-if="user_info.resume.experiences.length > 0 || editMode">
+            <div class="work-experience" v-if="user?.resume?.experiences?.length > 0 || editMode">
               <div>
                 <span class="title">
                   <v-icon v-if="editMode" size="20" @click="addExperience">mdi-plus</v-icon>
@@ -119,7 +118,7 @@
               </div>
 
               <div class="work-items">
-                <div class="details" v-for="(job, index) in user_info.resume.experiences" :key="index">
+                <div class="details" v-for="(job, index) in user?.resume?.experiences" :key="index">
                   <v-row>
                     <v-col cols="3" class="date"><span><edit-time :editMode="editMode" :date="job && job.finished_at ? job.finished_at : null
                       " :parent="'work'" :keySelector="'finished_at'" :index="index"
@@ -145,11 +144,11 @@
                       </div>
                     </v-col>
                   </v-row>
-                  <v-divider class="mt-2 mb-4" v-if="index != user_info.resume.experiences.length - 1" />
+                  <v-divider class="mt-2 mb-4" v-if="index != user?.resume?.experiences.length - 1" />
                 </div>
               </div>
             </div>
-            <div class="skills mt-3" v-if="user_info.resume.skills.length > 0">
+            <div class="skills mt-3" v-if="user?.resume?.skills.length > 0">
               <div class="title">
                 <span>
                   <v-icon v-if="editMode" size="20" @click="addSkill">mdi-plus</v-icon>
@@ -160,7 +159,7 @@
               </div>
 
               <v-row class="mt-2">
-                <v-col cols="6" v-for="(item, index) in user_info.resume.skills" :key="index"
+                <v-col cols="6" v-for="(item, index) in user?.resume?.skills" :key="index"
                   class="d-flex align-center mt-2">
                   <v-row class="item">
                     <v-col cols="5" :class="editMode ? 'editCursor' : ''" :contenteditable="editMode"
@@ -239,7 +238,7 @@ interface EditedData {
 }
 const { cookies } = useCookies();
 const route = useRoute();
-const user_info = computed(() => store.state.user?.user_info);
+const user = computed(() => store.state.user?.user);
 const loading = computed(() => store.state.user?.loading);
 const updateResumeStatus = computed(() => store.state.user?.updateResumeStatus);
 const editMode = ref(false);
@@ -248,7 +247,7 @@ const saveAlert = ref(false);
 const hasChanged = ref(false);
 const isMainUser = ref();
 const editedData = ref<EditedData>({
-  full_name: user_info.value?.full_name,
+  full_name: user.value?.full_name,
   education: [],
   phone: "",
   email: "",
@@ -261,26 +260,26 @@ onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 });
 watch(
-  () => user_info.value,
+  () => user.value,
   () => {
-    if (user_info.value && cookies.get("theUserUuid") === user_info.value?.uuid)
+    if (user.value && cookies.get("theUserUuid") === user.value?.uuid)
       isMainUser.value = true;
 
     editedData.value = {
-      full_name: user_info.value?.full_name,
-      education: user_info.value?.resume?.education,
-      phone: user_info.value?.resume?.contact?.find(
+      full_name: user.value?.full_name,
+      education: user.value?.resume?.education,
+      phone: user.value?.resume?.contact?.find(
         (item) => item.title == "phone"
       )?.link,
-      email: user_info.value?.resume?.contact?.find(
+      email: user.value?.resume?.contact?.find(
         (item) => item.title == "email"
       )?.link,
-      address: user_info.value?.resume?.contact?.find(
+      address: user.value?.resume?.contact?.find(
         (item) => item.title == "address"
       )?.link,
-      samary: user_info.value?.resume?.summary,
-      work: user_info.value?.resume?.experiences,
-      skills: user_info.value?.resume?.skills,
+      samary: user.value?.resume?.summary,
+      work: user.value?.resume?.experiences,
+      skills: user.value?.resume?.skills,
     };
   }
 );
@@ -339,7 +338,7 @@ const save = () => {
     uuid: route.params.uuid,
     summary: editedData.value.samary,
     skills: editedData.value.skills,
-    experiences: user_info.value?.resume?.experiences?.map((item) => {
+    experiences: user.value?.resume?.experiences?.map((item) => {
       if (item.finished_at) {
         return {
           company: item.company,
@@ -357,7 +356,7 @@ const save = () => {
         };
       }
     }),
-    education: user_info.value?.resume?.education?.map((item) => {
+    education: user.value?.resume?.education?.map((item) => {
       if (item.finished_at) {
         return {
           field: item.field,
@@ -391,7 +390,7 @@ const onCloseSaveAlert = () => {
 };
 const addEducation = () => {
   hasChanged.value = true;
-  user_info.value?.resume?.education?.push({
+  user.value?.resume?.education?.push({
     field: "field",
     finished_at: "finished at",
     location: "City",
@@ -401,11 +400,11 @@ const addEducation = () => {
 };
 const deleteEducation = (index: number) => {
   hasChanged.value = true;
-  user_info.value?.resume?.education?.splice(index, 1);
+  user.value?.resume?.education?.splice(index, 1);
 };
 const addExperience = () => {
   hasChanged.value = true;
-  user_info.value?.resume?.experiences?.push({
+  user.value?.resume?.experiences?.push({
     company: "company",
     position: "position",
     started_at: "started at",
@@ -415,18 +414,18 @@ const addExperience = () => {
 };
 const deleteExperience = (index: number) => {
   hasChanged.value = true;
-  user_info.value?.resume?.experiences?.splice(index, 1);
+  user.value?.resume?.experiences?.splice(index, 1);
 };
 const addSkill = () => {
   hasChanged.value = true;
-  user_info.value?.resume?.skills?.push({
+  user.value?.resume?.skills?.push({
     title: "skill",
     percent: 50,
   });
 };
 const deleteSkill = (index: number) => {
   hasChanged.value = true;
-  user_info.value?.resume?.skills?.splice(index, 1);
+  user.value?.resume?.skills?.splice(index, 1);
 };
 const valueChange = () => {
   hasChanged.value = true;
@@ -448,7 +447,6 @@ const setScore = (
 <style lang="scss">
 .contact-info {
   margin-top: 50px;
-  font-style: normal;
   font-weight: 600;
   font-size: 24px;
   line-height: 30px;
@@ -456,7 +454,6 @@ const setScore = (
 }
 
 .job-title {
-  font-style: normal;
   font-weight: 300;
   font-size: 17px;
   line-height: 20px;
@@ -475,7 +472,6 @@ const setScore = (
   margin-top: 26px;
 
   .header {
-    font-style: normal;
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
@@ -490,8 +486,6 @@ const setScore = (
       margin-top: 12px;
 
       .title {
-        font-family: "IRANSansX";
-        font-style: normal;
         font-weight: 500;
         font-size: 16px;
         line-height: 18px;
@@ -502,7 +496,6 @@ const setScore = (
       }
 
       .description {
-        font-style: normal;
         font-weight: 500;
         font-size: 13px;
         line-height: 14px;
@@ -516,7 +509,6 @@ const setScore = (
   margin-top: 26px;
 
   .header {
-    font-style: normal;
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
@@ -526,7 +518,6 @@ const setScore = (
   .items {
     .item {
       .title {
-        font-style: normal;
         font-weight: 500;
         font-size: 13px;
         line-height: 14px;
@@ -534,7 +525,6 @@ const setScore = (
       }
 
       .detail {
-        font-style: normal;
         font-weight: 500;
         font-size: 13px;
         line-height: 14px;
@@ -553,14 +543,12 @@ const setScore = (
 
 .profile {
   .title {
-    font-style: normal;
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
   }
 
   .profile-details {
-    font-style: normal;
     font-weight: 500;
     font-size: 13px;
     line-height: 14px;
@@ -573,7 +561,6 @@ const setScore = (
 
 .work-experience {
   .title {
-    font-style: normal;
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;
@@ -582,7 +569,6 @@ const setScore = (
   .work-items {
     .details {
       .date {
-        font-style: normal;
         font-weight: 400;
         font-size: 16px;
         line-height: 18px;
@@ -597,7 +583,6 @@ const setScore = (
         min-height: 122px;
 
         .job-title {
-          font-style: normal;
           font-weight: 500;
           font-size: 16px;
           line-height: 18px;
@@ -608,7 +593,6 @@ const setScore = (
         }
 
         .description {
-          font-style: normal;
           font-weight: 500;
           font-size: 13px;
           line-height: 14px;
@@ -620,14 +604,12 @@ const setScore = (
 }
 
 .skills {
-  font-style: normal;
   font-weight: 500;
   font-size: 13px;
   line-height: 14px;
   color: #747474;
 
   .title {
-    font-style: normal;
     font-weight: 600;
     font-size: 20px;
     line-height: 24px;

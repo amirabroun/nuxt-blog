@@ -67,7 +67,7 @@ const props = defineProps({
   index: Number,
   mode: String,
 });
-const user_info = computed(() => store.state.user?.user_info);
+const user = computed(() => store.state.user?.user);
 
 const positionMonth = ref();
 const positionYear = ref();
@@ -123,39 +123,39 @@ const onConfirm = () => {
     if (props.parent == "education") {
       if (props.keySelector == "finished_at") {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.education
+          user.value &&
+          user.value.resume &&
+          user.value.resume.education
         )
           //@ts-ignore
-          user_info.value.resume.education[props.index].finished_at = undefined;
+          user.value.resume.education[props.index].finished_at = undefined;
       } else {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.education
+          user.value &&
+          user.value.resume &&
+          user.value.resume.education
         )
           //@ts-ignore
-          user_info.value.resume.education[props.index].started_at = undefined;
+          user.value.resume.education[props.index].started_at = undefined;
       }
     } else {
       if (props.keySelector == "finished_at") {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.experiences
+          user.value &&
+          user.value.resume &&
+          user.value.resume.experiences
         )
           //@ts-ignore
-          user_info.value.resume.experiences[props.index].finished_at =
+          user.value.resume.experiences[props.index].finished_at =
             undefined;
       } else {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.experiences
+          user.value &&
+          user.value.resume &&
+          user.value.resume.experiences
         )
           //@ts-ignore
-          user_info.value.resume.experiences[props.index].started_at =
+          user.value.resume.experiences[props.index].started_at =
             undefined;
       }
     }
@@ -163,21 +163,21 @@ const onConfirm = () => {
     if (props.parent == "education") {
       if (props.keySelector == "finished_at") {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.education
+          user.value &&
+          user.value.resume &&
+          user.value.resume.education
         )
           //@ts-ignore
-          user_info.value.resume.education[props.index].finished_at =
+          user.value.resume.education[props.index].finished_at =
             positionYear.value.toString() + "-" + positionMonth.value;
       } else {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.education
+          user.value &&
+          user.value.resume &&
+          user.value.resume.education
         )
           //@ts-ignore
-          user_info.value.resume.education[props.index].started_at =
+          user.value.resume.education[props.index].started_at =
             positionYear.value.toString() +
             "-" +
             positionMonth.value.toString();
@@ -185,23 +185,23 @@ const onConfirm = () => {
     } else {
       if (props.keySelector == "finished_at") {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.experiences
+          user.value &&
+          user.value.resume &&
+          user.value.resume.experiences
         )
           //@ts-ignore
-          user_info.value.resume.experiences[props.index].finished_at =
+          user.value.resume.experiences[props.index].finished_at =
             positionYear.value.toString() +
             "-" +
             positionMonth.value.toString();
       } else {
         if (
-          user_info.value &&
-          user_info.value.resume &&
-          user_info.value.resume.experiences
+          user.value &&
+          user.value.resume &&
+          user.value.resume.experiences
         )
           //@ts-ignore
-          user_info.value.resume.experiences[props.index].started_at =
+          user.value.resume.experiences[props.index].started_at =
             positionYear.value.toString() +
             "-" +
             positionMonth.value.toString();

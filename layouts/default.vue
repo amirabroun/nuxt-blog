@@ -2,7 +2,7 @@
   <client-only>
     <div class="d-flex justify-content p-2 shadow-lg">
       <v-avatar>
-        <NuxtLink v-if="authUser">
+        <NuxtLink v-if="authUser && authUser.avatar != null">
           <img :src="authUser.avatar" width="40" height="40" style="padding: auto; border-radius: 10px; margin-top: 6px;"
             @error="handleImageError" />
         </NuxtLink>
