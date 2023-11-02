@@ -26,5 +26,10 @@ export interface Post {
   user: User;
   title?: string;
   body?: string;
+  media?: Media[];
   created_at?: Date;
+}
+
+export interface Media {
+  original_url: string
 }
