@@ -5,6 +5,9 @@
         <div class="col-sm-12 col-md-12 col-lg-7 bg-light card p-3">
             <div v-for="post in posts" :key="post.id" class="mt-4">
                 <h2 class="text-dark">{{ post.title }}</h2>
+
+                <img :src="post.image" class="w-100" />
+
                 <br>
                 <p class="card-text">{{ post.body }}</p>
 
