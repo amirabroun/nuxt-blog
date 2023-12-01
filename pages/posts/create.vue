@@ -9,16 +9,15 @@
                 </div>
 
                 <div class="col-sm-12 col-lg-8 mb-6">
-                    <v-text-field v-model="title" required variant="solo-filled" placeholder="title" />
+                    <v-text-field ref="title" required variant="solo-filled" placeholder="title" />
                 </div>
 
                 <div class="col-sm-12 mb-6">
-                    <v-textarea v-model="body" required variant="solo-filled" placeholder="Write your body" />
+                    <v-textarea ref="body" required variant="solo-filled" placeholder="Write your body" />
                 </div>
 
                 <div class="col-12 mb-6">
-                    <input type="file" name="file" @change="previewFiles" multiple tabindex="-1">
-                    <!-- <v-file-input name="file" type="file" accept="image/*" label="File input"></v-file-input> -->
+                    <input type="file" ref="file" multiple tabindex="-1">
                 </div>
 
                 <div class="col-12">
@@ -36,33 +35,28 @@
 
 <script lang="ts" setup>
 
-
-
 import { store } from "~/store";
 import { CategoriesActionTypes } from "~/store/categories/action-types";
 import { PostsActionTypes } from "~/store/posts/action-types";
 
+const categories = computed(() => store.state.categories?.categories);
 onMounted(() => {
     store.dispatch(`categories/${CategoriesActionTypes.fetchCategories}`);
 });
 
-const categories = computed(() => store.state.categories?.categories);
-const title = ref<string>();
-const body = ref<string>();
+const title = ref();
+const body = ref();
+const file = ref();
 
-var file = ref(null);
 
-const previewFiles = (event: any) => {
-    file = event.target.files[0];
-    console.log(file);
+async function createPost() {
+    let formData = new FormData();
 
+    formData.append('title', title.value.value);
+    formData.append('body', body.value.value);
+    formData.append('image', file.value.files[0]);
+
+    store.dispatch(`posts/${PostsActionTypes.createPost}`, formData);
 };
 
-const createPost = async (event: any) => {
-    store.dispatch(`posts/${PostsActionTypes.createPost}`, {
-        title: title.value,
-        body: body.value,
-        image: file.value,
-    });
-};
 </script>
