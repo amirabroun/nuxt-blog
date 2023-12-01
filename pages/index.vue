@@ -1,7 +1,7 @@
 <template>
     <div class="row mx-2 mt-6">
         <div class="col-lg-1"></div>
-
+      
         <div class="col-sm-12 col-md-12 col-lg-7">
             <v-card v-for="post in posts" :key="post.id" class="mb-3 p-2 bg-light">
                 

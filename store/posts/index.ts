@@ -25,6 +25,7 @@ export interface Post {
   id?: number;
   user: User;
   title?: string;
+  image?: string;
   body?: string;
   media?: Media[];
   created_at?: Date;
