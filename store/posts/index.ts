@@ -27,5 +27,10 @@ export interface Post {
   title?: string;
   image?: string;
   body?: string;
+  media?: Media[];
   created_at?: Date;
+}
+
+export interface Media {
+  original_url: string
 }

@@ -19,6 +19,7 @@ export default defineNuxtPlugin(() => {
               baseURL: baseRoute,
               headers: {
                 Authorization: `Bearer ${bearerToken}`,
+                "Content-Type": "multipart/form-data"
               },
             };
             $fetch(url, { ...fetchOptions, ...options })

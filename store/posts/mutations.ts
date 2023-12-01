@@ -10,4 +10,10 @@ export const mutations: MutationTree<PostsState> = {
     state.loading = payload.loading;
     state.posts = payload.posts;
   },
+
+  // [PostsMutationTypes.createPost]: (
+  //   state,
+  //   payload: { loading: boolean; posts:any }
+  // ) => {
+  // },
 };
