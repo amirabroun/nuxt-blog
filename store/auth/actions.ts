@@ -25,7 +25,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     const { cookies } = useCookies();
     $httpsRequest(`auth/login`, {
       method: "POST",
-      body: { username: username, password: password },
+      data: { username: username, password: password },
     })
       .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {
@@ -74,7 +74,7 @@ export const actions: ActionTree<AuthState, RootState> = {
     const { $httpsRequest } = useNuxtApp();
     $httpsRequest(`auth/register`, {
       method: "POST",
-      body: { username, password, password_confirmation },
+      data: { username, password, password_confirmation },
     })
       .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {
