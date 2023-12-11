@@ -72,7 +72,9 @@ async function createPost() {
 
   formData.append("title", title.value.value);
   formData.append("body", body.value.value);
-  formData.append("image", file.value.files[0]);
+  if (file.value.files[0]) {
+    formData.append("image", file.value.files[0]);
+  }
 
   store.dispatch(`posts/${PostsActionTypes.createPost}`, formData);
 }
