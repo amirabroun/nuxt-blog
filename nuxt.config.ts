@@ -1,10 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default {
   modules: ["nuxt-swiper"],
-  css: [
-    "@fortawesome/fontawesome-svg-core/styles.css", 
-    "bootstrap/dist/css/bootstrap.min.css"
-  ],
+  css: ["@fortawesome/fontawesome-svg-core/styles.css"],
   build: {
     transpile: ["vuetify"],
   },
