@@ -1,56 +1,60 @@
 <template>
-  <div class="row mx-2 mt-6">
-    <div class="col-lg-1"></div>
+  <VContainer>
+    <VRow justify="center">
+      <VCol cols="12" md="7">
+        <VCard
+          v-for="post in posts"
+          :key="post.id"
+          class="mb-3 pa-2 rounded-lg"
+          flat
+        >
+          <VImg
+            :src="post.media?.find(() => true)?.original_url"
+            max-height="400"
+            class="rounded-lg"
+          ></VImg>
+          <VCardTitle class="text-h5 my-4">
+            {{ post.title }}
+          </VCardTitle>
 
-    <div class="col-sm-12 col-md-12 col-lg-7">
-      <v-card v-for="post in posts" :key="post.id" class="mb-3 p-2 bg-light">
-        <v-img
-          :src="post.media?.find(() => true)?.original_url"
-          max-height="300"
-          class="bg-secondary rounded-lg"
-        ></v-img>
-        <v-card-title class="text-h5">
-          {{ post.title }}
-        </v-card-title>
+          <VCardText>
+            <div>{{ post.body }}</div>
 
-        <v-card-title class="text-dark mt-2">
-          <p class="card-text">{{ post.body }}</p>
+            <div class="grey--text">
+              by
+              <NuxtLink
+                class="primary--text"
+                :to="`/users/${post.user.uuid}`"
+                >{{ post.user.full_name }}</NuxtLink
+              >
+              <span class="ml-1">at {{ post.created_at }}</span>
+            </div>
+          </VCardText>
+        </VCard>
+      </VCol>
 
-          <span class="text-muted" style="font-size: 13px"> by </span>
-          <NuxtLink
-            class="text-primary"
-            :to="`/users/${post.user.uuid}`"
-            style="font-size: 16px"
-            >{{ post.user.full_name }}</NuxtLink
-          >
-          <span class="text-muted ml-1" style="font-size: 13px"
-            >at {{ post.created_at }}</span
-          >
-        </v-card-title>
-      </v-card>
-    </div>
+      <VCol cols="12" md="3" class="d-none d-md-flex">
+        <VCard class="mx-auto categories-card" max-width="300" min-width="250">
+          <VList
+            :items="categories"
+            iteTitle="title"
+            item-value="title"
+          ></VList>
+        </VCard>
+      </VCol>
+    </VRow>
 
-    <div class="col-md-3 col-lg-3 d-none d-lg-block d-xl-block">
-      <v-card class="mx-auto" max-width="300">
-        <v-list
-          :items="categories"
-          item-title="title"
-          item-value="title"
-        ></v-list>
-      </v-card>
-    </div>
-
-    <div class="col-lg-1"></div>
-
-    <v-btn
+    <VBtn
       v-if="authUser"
-      icon="mdi-plus"
-      class="text-white bg-primary"
-      size="50px"
-      to="/posts/create"
-      style="position: fixed; right: 20px; bottom: 20px"
-    />
-  </div>
+      fab
+      dark
+      color="secondary"
+      :to="'/posts/create'"
+      class="fixed-bottom-right btn"
+    >
+      <VIcon>mdi-plus</VIcon>
+    </VBtn>
+  </VContainer>
 </template>
 
 <script lang="ts" setup>
@@ -67,3 +71,19 @@ const posts = computed(() => store.state.posts?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
 const categories = computed(() => store.state.categories?.categories);
 </script>
+
+<style scoped>
+.btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+}
+
+.categories-card {
+  height: max-content;
+}
+</style>

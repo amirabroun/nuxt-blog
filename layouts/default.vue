@@ -1,38 +1,64 @@
 <template>
   <client-only>
-    <div class="d-flex justify-content p-2 shadow-lg">
-      <v-avatar>
-        <NuxtLink v-if="authUser && authUser.avatar != null">
-          <img :src="authUser.avatar" width="40" height="40" style="padding: auto; border-radius: 10px; margin-top: 6px;"
-            @error="handleImageError" />
-        </NuxtLink>
-        <NuxtLink v-else>
-          <img src="@/assets/images/avatar.png" width="40" height="40" style="border-radius: 10px; margin-top: 6px;" />
-        </NuxtLink>
-        <v-menu activator="parent">
-          <v-list>
-            <v-list-item :to="`/users/${authUser?.uuid}/resume`">
-              <v-list-item-title class="text-black">
-                <v-icon size="small" class="mr-2">
-                  <font-awesome-icon icon="fa-solid fa-user" /></v-icon>Profile</v-list-item-title>
-            </v-list-item>
-            <v-list-item @click="logout">
-              <v-list-item-title class="text-red">
-                <v-icon size="small" class="mr-2"><font-awesome-icon icon="fa-solid fa-right-from-bracket" /></v-icon>
-                Logout
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-avatar>
+    <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0" fluid>
+      <VRow justify="start" align="center">
+        <VCol cols="auto">
+          <VAvatar>
+            <NuxtLink v-if="authUser && authUser.avatar != null">
+              <img
+                :src="authUser.avatar"
+                width="40"
+                height="40"
+                class="rounded avatar-img"
+                @error="handleImageError"
+              />
+            </NuxtLink>
+            <NuxtLink v-else>
+              <img
+                src="@/assets/images/avatar.png"
+                width="40"
+                height="40"
+                class="rounded avatar-img"
+              />
+            </NuxtLink>
+          </VAvatar>
+          <VMenu activator="parent" v-if="authUser">
+            <VList>
+              <VListItem :to="`/users/${authUser?.uuid}/resume`">
+                <VListItemTitle class="text-black">
+                  <VIcon class="mr-2"> mdi-account</VIcon
+                  >Profile</VListItemTitle
+                >
+              </VListItem>
+              <VListItem @click="logout">
+                <VListItemTitle class="text-red">
+                  <VIcon class="mr-2">mdi-logout /></VIcon>
+                  Logout
+                </VListItemTitle>
+              </VListItem>
+            </VList>
+          </VMenu>
+        </VCol>
 
-      <NuxtLink class="text-primary m-2 ml-5" to="/">Blog</NuxtLink>
-      <NuxtLink v-if="!authUser" to="/login" class="m-2 text-dark">Login</NuxtLink>
-      <div v-if="!authUser" class="mt-2 text-dark"> | </div>
-      <NuxtLink v-if="!authUser" to="/register" class="mt-2 ml-2 text-dark">Register</NuxtLink>
-      <NuxtLink v-if="authUser && authUser.is_admin == true" to="/users" class="mt-2 ml-2 text-dark">Users</NuxtLink>
-
-    </div>
+        <VCol cols="auto">
+          <NuxtLink to="/" class="text-decoration-none">Blog</NuxtLink>
+        </VCol>
+        <VCol cols="auto" v-if="!authUser">
+          <NuxtLink to="/login" class="text-decoration-none">Login</NuxtLink>
+        </VCol>
+        <VCol cols="auto" v-if="!authUser">
+          <span>|</span>
+        </VCol>
+        <VCol cols="auto" v-if="!authUser">
+          <NuxtLink to="/register" class="text-decoration-none"
+            >Register</NuxtLink
+          >
+        </VCol>
+        <VCol cols="auto" v-if="authUser && authUser.is_admin == true">
+          <NuxtLink to="/users" class="text-decoration-none">Users</NuxtLink>
+        </VCol>
+      </VRow>
+    </VContainer>
     <slot />
   </client-only>
 </template>
@@ -43,6 +69,12 @@ const router = useRouter();
 const authUser = computed(() => store.state.auth?.authUser);
 const isLoggedIn = computed(() => store.getters["auth/isAuth"]);
 const loggingOutStatus = computed(() => store.state.auth?.loggingOutStatus);
+
+const list = [
+  { text: "Profile", icon: "mdi-account" },
+  { text: "Logout", icon: "mdi-logout" },
+];
+
 watch(
   () => loggingOutStatus.value,
   () => {
@@ -64,13 +96,18 @@ const handleImageError = (event: any) => {
   ).href;
 };
 </script>
+
 <style lang="scss">
 body {
-  font-family: 'ubuntu', sans-serif;
-  background: linear-gradient(to left, #00416A, #E4E5E6);
+  font-family: "ubuntu", sans-serif;
+  background: linear-gradient(to left, #00416a, #e4e5e6);
 }
 
 a {
-  text-decoration: none
+  text-decoration: none;
+}
+
+.avatar-img {
+  cursor: pointer;
 }
 </style>

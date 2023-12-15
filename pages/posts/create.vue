@@ -1,56 +1,48 @@
 <template>
-  <div class="row mt-6 mx-2">
-    <div class="col-lg-2 col-md-2"></div>
+  <VContainer>
+    <VRow justify="center">
+      <VCol cols="12" md="8" lg="7">
+        <VCard class="pa-6" elevation="2">
+          <VForm enctype="multipart/form-data">
+            <VRow>
+              <VCol cols="12" lg="4" class="mb-6">
+                <VSelect label="Select" :items="categories" solo />
+              </VCol>
 
-    <div class="col-sm-12 col-md-8 col-lg-7 bg-light card py-6">
-      <v-form class="row" enctype="multipart/form-data">
-        <div class="col-sm-12 col-lg-4 mb-6">
-          <v-select label="Select" :items="categories" variant="solo-filled" />
-        </div>
+              <VCol cols="12" lg="8" class="mb-6">
+                <VTextField ref="title" required solo placeholder="title" />
+              </VCol>
 
-        <div class="col-sm-12 col-lg-8 mb-6">
-          <v-text-field
-            ref="title"
-            required
-            variant="solo-filled"
-            placeholder="title"
-          />
-        </div>
+              <VCol cols="12" class="mb-6">
+                <VTextarea
+                  ref="body"
+                  required
+                  solo
+                  placeholder="Write your body"
+                />
+              </VCol>
 
-        <div class="col-sm-12 mb-6">
-          <v-textarea
-            ref="body"
-            required
-            variant="solo-filled"
-            placeholder="Write your body"
-          />
-        </div>
+              <VCol cols="12" class="mb-6">
+                <VFileInput
+                  label="File input"
+                  accept="image/*"
+                  ref="file"
+                ></VFileInput>
+              </VCol>
 
-        <div class="col-12 mb-6">
-          <v-file-input
-            label="File input"
-            accept="image/*"
-            ref="file"
-          ></v-file-input>
-        </div>
+              <VCol cols="12">
+                <VBtn color="info" block class="py-2 mt-2" @click="createPost">
+                  Create
+                </VBtn>
+              </VCol>
+            </VRow>
+          </VForm>
 
-        <div class="col-12">
-          <v-btn
-            color="info"
-            class="w-100 p-2 rounded mt-2"
-            @click="createPost"
-          >
-            Create
-          </v-btn>
-        </div>
-      </v-form>
-
-      <hr />
-      <NuxtLink class="text-danger" to="/" style="font-size: 14px"
-        >Back to Blog</NuxtLink
-      >
-    </div>
-  </div>
+          <VDivider></VDivider>
+        </VCard>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script lang="ts" setup>
