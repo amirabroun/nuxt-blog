@@ -46,14 +46,17 @@
           </NuxtLink>
         </VCol>
         <VCol cols="auto" v-if="!authUser">
-          <NuxtLink to="/login" class="text-decoration-none">Login</NuxtLink>
+          <NuxtLink
+            to="/login"
+            class="signIn-link navbar-link py-3 px-4 rounded"
+            >Sign In</NuxtLink
+          >
         </VCol>
         <VCol cols="auto" v-if="!authUser">
-          <span>|</span>
-        </VCol>
-        <VCol cols="auto" v-if="!authUser">
-          <NuxtLink to="/register" class="text-decoration-none"
-            >Register</NuxtLink
+          <NuxtLink
+            to="/register"
+            class="signUp-link navbar-link py-3 px-4 rounded"
+            >Sign Up</NuxtLink
           >
         </VCol>
         <VCol cols="auto" v-if="authUser && authUser.is_admin == true">
@@ -135,5 +138,19 @@ a {
   top: 0;
   z-index: 9;
   background: linear-gradient(to left, #00416a, #e4e5e6);
+}
+
+.navbar-link {
+  font-weight: 700;
+  color: #00416a;
+  transition: 0.2s;
+}
+
+.navbar-link:hover {
+  background-color: rgba($color: #fff, $alpha: 0.4);
+}
+
+.signUp-link {
+  border: 2px solid;
 }
 </style>
