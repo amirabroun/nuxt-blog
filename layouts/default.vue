@@ -3,8 +3,8 @@
     <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0 pl-5" fluid>
       <VRow justify="start" align="center">
         <VCol cols="auto">
-          <VAvatar>
-            <NuxtLink v-if="authUser && authUser.avatar != null">
+          <VAvatar v-if="authUser">
+            <NuxtLink v-if="authUser.avatar != null">
               <img
                 :src="authUser.avatar"
                 width="40"
