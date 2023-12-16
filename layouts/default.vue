@@ -9,12 +9,19 @@
         </VCol>
         |
         <VCol cols="auto" class="ml-2" v-if="authUser">
-          <VAvatar>
+          <VAvatar size="45" class="navbar-avatar mt-1">
             <NuxtLink v-if="authUser.avatar != null">
-              <img :src="authUser.avatar" width="40" height="40" class="avatar-img" @error="handleImageError" />
+              <img
+                :src="authUser.avatar"
+                class="avatar-img rounded-sm"
+                @error="handleImageError"
+              />
             </NuxtLink>
             <NuxtLink v-else>
-              <img src="@/assets/images/avatar.png" width="40" height="40" class="rounded avatar-img" />
+              <img
+                src="@/assets/images/avatar.png"
+                class="avatar-img rounded-sm"
+              />
             </NuxtLink>
           </VAvatar>
           <span class="ml-3">{{ authUser.full_name }} </span>
@@ -36,7 +43,11 @@
         </VCol>
         <VCol cols="auto" v-if="!authUser">
           <NuxtLink to="/login" class="navbar-link">Sign In</NuxtLink>
-          <NuxtLink to="/register" class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg">Sign Up</NuxtLink>
+          <NuxtLink
+            to="/register"
+            class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
+            >Sign Up</NuxtLink
+          >
         </VCol>
       </VRow>
     </VContainer>
@@ -93,6 +104,11 @@ a {
 
 .avatar-img {
   cursor: pointer;
+  width: 90%;
+}
+
+.navbar-avatar {
+  border-radius: 0px !important;
 }
 
 .logo-link {
