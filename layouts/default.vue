@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0 pl-5" fluid>
+    <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0 pl-5 navbar" fluid>
       <VRow justify="start" align="center">
         <VCol cols="auto">
           <VAvatar v-if="authUser">
@@ -41,7 +41,7 @@
         </VCol>
 
         <VCol cols="auto" class="px-0">
-          <NuxtLink to="/" class="logo-link">
+          <NuxtLink to="/" class="logo-link pb-2">
             <img src="@/assets/images/logo-e-blog-1.png" class="logo-img" />
           </NuxtLink>
         </VCol>
@@ -61,7 +61,9 @@
         </VCol>
       </VRow>
     </VContainer>
-    <slot />
+    <VContainer fluid class="mt-15">
+      <slot />
+    </VContainer>
   </client-only>
 </template>
 <script lang="ts" setup>
@@ -126,5 +128,12 @@ a {
   width: 100%;
   max-width: 80px;
   object-fit: cover;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  z-index: 9;
+  background: linear-gradient(to left, #00416a, #e4e5e6);
 }
 </style>
