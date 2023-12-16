@@ -1,6 +1,6 @@
 <template>
   <client-only>
-    <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0" fluid>
+    <VContainer class="pa-2 elevation-10 rounded-b-lg ma-0 pl-5" fluid>
       <VRow justify="start" align="center">
         <VCol cols="auto">
           <VAvatar>
@@ -40,8 +40,10 @@
           </VMenu>
         </VCol>
 
-        <VCol cols="auto">
-          <NuxtLink to="/" class="text-decoration-none">Blog</NuxtLink>
+        <VCol cols="auto" class="px-0">
+          <NuxtLink to="/" class="logo-link">
+            <img src="@/assets/images/logo-e-blog-1.png" class="logo-img" />
+          </NuxtLink>
         </VCol>
         <VCol cols="auto" v-if="!authUser">
           <NuxtLink to="/login" class="text-decoration-none">Login</NuxtLink>
@@ -109,5 +111,20 @@ a {
 
 .avatar-img {
   cursor: pointer;
+}
+
+.logo-link {
+  display: block;
+  width: 80px;
+  overflow-y: hidden;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  width: 100%;
+  max-width: 80px;
+  object-fit: cover;
 }
 </style>
