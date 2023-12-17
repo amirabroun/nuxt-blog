@@ -39,6 +39,18 @@
               <div class="grey--text">{{ user?.username }}</div>
             </VCol>
           </VRow>
+          <VRow justify="center" align="center" class="px-2 py-3">
+            <VCol cols="12" class="pa-0">
+              <VBtn
+                class="w-100"
+                :color="followBtnColor"
+                @click="sendFollowing(followBtnText)"
+                ref="followBtn"
+              >
+                {{ followBtnText }}
+              </VBtn>
+            </VCol>
+          </VRow>
         </VCard>
       </VCol>
     </VRow>
@@ -57,9 +69,18 @@
 </template>
 
 <script lang="ts" setup>
+import { VBtn } from "vuetify/lib/components/index.mjs";
 import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/action-types";
 const route = useRoute();
+
+const followBtn = ref();
+let followBtnText: string = "Follow";
+let followBtnColor: string = "success";
+
+function sendFollowing(text: string): void {
+  console.log(text);
+}
 
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
