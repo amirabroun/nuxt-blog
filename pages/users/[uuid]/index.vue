@@ -1,6 +1,6 @@
 <template>
-  <VContainer>
-    <VRow justify="center">
+  <VContainer fluid>
+    <VRow justify="end">
       <VCol cols="12" md="7">
         <VCard class="pa-2 mb-3" v-for="post in posts" :key="post.id">
           <VImg
@@ -17,10 +17,10 @@
         </VCard>
       </VCol>
 
-      <VCol cols="3" class="d-none d-lg-flex">
-        <VCard class="pa-3 user-info">
+      <VCol cols="4" class="d-none d-lg-flex">
+        <VCard class="pa-3 user-info w-100">
           <VRow>
-            <VCol cols="4">
+            <VCol cols="auto">
               <v-avatar size="50" class="rounded avatar">
                 <img
                   :src="user?.avatar"
@@ -35,8 +35,8 @@
               </v-avatar>
             </VCol>
             <VCol cols="8">
-              <div class="text-h6 text-center">{{ user?.full_name }}</div>
-              <div class="grey--text text-center">{{ user?.username }}</div>
+              <div class="text-h6">{{ user?.full_name }}</div>
+              <div class="grey--text">{{ user?.username }}</div>
             </VCol>
           </VRow>
         </VCard>
@@ -67,7 +67,6 @@ onMounted(() => {
 
 const user = computed(() => store.state.user?.user);
 const posts = computed(() => store.state.user?.user?.posts);
-
 </script>
 
 <style scoped>
