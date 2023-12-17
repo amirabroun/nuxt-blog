@@ -262,7 +262,7 @@ onMounted(() => {
 watch(
   () => user.value,
   () => {
-    if (user.value && cookies.get("theUserUuid") === user.value?.uuid)
+    if (user.value)
       isMainUser.value = true;
 
     editedData.value = {

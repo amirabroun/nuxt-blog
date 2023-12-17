@@ -37,18 +37,10 @@ export const mutations: MutationTree<AuthState> = {
     state.theUserToken = null;
     cookies.remove("theUserToken");
   },
-
   [AuthMutationTypes.setLoadingAuthOrganizations]: (
     state,
     loading: boolean
   ) => {
     state.loadingOrganizations = loading;
   },
-
-  // [AuthMutationTypes.setAuthOrganizations]: (
-  //   state,
-  //   organizations: any
-  // ) => {
-  //   state.organizations = organizations;
-  // },
 };
