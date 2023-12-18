@@ -209,7 +209,7 @@ watch(
   () => {
     if (loginStatus.value == Status.success) {
       setTimeout(() => {
-        router.push(`/users/${user.value?.uuid}/resume`);
+        router.push(`/`);
       }, 1000);
     }
   }
