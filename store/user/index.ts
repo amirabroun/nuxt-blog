@@ -1,9 +1,7 @@
 import { Module } from "vuex";
 import { store, RootState, Status } from "..";
-import { actions } from "./actions";
-import { mutations } from "./mutations";
-import { UserActionTypes } from "./action-types";
-import { UserMutationTypes } from "./mutation-types";
+import { UserMutationTypes, mutations } from "./mutations";
+import { UserActionTypes, actions } from "./actions";
 import { Post } from "../posts";
 export interface User {
   id?: number;
@@ -14,6 +12,8 @@ export interface User {
   is_admin?: boolean;
   created_at?: Date;
   updated_at?: Date;
+  auth_followed_at?: Date;
+  follow_accepted_at?: Date;
   resume?: {
     contact?: { title?: string; link?: string }[];
     education?: {

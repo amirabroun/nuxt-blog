@@ -1,7 +1,12 @@
 import { MutationTree } from "vuex";
 import { User, UserState } from ".";
-import { UserMutationTypes } from "./mutation-types";
 import { Status } from "..";
+
+export enum UserMutationTypes {
+  fetchUser = "fetchUser",
+  fetchUserPosts = "fetchUserPosts",
+  updateResumeStatus = "updateResumeStatus",
+}
 
 export const mutations: MutationTree<UserState> = {
   [UserMutationTypes.fetchUser]: (

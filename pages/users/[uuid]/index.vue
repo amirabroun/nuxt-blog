@@ -58,7 +58,7 @@
 
 <script lang="ts" setup>
 import { store } from "~/store";
-import { UserActionTypes } from "~/store/user/action-types";
+import { UserActionTypes } from "~/store/user/actions";
 const route = useRoute();
 
 onMounted(() => {

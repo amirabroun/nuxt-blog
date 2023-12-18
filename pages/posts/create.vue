@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 import { store } from "~/store";
 import { CategoriesActionTypes } from "~/store/categories/action-types";
-import { PostsActionTypes } from "~/store/posts/action-types";
+import { PostsActionTypes } from "~/store/posts/actions";
 
 const categories = computed(() => store.state.categories?.categories);
 onMounted(() => {

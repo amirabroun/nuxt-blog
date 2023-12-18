@@ -1,8 +1,13 @@
 import { ActionTree } from "vuex";
 import { UserState } from ".";
 import { RootState, Status } from "..";
-import { UserActionTypes } from "./action-types";
-import { UserMutationTypes } from "./mutation-types";
+import { UserMutationTypes } from "./mutations";
+
+export enum UserActionTypes {
+  fetchUser = "fetchUser",
+  fetchUserPosts = "fetchUserPosts",
+  updateUserResume = "updateUserResume",
+}
 
 export interface UserResume {
   uuid: string;

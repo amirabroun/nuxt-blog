@@ -1,6 +1,11 @@
 import { MutationTree } from "vuex";
 import { PostsState } from ".";
-import { PostsMutationTypes } from "./mutation-types";
+
+export enum PostsMutationTypes {
+  fetchPosts = "fetchPosts",
+  fetchSuggestionsPosts = "fetchSuggestionsPosts",
+  createPost = "createPost",
+}
 
 export const mutations: MutationTree<PostsState> = {
   [PostsMutationTypes.fetchPosts]: (
@@ -11,9 +16,11 @@ export const mutations: MutationTree<PostsState> = {
     state.posts = payload.posts;
   },
 
-  // [PostsMutationTypes.createPost]: (
-  //   state,
-  //   payload: { loading: boolean; posts:any }
-  // ) => {
-  // },
+  [PostsMutationTypes.fetchSuggestionsPosts]: (
+    state,
+    payload: { loading: boolean; posts:any }
+  ) => {
+    state.loading = payload.loading;
+    state.suggestionPosts = payload.posts;
+  },
 };

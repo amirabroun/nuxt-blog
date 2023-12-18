@@ -7,6 +7,7 @@ import { User } from "../user";
 const state: PostsState = {
   loading: false,
   posts: [],
+  suggestionPosts: [],
 };
 
 export const posts: Module<PostsState, RootState> = {
@@ -19,6 +20,7 @@ export const posts: Module<PostsState, RootState> = {
 export interface PostsState {
   loading: boolean;
   posts: Post[];
+  suggestionPosts: Post[];
 }
 
 export interface Post {

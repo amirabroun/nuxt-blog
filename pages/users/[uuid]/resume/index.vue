@@ -206,7 +206,7 @@
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
-import { UserActionTypes } from "~/store/user/action-types";
+import { UserActionTypes } from "~/store/user/actions";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
 //@ts-ignore

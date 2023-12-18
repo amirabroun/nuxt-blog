@@ -42,7 +42,7 @@
 
 <script lang="ts" setup>
 import { store } from "~/store";
-import { UsersActionTypes } from "~/store/users/action-types";
+import { UsersActionTypes } from "~/store/users/actions";
 
 onMounted(() => {
     store.dispatch(`users/${UsersActionTypes.fetchUsers}`);

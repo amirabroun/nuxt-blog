@@ -7,11 +7,13 @@ import { User } from "../user";
 export interface UsersState {
   loading: boolean;
   users: User[];
+  suggestionUsers: User[];
 };
 
 const state: UsersState = {
   loading: false,
   users: [],
+  suggestionUsers: [],
 };
 
 export const users: Module<UsersState, RootState> = {

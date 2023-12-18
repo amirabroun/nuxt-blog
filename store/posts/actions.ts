@@ -1,9 +1,14 @@
 import { ActionTree } from "vuex";
 import { PostsState } from ".";
 import { RootState, store } from "..";
-import { PostsActionTypes } from "./action-types";
-import { PostsMutationTypes } from "./mutation-types";
 import { showToastErrorMessage, showToastSuccessMessage } from "../app/mutations";
+import { PostsMutationTypes } from "./mutations";
+
+export enum PostsActionTypes {
+  fetchPosts = "fetchPosts",
+  fetchSuggestionsPosts = "fetchSuggestionsPosts",
+  createPost = "createPost",
+}
 
 export const actions: ActionTree<PostsState, RootState> = {
   [PostsActionTypes.fetchPosts]: ({ commit }) => {
@@ -12,6 +17,17 @@ export const actions: ActionTree<PostsState, RootState> = {
       method: "GET",
     }).then((res: any) => {
       commit(PostsMutationTypes.fetchPosts, {
+        loading: false,
+        posts: res.data.posts,
+      });
+    });
+  },
+  [PostsActionTypes.fetchSuggestionsPosts]: ({ commit }) => {
+    const { $httpsRequest } = useNuxtApp();
+    $httpsRequest(`suggestions/posts`, {
+      method: "GET",
+    }).then((res: any) => {
+      commit(PostsMutationTypes.fetchSuggestionsPosts, {
         loading: false,
         posts: res.data.posts,
       });
