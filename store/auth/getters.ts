@@ -4,17 +4,10 @@ import { RootState } from "..";
 
 export const getters: GetterTree<AuthState, RootState> = {
   isAuth: (state) => {
-    if (state.theUserToken) {
+    if (state.isLoggingIn) {
       return true;
     } else {
       return false;
     }
-  },
-  theUserToken: (state) => {
-    if (state.theUserToken) {
-      return state.theUserToken;
-    } else {
-      return null;
-    }
-  },
+  }
 };

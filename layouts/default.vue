@@ -11,17 +11,10 @@
         <VCol cols="auto" class="ml-2" v-if="authUser">
           <VAvatar size="45" class="navbar-avatar mt-1">
             <NuxtLink v-if="authUser.avatar != null">
-              <img
-                :src="authUser.avatar"
-                class="avatar-img rounded-sm"
-                @error="handleImageError"
-              />
+              <img :src="authUser.avatar" class="avatar-img rounded-sm" @error="handleImageError" />
             </NuxtLink>
             <NuxtLink v-else>
-              <img
-                src="@/assets/images/avatar.png"
-                class="avatar-img rounded-sm"
-              />
+              <img src="@/assets/images/avatar.png" class="avatar-img rounded-sm" />
             </NuxtLink>
           </VAvatar>
           <span class="ml-3">{{ authUser.full_name }} </span>
@@ -43,11 +36,7 @@
         </VCol>
         <VCol cols="auto" v-if="!authUser">
           <NuxtLink to="/login" class="navbar-link">Sign In</NuxtLink>
-          <NuxtLink
-            to="/register"
-            class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
-            >Sign Up</NuxtLink
-          >
+          <NuxtLink to="/register" class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg">Sign Up</NuxtLink>
         </VCol>
       </VRow>
     </VContainer>
@@ -58,17 +47,11 @@
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
-import { auth } from "~/store/auth";
+import { useCookies } from "vue3-cookies";
 import { AuthActionTypes } from "~/store/auth/action-types";
 const router = useRouter();
 const authUser = computed(() => store.state.auth?.authUser);
-const isLoggedIn = computed(() => store.getters["auth/isAuth"]);
 const loggingOutStatus = computed(() => store.state.auth?.loggingOutStatus);
-
-const list = [
-  { text: "Profile", icon: "mdi-account" },
-  { text: "Logout", icon: "mdi-logout" },
-];
 
 watch(
   () => loggingOutStatus.value,
@@ -78,9 +61,11 @@ watch(
     }
   }
 );
+const { cookies } = useCookies();
 onMounted(() => {
-  if (isLoggedIn.value) store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
+  if (cookies.get("theUserToken") != null) store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
 });
+
 const logout = async () => {
   store.dispatch(`auth/${AuthActionTypes.logOut}`);
 };
