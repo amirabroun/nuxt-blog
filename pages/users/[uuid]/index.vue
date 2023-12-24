@@ -16,11 +16,10 @@
           </VCardSubtitle>
         </VCard>
       </VCol>
-
-      <VCol cols="3" class="d-none d-lg-flex">
-        <VCard class="pa-3 user-info">
+      <VCol cols="4" class="d-none d-lg-flex">
+        <VCard class="pa-3 user-info w-100">
           <VRow>
-            <VCol cols="4">
+            <VCol cols="auto">
               <v-avatar size="50" class="rounded avatar">
                 <img
                   :src="user?.avatar"
@@ -35,14 +34,25 @@
               </v-avatar>
             </VCol>
             <VCol cols="8">
-              <div class="text-h6 text-center">{{ user?.full_name }}</div>
-              <div class="grey--text text-center">{{ user?.username }}</div>
+              <div class="text-h6">{{ user?.full_name }}</div>
+              <div class="grey--text">{{ user?.username }}</div>
+            </VCol>
+          </VRow>
+          <VRow justify="center" align="center" class="px-2 py-3">
+            <VCol cols="12" class="pa-0">
+              <VBtn
+                class="w-100"
+                :color="followBtnColor"
+                @click="sendFollowing(followBtnText)"
+                ref="followBtn"
+              >
+                {{ followBtnText }}
+              </VBtn>
             </VCol>
           </VRow>
         </VCard>
       </VCol>
     </VRow>
-
     <VBtn
       v-if="user"
       fab
@@ -55,21 +65,32 @@
     </VBtn>
   </VContainer>
 </template>
-
 <script lang="ts" setup>
 import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/actions";
+import { UsersActionTypes } from "~/store/users/actions";
 const route = useRoute();
+const followBtn = ref();
+let followBtnText: string = "Follow";
+let followBtnColor: string = "success";
+
+async function sendFollowing(text: string) {
+  await store.dispatch(
+    `users/${UsersActionTypes.userToggleFollow}`,
+    route.params.uuid
+  );
+  await store.dispatch(
+    `user/${UserActionTypes.fetchUserPosts}`,
+    route.params.uuid
+  );
+}
 
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
 });
-
 const user = computed(() => store.state.user?.user);
 const posts = computed(() => store.state.user?.user?.posts);
-
 </script>
-
 <style scoped>
 .btn {
   position: fixed;
@@ -80,7 +101,6 @@ const posts = computed(() => store.state.user?.user?.posts);
   border-radius: 50%;
   font-size: 1.3rem;
 }
-
 .user-info {
   height: max-content;
 }

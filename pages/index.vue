@@ -2,29 +2,53 @@
   <VContainer>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <VCard v-for="post in posts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
-          <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
+        <VCard
+          v-for="post in posts"
+          :key="post.id"
+          class="mb-3 pa-2 rounded-lg"
+          flat
+        >
+          <VImg
+            :src="post.media?.find(() => true)?.original_url"
+            max-height="400"
+            class="rounded-lg"
+          ></VImg>
           <VCardTitle class="text-h5 my-4">
             {{ post.title }}
           </VCardTitle>
           <VCardText>
             <div>{{ post.body }}</div>
             <div class="text-grey mt-3">
-              by <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">{{ post.user.full_name }}</NuxtLink>
+              by
+              <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">{{
+                post.user.full_name
+              }}</NuxtLink>
               <span class="ml-1">at {{ post.created_at }}</span>
             </div>
           </VCardText>
         </VCard>
         <div class="separator mb-3">Suggestion for you</div>
-        <VCard v-for="post in suggestionPosts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
-          <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
+        <VCard
+          v-for="post in suggestionPosts"
+          :key="post.id"
+          class="mb-3 pa-2 rounded-lg"
+          flat
+        >
+          <VImg
+            :src="post.media?.find(() => true)?.original_url"
+            max-height="400"
+            class="rounded-lg"
+          ></VImg>
           <VCardTitle class="text-h5 my-4">
             {{ post.title }}
           </VCardTitle>
           <VCardText>
             <div>{{ post.body }}</div>
             <div class="text-grey mt-3">
-              by <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">{{ post.user.full_name }}</NuxtLink>
+              by
+              <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">{{
+                post.user.full_name
+              }}</NuxtLink>
               <span class="ml-1">at {{ post.created_at }}</span>
             </div>
           </VCardText>
@@ -32,9 +56,25 @@
       </VCol>
       <VCol cols="12" md="4" class="d-none d-md-flex">
         <VCard class="categories-card px-3 rounded-lg" min-width="450">
-          <VList v-for="user in suggestionUsers" :key="user.id">
+          <VList v-for="user in suggestionUsers" :key="user.id" class="list">
+            <div class="follow-box">
+              <VBtn
+                :class="[
+                  'w-max follow-btn pa-0 px-1 rounded-lg',
+                  user.auth_followed_at ? 'button-green' : 'button-red',
+                ]"
+                @click="sendFollowing(user.uuid)"
+                ref="followBtn"
+              >
+                {{ user.auth_followed_at ? "Follow" : "UnFollow" }}
+              </VBtn>
+            </div>
             <VAvatar size="50" class="mt-1">
-              <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
+              <img
+                v-if="user.avatar != null"
+                :src="user.avatar"
+                class="avatar-img"
+              />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
             {{ user.full_name }}
@@ -42,7 +82,14 @@
         </VCard>
       </VCol>
     </VRow>
-    <VBtn v-if="authUser" fab dark color="secondary" :to="'/posts/create'" class="fixed-bottom-right btn">
+    <VBtn
+      v-if="authUser"
+      fab
+      dark
+      color="secondary"
+      :to="'/posts/create'"
+      class="fixed-bottom-right btn"
+    >
       <VIcon>mdi-plus</VIcon>
     </VBtn>
   </VContainer>
@@ -52,6 +99,11 @@
 import { store } from "~/store";
 import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
+
+async function sendFollowing(uuid: any) {
+  await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
+  await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
+}
 
 onMounted(() => {
   store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
@@ -63,7 +115,6 @@ const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 const suggestionUsers = computed(() => store.state.users?.suggestionUsers);
 const posts = computed(() => store.state.posts?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
-
 </script>
 
 <style scoped>
@@ -88,7 +139,7 @@ const authUser = computed(() => store.state.auth?.authUser);
 
 .separator::before,
 .separator::after {
-  content: '';
+  content: "";
   flex: 1;
   border-bottom: 1px solid lightblue;
 }
@@ -99,5 +150,45 @@ const authUser = computed(() => store.state.auth?.authUser);
 
 .separator:not(:empty)::after {
   margin-left: 2em;
+}
+
+.list {
+  position: relative;
+}
+
+.list:hover .follow-box {
+  opacity: 1;
+  visibility: visible;
+}
+
+.follow-box {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  padding-right: 10px;
+  border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s;
+}
+
+.follow-btn {
+  font-size: 0.8rem;
+  border: 1px solid;
+}
+
+.button-green {
+  border-color: #4caf50;
+  color: #4caf50;
+}
+
+.button-red {
+  border-color: #f44336;
+  color: #f44336;
 }
 </style>
