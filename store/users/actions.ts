@@ -6,6 +6,7 @@ import { UserMutationTypes } from "./mutations";
 export enum UsersActionTypes {
   fetchUsers = "fetchUsers",
   fetchSuggestionsUsers = "fetchSuggestionsUsers",
+  userToggleFollow = "userToggleFollow",
 }
 
 export const actions: ActionTree<UsersState, RootState> = {
@@ -20,14 +21,25 @@ export const actions: ActionTree<UsersState, RootState> = {
       });
     });
   },
-  [UsersActionTypes.fetchSuggestionsUsers]: ({ commit }) => {
+  [UsersActionTypes.fetchSuggestionsUsers]: async ({ commit }) => {
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`suggestions/users`, {
+    await $httpsRequest(`suggestions/users`, {
       method: "GET",
     }).then((res: any) => {
       commit(UserMutationTypes.fetchSuggestionsUsers, {
         loading: false,
         users: res.data.users,
+      });
+    });
+  },
+  [UsersActionTypes.userToggleFollow]: ({ commit }, uuid) => {
+    const { $httpsRequest } = useNuxtApp();
+
+    $httpsRequest(`users/${uuid}/toggle-follow`, {
+      method: "PUT",
+    }).then(() => {
+      commit(UserMutationTypes.fetchSuggestionsUsers, {
+        loading: false,
       });
     });
   },
