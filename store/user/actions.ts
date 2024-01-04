@@ -84,13 +84,13 @@ export const actions: ActionTree<UserState, RootState> = {
       });
   },
 
-  [UserActionTypes.fetchUserPosts]: ({ commit }, uuid: string) => {
+  [UserActionTypes.fetchUserPosts]: async ({ commit }, uuid: string) => {
     commit(UserMutationTypes.fetchUser, {
       loading: true,
       user: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`users/${uuid}/posts`, {
+    await $httpsRequest(`users/${uuid}/posts`, {
       method: "GET",
     }).then((res: any) => {
       commit(UserMutationTypes.fetchUserPosts, {
