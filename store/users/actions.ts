@@ -32,10 +32,10 @@ export const actions: ActionTree<UsersState, RootState> = {
       });
     });
   },
-  [UsersActionTypes.userToggleFollow]: ({ commit }, uuid) => {
+  [UsersActionTypes.userToggleFollow]: async ({ commit }, uuid) => {
     const { $httpsRequest } = useNuxtApp();
 
-    $httpsRequest(`users/${uuid}/toggle-follow`, {
+    await $httpsRequest(`users/${uuid}/toggle-follow`, {
       method: "PUT",
     }).then(() => {
       commit(UserMutationTypes.fetchSuggestionsUsers, {
