@@ -86,7 +86,6 @@ export const actions: ActionTree<AuthState, RootState> = {
       data: { username, password, password_confirmation },
     })
       .then((res: any) => {
-        console.log(res.status);
         if (res.status === 200) {
           commit(AuthMutationTypes.setLoggingInState, {
             isLoggingIn: false,
