@@ -54,7 +54,7 @@
           </VCardText>
         </VCard>
       </VCol>
-      <VCol v-if="authUser" cols="12" md="4" class="d-none d-md-flex">
+      <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex">
         <VCard class="categories-card px-3 rounded-lg" min-width="450">
           <VList
             v-for="(user, index) in suggestionUsers"
@@ -66,7 +66,7 @@
                 class="follow-btn px-3 rounded-lg"
                 @click="sendFollowing(user.uuid)"
               >
-                Follow
+                follow
               </VBtn>
             </div>
             <VAvatar size="50" class="mt-1">
