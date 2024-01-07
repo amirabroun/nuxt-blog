@@ -3,6 +3,10 @@ import { AuthState } from ".";
 import { RootState, Status } from "..";
 import { AuthActionTypes } from "./action-types";
 import { AuthMutationTypes } from "./mutation-types";
+import {
+  showToastErrorMessage,
+  showToastSuccessMessage,
+} from "../app/mutations";
 
 export interface LoginPayload {
   username: string;
@@ -26,13 +30,21 @@ export const actions: ActionTree<AuthState, RootState> = {
       data: { username: username, password: password },
     })
       .then((res: any) => {
-        commit(AuthMutationTypes.setLoggingInState, {
-          isLoggingIn: false,
-          status: Status.success,
-        });
-        commit(AuthMutationTypes.setAuthUser, res.data.user);
+        if (res.status === 200) {
+          commit(AuthMutationTypes.setLoggingInState, {
+            isLoggingIn: false,
+            status: Status.success,
+          });
+          commit(AuthMutationTypes.setAuthUser, res.data.user);
 
-        commit(AuthMutationTypes.setToken, res.data.user.token);
+          commit(AuthMutationTypes.setToken, res.data.user.token);
+          showToastSuccessMessage(commit, res.message);
+        } else {
+          showToastErrorMessage(commit, res.message);
+        }
+      })
+      .catch((err) => {
+        showToastErrorMessage(commit, err.message);
       })
       .finally(() => {
         commit(AuthMutationTypes.setLoggingInState, {
@@ -74,12 +86,20 @@ export const actions: ActionTree<AuthState, RootState> = {
       data: { username, password, password_confirmation },
     })
       .then((res: any) => {
-        commit(AuthMutationTypes.setLoggingInState, {
-          isLoggingIn: false,
-          status: Status.success,
-        });
-        commit(AuthMutationTypes.setAuthUser, res.data.user);
-        commit(AuthMutationTypes.setToken, res.data.user.token);
+        if (res.status === 200) {
+          commit(AuthMutationTypes.setLoggingInState, {
+            isLoggingIn: false,
+            status: Status.success,
+          });
+          commit(AuthMutationTypes.setAuthUser, res.data.user);
+          commit(AuthMutationTypes.setToken, res.data.user.token);
+          showToastSuccessMessage(commit, res.message);
+        } else {
+          showToastErrorMessage(commit, res);
+        }
+      })
+      .catch((err) => {
+        showToastErrorMessage(commit, err.message);
       })
       .finally(() => {
         commit(AuthMutationTypes.setLoggingInState, {
