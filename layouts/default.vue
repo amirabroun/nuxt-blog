@@ -1,14 +1,14 @@
 <template>
   <client-only>
     <VContainer class="py-1 elevation-4 rounded-b-lg navbar" fluid>
-      <VRow justify="space-between" align="center" class="pr-15">
+      <VRow justify="space-between" align="center" class="pr-10">
         <VCol cols="auto">
           <NuxtLink to="/" class="logo-link">
             <img src="@/assets/images/logo-e-blog.png" class="logo-img" />
           </NuxtLink>
         </VCol>
         <VCol cols="auto" class="ml-2" v-if="authUser">
-          <span class="ml-3 pr-5 pl-3 bg-white rounded-xl username-box"
+          <span class="ml-3 pr-5 pl-4 pr-9 bg-white rounded-xl username-box"
             >{{ authUser.full_name }}
           </span>
           <VAvatar size="45" class="navbar-avatar mt-1 relative">
@@ -129,11 +129,10 @@ a {
   position: fixed;
   top: 0;
   z-index: 9;
-  background: linear-gradient(to left, #00416a, #e4e5e6);
 }
 
 .navbar-link {
-  color: #00416a9f;
+  color: #fff;
 }
 
 .signUp-link {
@@ -141,8 +140,9 @@ a {
 }
 
 .username-box {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-size: 0.85rem;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 0.9rem;
+  color: rgba(#000000, 0.7) !important;
 }
 </style>
