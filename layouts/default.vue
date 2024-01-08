@@ -1,23 +1,31 @@
 <template>
   <client-only>
     <VContainer class="py-1 elevation-4 rounded-b-lg navbar" fluid>
-      <VRow justify="start" align="center">
+      <VRow justify="space-between" align="center" class="pr-15">
         <VCol cols="auto">
           <NuxtLink to="/" class="logo-link">
             <img src="@/assets/images/logo-e-blog.png" class="logo-img" />
           </NuxtLink>
         </VCol>
-        |
         <VCol cols="auto" class="ml-2" v-if="authUser">
-          <VAvatar size="45" class="navbar-avatar mt-1">
+          <span class="ml-3 pr-5 pl-3 bg-white rounded-xl username-box"
+            >{{ authUser.full_name }}
+          </span>
+          <VAvatar size="45" class="navbar-avatar mt-1 relative">
             <NuxtLink v-if="authUser.avatar != null">
-              <img :src="authUser.avatar" class="avatar-img rounded-sm" @error="handleImageError" />
+              <img
+                :src="authUser.avatar"
+                class="avatar-img rounded-sm"
+                @error="handleImageError"
+              />
             </NuxtLink>
             <NuxtLink v-else>
-              <img src="@/assets/images/avatar.png" class="avatar-img rounded-sm" />
+              <img
+                src="@/assets/images/avatar.png"
+                class="avatar-img rounded-sm"
+              />
             </NuxtLink>
           </VAvatar>
-          <span class="ml-3">{{ authUser.full_name }} </span>
           <VMenu activator="parent">
             <VList>
               <VListItem :to="`/users/${authUser?.uuid}/resume`">
@@ -36,7 +44,11 @@
         </VCol>
         <VCol cols="auto" v-if="!authUser">
           <NuxtLink to="/login" class="navbar-link">Sign In</NuxtLink>
-          <NuxtLink to="/register" class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg">Sign Up</NuxtLink>
+          <NuxtLink
+            to="/register"
+            class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
+            >Sign Up</NuxtLink
+          >
         </VCol>
       </VRow>
     </VContainer>
@@ -63,7 +75,8 @@ watch(
 );
 const { cookies } = useCookies();
 onMounted(() => {
-  if (cookies.get("theUserToken") != null) store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
+  if (cookies.get("theUserToken") != null)
+    store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
 });
 
 const logout = async () => {
@@ -93,6 +106,7 @@ a {
 }
 
 .navbar-avatar {
+  left: -20px;
   border-radius: 0px !important;
 }
 
@@ -124,5 +138,11 @@ a {
 
 .signUp-link {
   border: 1px solid;
+}
+
+.username-box {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 0.85rem;
 }
 </style>
