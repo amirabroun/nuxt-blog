@@ -3,17 +3,8 @@
     <VRow justify="center">
       <VCol cols="12" md="8">
         <div v-if="authUser">
-          <VCard
-            v-for="post in posts"
-            :key="post.id"
-            class="mb-3 pa-2 rounded-lg"
-            flat
-          >
-            <VImg
-              :src="post.media?.find(() => true)?.original_url"
-              max-height="400"
-              class="rounded-lg"
-            ></VImg>
+          <VCard v-for="post in posts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
+            <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
             <VCardTitle class="text-h5 my-4">
               {{ post.title }}
             </VCardTitle>
@@ -30,17 +21,8 @@
           </VCard>
           <div class="separator mb-3">Suggestion for you</div>
         </div>
-        <VCard
-          v-for="post in suggestionPosts"
-          :key="post.id"
-          class="mb-3 pa-2 rounded-lg"
-          flat
-        >
-          <VImg
-            :src="post.media?.find(() => true)?.original_url"
-            max-height="400"
-            class="rounded-lg"
-          ></VImg>
+        <VCard v-for="post in suggestionPosts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
+          <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
           <VCardTitle class="text-h5 my-4"> {{ post.title }} </VCardTitle>
           <VCardText>
             <div>{{ post.body }}</div>
@@ -56,25 +38,14 @@
       </VCol>
       <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex">
         <VCard class="categories-card px-3 rounded-lg" min-width="450">
-          <VList
-            v-for="(user, index) in suggestionUsers"
-            :key="index"
-            class="list"
-          >
+          <VList v-for="(user, index) in suggestionUsers" :key="index" class="list">
             <div class="follow-box">
-              <VBtn
-                class="follow-btn px-3 rounded-lg"
-                @click="sendFollowing(user.uuid)"
-              >
+              <VBtn class="follow-btn px-3 rounded-lg" @click="sendFollowing(user.uuid)">
                 follow
               </VBtn>
             </div>
             <VAvatar size="50" class="mt-1">
-              <img
-                v-if="user.avatar != null"
-                :src="user.avatar"
-                class="avatar-img"
-              />
+              <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
             {{ user.full_name }}
@@ -82,14 +53,8 @@
         </VCard>
       </VCol>
     </VRow>
-    <VBtn
-      v-if="authUser"
-      fab
-      dark
-      color="secondary"
-      :to="'/posts/create'"
-      class="text-white bg-info fixed-bottom-right btn"
-    >
+    <VBtn v-if="authUser" fab dark color="secondary" :to="'/posts/create'"
+      class="text-white bg-info fixed-bottom-right btn">
       <VIcon>mdi-plus</VIcon>
     </VBtn>
   </VContainer>
@@ -100,17 +65,24 @@ import { store } from "~/store";
 import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
-onMounted(async () => {
-  store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
-  store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
-  await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
-  suggestionUsers.value = store.state.users?.suggestionUsers;
-});
+let posts = ref();
+let suggestionUsers = ref();
 
 const authUser = computed(() => store.state.auth?.authUser);
-const posts = computed(() => store.state.posts?.posts);
+
+onMounted(async () => {
+  store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
+
+  if (authUser) {
+    store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+    posts = computed(() => store.state.posts?.posts);
+
+    await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
+    suggestionUsers.value = store.state.users?.suggestionUsers;
+  }
+});
+
 const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
-let suggestionUsers = ref();
 
 async function sendFollowing(uuid: string) {
   if (suggestionUsers.value?.length! > 1) {
