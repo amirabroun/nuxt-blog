@@ -7,22 +7,22 @@
             <img src="@/assets/images/logo-e-blog.png" class="logo-img" />
           </NuxtLink>
         </VCol>
-        <VCol cols="auto" class="ml-2" v-if="authUser">
-          <span class="ml-3 pr-5 pl-4 pr-9 bg-white rounded-xl username-box"
+        <VCol cols="auto mt-1" v-if="authUser">
+          <span class="pl-4 pr-8 bg-white rounded-lg username-box"
             >{{ authUser.full_name }}
           </span>
-          <VAvatar size="45" class="navbar-avatar mt-1 relative">
+          <VAvatar size="45" class="navbar-avatar relative">
             <NuxtLink v-if="authUser.avatar != null">
               <img
                 :src="authUser.avatar"
-                class="avatar-img rounded-sm"
+                class="avatar-img rounded-lg"
                 @error="handleImageError"
               />
             </NuxtLink>
             <NuxtLink v-else>
               <img
                 src="@/assets/images/avatar.png"
-                class="avatar-img rounded-sm"
+                class="avatar-img rounded-lg"
               />
             </NuxtLink>
           </VAvatar>
@@ -129,6 +129,7 @@ a {
   position: fixed;
   top: 0;
   z-index: 9;
+  background: linear-gradient(to left, #00416a, #e4e5e6);
 }
 
 .navbar-link {
@@ -143,6 +144,6 @@ a {
   padding-top: 6px;
   padding-bottom: 6px;
   font-size: 0.9rem;
-  color: rgba(#000000, 0.7) !important;
+  background: linear-gradient(to left, #00416ac2, #71a9e075);
 }
 </style>
