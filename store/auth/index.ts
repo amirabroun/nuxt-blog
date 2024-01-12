@@ -5,21 +5,13 @@ import { mutations } from "./mutations";
 import { getters } from "./getters";
 import { AuthActionTypes } from "./action-types";
 import { AuthMutationTypes } from "./mutation-types";
-export interface AuthUser {
-  avatar: string;
-  created_at: string;
-  email: string;
-  full_name: string;
-  is_admin: boolean;
-  updated_at: string;
-  uuid: string;
-}
+import { User } from "../user";
 
 export interface AuthState {
   isLoggingIn: boolean;
   loggingOut: boolean;
   loggingOutStatus: Status | null;
-  authUser: AuthUser | null;
+  authUser: User | null;
   theUserToken: string | null;
   organizationToken: string | null;
   status: Status | null;

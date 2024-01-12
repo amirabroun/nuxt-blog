@@ -5,7 +5,7 @@ import { UserActionTypes, actions } from "./actions";
 import { Post } from "../posts";
 export interface User {
   id?: number;
-  uuid?: string;
+  uuid: string;
   full_name?: string;
   username?: string;
   avatar?: string;
@@ -71,7 +71,9 @@ const state: UserState = {
     media: [],
     posts: [],
   },
-  savedUser: {},
+  savedUser: {
+    uuid: '',
+  },
   updateResumeStatus: null,
 };
 
