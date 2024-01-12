@@ -12,6 +12,8 @@ export interface User {
   is_admin?: boolean;
   created_at?: Date;
   updated_at?: Date;
+  followers_count?: number;
+  followings_count?: number;
   auth_followed_at?: Date;
   follow_accepted_at?: Date;
   resume?: {
@@ -37,6 +39,7 @@ export interface User {
   };
   media?: [];
   posts?: Post[];
+  followings?: User[];
 }
 
 export interface UserState {

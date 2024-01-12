@@ -1,79 +1,77 @@
 <template>
-  <VContainer>
+  <VContainer fluid>
     <VRow justify="center">
-      <VCol cols="12" md="7">
+      <VCol lg="1" class="d-none d-lg-flex"></VCol>
+      <VCol lg="6" md="6">
         <VCard class="pa-2 mb-3" v-for="post in posts" :key="post.id">
-          <VImg
-            :src="post.media?.find(() => true)?.original_url"
-            max-height="400"
-            class="rounded-lg"
-          ></VImg>
+          <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
           <VCardTitle class="text-h5">{{ post.title }}</VCardTitle>
           <VCardText>{{ post.body }}</VCardText>
           <VCardSubtitle>
             by <span class="text-primary">{{ user?.full_name }}</span>
-            <span class="grey--text ml-1">{{ post.created_at }}</span>
+            <span class="text-grey ml-1">{{ post.created_at }}</span>
           </VCardSubtitle>
         </VCard>
       </VCol>
-      <VCol cols="4" class="d-none d-lg-flex">
+      <VCol lg="4" md="6" sm="12">
         <VCard class="pa-3 user-info w-100">
           <VRow>
-            <VCol cols="auto">
-              <v-avatar size="50" class="rounded avatar">
-                <img
-                  :src="user?.avatar"
-                  v-if="user?.avatar"
-                  class="rounded w-100"
-                />
-                <img
-                  src="@/assets/images/avatar.png"
-                  v-else
-                  class="rounded w-100"
-                />
-              </v-avatar>
+            <VCol cols="3" lg="3" md="3">
+              <img :src="user?.avatar" v-if="user?.avatar" width="100" class="rounded-xl"/>
+              <img src="@/assets/images/avatar.png" v-else width="100" class="rounded-xl"/>
             </VCol>
-            <VCol cols="8">
-              <div class="text-h6">{{ user?.full_name }}</div>
-              <div class="grey--text">{{ user?.username }}</div>
-            </VCol>
-          </VRow>
-          <VRow justify="center" align="center" class="px-2 py-3">
-            <VCol cols="12" v-if="authUser" class="pa-0">
-              <VBtn
-                class="w-100"
-                :color="followBtnColor"
-                @click="sendFollowing(followBtnText)"
-                ref="followBtn"
-              >
+            <VCol cols="9" lg="9" md="9" class="mt-3">
+              {{ user?.full_name }}
+              <VBtn width="50px" height="25px" class="ml-2 rounded-lg" :color="followBtnColor"
+                v-if="authUser && authUser.uuid != user?.uuid" @click="sendFollowing(followBtnText)" ref="followBtn"
+                style="font-size: 0.62rem;">
                 {{ followBtnText }}
               </VBtn>
+              <div class="mt-3" style="font-size: 20px;">{{ user?.username }}</div>
+              <VRow class="text-grey">
+                <VCol cols="8">
+                  {{ user?.followers_count }} follower
+                  <span class="ml-3">{{ user?.followings_count }} followings</span>
+                </VCol>
+              </VRow>
+            </VCol>
+          </VRow>
+          <VRow>
+            <VCol cols="9" lg="9" md="9" class="mt-3">
+              Followings
+              <VList v-for="following in user?.followings" :key="following.uuid" class="list">
+                <VAvatar size="50" class="mt-1">
+                  <img v-if="following.avatar != null" :src="following.avatar" class="avatar-img" />
+                  <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
+                </VAvatar>
+                <NuxtLink class="text-info ml-2" :to="`/users/${following.uuid}`">{{ following.full_name }}
+                  <VBtn width="50px" height="25px" class="ml-2 rounded-lg" color="#cdf1c6d2" style="font-size: 0.62rem;">
+                    {{ followBtnText }}
+                  </VBtn>
+                </NuxtLink>
+              </VList>
             </VCol>
           </VRow>
         </VCard>
       </VCol>
+      <VCol lg="1" class="d-none d-lg-flex"></VCol>
     </VRow>
-    <VBtn
-      v-if="authUser"
-      fab
-      dark
-      color="secondary"
-      :to="'/posts/create'"
-      class="fixed-bottom-right btn"
-    >
+    <VBtn v-if="authUser" fab dark color="secondary" :to="'/posts/create'" class="fixed-bottom-right btn">
       <VIcon>mdi-plus</VIcon>
     </VBtn>
   </VContainer>
 </template>
+
 <script lang="ts" setup>
-import { setTimeout } from "timers";
+
 import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
+
 const route = useRoute();
 const followBtn = ref();
-let followBtnText = ref("Follow");
-let followBtnColor = ref("success");
+let followBtnText = ref("follow");
+let followBtnColor = ref("#cdf1c6d2");
 
 async function sendFollowing(text: string) {
   await store.dispatch(
@@ -91,8 +89,8 @@ async function sendFollowing(text: string) {
     followBtnText.value = "Unfollow";
     followBtnColor.value = "red";
   } else {
-    followBtnText.value = "Follow";
-    followBtnColor.value = "success";
+    followBtnText.value = "follow";
+    followBtnColor.value = "#cdf1c6d2";
   }
 }
 
