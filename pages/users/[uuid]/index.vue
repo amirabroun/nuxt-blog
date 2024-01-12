@@ -17,15 +17,15 @@
         <VCard class="pa-3 user-info w-100">
           <VRow>
             <VCol cols="3" lg="3" md="3">
-              <img :src="user?.avatar" v-if="user?.avatar" width="100" class="rounded-xl"/>
-              <img src="@/assets/images/avatar.png" v-else width="100" class="rounded-xl"/>
+              <img :src="user?.avatar" v-if="user?.avatar" width="100" class="rounded-xl" />
+              <img src="@/assets/images/avatar.png" v-else width="100" class="rounded-xl" />
             </VCol>
             <VCol cols="9" lg="9" md="9" class="mt-3">
               {{ user?.full_name }}
-              <VBtn width="50px" height="25px" class="ml-2 rounded-lg" :color="followBtnColor"
-                v-if="authUser && authUser.uuid != user?.uuid" @click="sendFollowing(followBtnText)" ref="followBtn"
-                style="font-size: 0.62rem;">
-                {{ followBtnText }}
+              <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != user?.uuid"
+                @click="toggleFollow(user?.uuid)" style="font-size: 0.62rem;" class="ml-3 rounded-lg"
+                :color="user?.auth_followed_at == null ? '#cdf1c6d2' : 'red'">
+                {{ user?.auth_followed_at == null ? 'follow' : 'unfollow' }}
               </VBtn>
               <div class="mt-3" style="font-size: 20px;">{{ user?.username }}</div>
               <VRow class="text-grey">
@@ -46,7 +46,7 @@
                 </VAvatar>
                 <NuxtLink class="text-info ml-2" :to="`/users/${following.uuid}`">{{ following.full_name }}
                   <VBtn width="50px" height="25px" class="ml-2 rounded-lg" color="#cdf1c6d2" style="font-size: 0.62rem;">
-                    {{ followBtnText }}
+                    {{ user?.auth_followed_at == null ? 'follow' : 'unfollow' }}
                   </VBtn>
                 </NuxtLink>
               </VList>
@@ -69,36 +69,20 @@ import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 const route = useRoute();
-const followBtn = ref();
-let followBtnText = ref("follow");
-let followBtnColor = ref("#cdf1c6d2");
-
-async function sendFollowing(text: string) {
-  await store.dispatch(
-    `users/${UsersActionTypes.userToggleFollow}`,
-    route.params.uuid
-  );
-  await store.dispatch(
-    `user/${UserActionTypes.fetchUserPosts}`,
-    route.params.uuid
-  );
-  if (
-    store.state.user?.user.auth_followed_at &&
-    store.state.user?.user.follow_accepted_at
-  ) {
-    followBtnText.value = "Unfollow";
-    followBtnColor.value = "red";
-  } else {
-    followBtnText.value = "follow";
-    followBtnColor.value = "#cdf1c6d2";
-  }
-}
+let user = ref();
 
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
 });
 
-const user = computed(() => store.state.user?.user);
+async function toggleFollow(uuid: any) {
+  await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
+
+  await store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
+}
+
+user = computed(() => store.state.user?.user);
+
 const posts = computed(() => store.state.user?.user?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
 </script>
