@@ -94,6 +94,7 @@ async function sendFollowing(uuid: string) {
     await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
   }
+  store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
 }
 </script>
 
