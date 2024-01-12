@@ -48,7 +48,7 @@
               <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
-            {{ user.full_name }}
+            <NuxtLink class="text-info ml-2" :to="`/users/${user.uuid}`">{{ user.full_name }}</NuxtLink>
           </VList>
         </VCard>
       </VCol>
