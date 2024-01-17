@@ -4,7 +4,11 @@
       <VCol lg="1" class="d-none d-lg-flex"></VCol>
       <VCol lg="6" md="6">
         <VCard class="pa-2 mb-3" v-for="post in posts" :key="post.id">
-          <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
+          <VImg
+            :src="post.media?.find(() => true)?.original_url"
+            max-height="400"
+            class="rounded-lg"
+          ></VImg>
           <VCardTitle class="text-h5">{{ post.title }}</VCardTitle>
           <VCardText>{{ post.body }}</VCardText>
           <VCardSubtitle>
@@ -17,21 +21,41 @@
         <VCard class="pa-3 user-info w-100">
           <VRow>
             <VCol cols="3" lg="3" md="3">
-              <img :src="user?.avatar" v-if="user?.avatar" width="100" class="rounded-xl" />
-              <img src="@/assets/images/avatar.png" v-else width="100" class="rounded-xl" />
+              <img
+                :src="user?.avatar"
+                v-if="user?.avatar"
+                width="100"
+                class="rounded-xl"
+              />
+              <img
+                src="@/assets/images/avatar.png"
+                v-else
+                width="100"
+                class="rounded-xl"
+              />
             </VCol>
             <VCol cols="9" lg="9" md="9" class="mt-3">
               {{ user?.full_name }}
-              <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != user?.uuid"
-                @click="toggleFollow(user?.uuid)" style="font-size: 0.62rem;" class="ml-3 rounded-lg"
-                :color="user?.auth_followed_at == null ? '#cdf1c6d2' : 'red'">
-                {{ user?.auth_followed_at == null ? 'follow' : 'unfollow' }}
+              <VBtn
+                width="80px"
+                height="25px"
+                v-if="authUser && authUser.uuid != user?.uuid"
+                @click="toggleFollow(user?.uuid)"
+                style="font-size: 0.62rem"
+                class="ml-3 rounded-lg"
+                :color="user?.auth_followed_at == null ? '#cdf1c6d2' : 'red'"
+              >
+                {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
               </VBtn>
-              <div class="mt-3" style="font-size: 20px;">{{ user?.username }}</div>
+              <div class="mt-3" style="font-size: 20px">
+                {{ user?.username }}
+              </div>
               <VRow class="text-grey">
                 <VCol cols="8">
                   {{ user?.followers_count }} follower
-                  <span class="ml-3">{{ user?.followings_count }} followings</span>
+                  <span class="ml-3"
+                    >{{ user?.followings_count }} followings</span
+                  >
                 </VCol>
               </VRow>
             </VCol>
@@ -39,14 +63,35 @@
           <VRow>
             <VCol cols="9" lg="9" md="9" class="mt-3">
               Followings
-              <VList v-for="following in user?.followings" :key="following.uuid" class="list">
+              <VList
+                v-for="following in user?.followings"
+                :key="following.uuid"
+                class="list"
+              >
                 <VAvatar size="50" class="mt-1">
-                  <img v-if="following.avatar != null" :src="following.avatar" class="avatar-img" />
-                  <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
+                  <img
+                    v-if="following.avatar != null"
+                    :src="following.avatar"
+                    class="avatar-img"
+                  />
+                  <img
+                    v-else
+                    src="@/assets/images/avatar.png"
+                    class="avatar-img"
+                  />
                 </VAvatar>
-                <NuxtLink class="text-info ml-2" :to="`/users/${following.uuid}`">{{ following.full_name }}
-                  <VBtn width="50px" height="25px" class="ml-2 rounded-lg" color="#cdf1c6d2" style="font-size: 0.62rem;">
-                    {{ user?.auth_followed_at == null ? 'follow' : 'unfollow' }}
+                <NuxtLink
+                  class="text-info ml-2"
+                  :to="`/users/${following.uuid}`"
+                  >{{ following.full_name }}
+                  <VBtn
+                    width="50px"
+                    height="25px"
+                    class="ml-2 rounded-lg"
+                    color="#cdf1c6d2"
+                    style="font-size: 0.62rem"
+                  >
+                    {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
                   </VBtn>
                 </NuxtLink>
               </VList>
@@ -56,14 +101,11 @@
       </VCol>
       <VCol lg="1" class="d-none d-lg-flex"></VCol>
     </VRow>
-    <VBtn v-if="authUser" fab dark color="secondary" :to="'/posts/create'" class="fixed-bottom-right btn">
-      <VIcon>mdi-plus</VIcon>
-    </VBtn>
+    <createPostBtn :isAuth="authUser" />
   </VContainer>
 </template>
 
 <script lang="ts" setup>
-
 import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
@@ -78,7 +120,10 @@ onMounted(() => {
 async function toggleFollow(uuid: any) {
   await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
 
-  await store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
+  await store.dispatch(
+    `user/${UserActionTypes.fetchUserPosts}`,
+    route.params.uuid
+  );
 }
 
 user = computed(() => store.state.user?.user);
