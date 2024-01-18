@@ -36,17 +36,10 @@
             </VCol>
             <VCol cols="9" lg="9" md="9" class="mt-3">
               {{ user?.full_name }}
-              <VBtn
-                width="80px"
-                height="25px"
+              <FollowBtn
+                :data="{ user: user, width: 80, height: 25 }"
                 v-if="authUser && authUser.uuid != user?.uuid"
-                @click="toggleFollow(user?.uuid)"
-                style="font-size: 0.62rem"
-                class="ml-3 rounded-lg"
-                :color="user?.auth_followed_at == null ? '#cdf1c6d2' : 'red'"
-              >
-                {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
-              </VBtn>
+              />
               <div class="mt-3" style="font-size: 20px">
                 {{ user?.username }}
               </div>
@@ -84,15 +77,7 @@
                   class="text-info ml-2"
                   :to="`/users/${following.uuid}`"
                   >{{ following.full_name }}
-                  <VBtn
-                    width="50px"
-                    height="25px"
-                    class="ml-2 rounded-lg"
-                    color="#cdf1c6d2"
-                    style="font-size: 0.62rem"
-                  >
-                    {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
-                  </VBtn>
+                  <FollowBtn :data="{ user: user, width: 50, height: 25 }" />
                 </NuxtLink>
               </VList>
             </VCol>
@@ -116,15 +101,6 @@ let user = ref();
 onMounted(() => {
   store.dispatch(`user/${UserActionTypes.fetchUserPosts}`, route.params.uuid);
 });
-
-async function toggleFollow(uuid: any) {
-  await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
-
-  await store.dispatch(
-    `user/${UserActionTypes.fetchUserPosts}`,
-    route.params.uuid
-  );
-}
 
 user = computed(() => store.state.user?.user);
 
