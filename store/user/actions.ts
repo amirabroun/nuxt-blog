@@ -23,33 +23,38 @@ export interface UserResume {
     started_at: string;
   }[];
   education:
-    | {
-        field?: string;
-        university?: string;
-        started_at?: string;
-        finished_at?: string;
-        location?: string;
-      }[]
-    | undefined;
+  | {
+    field?: string;
+    university?: string;
+    started_at?: string;
+    finished_at?: string;
+    location?: string;
+  }[]
+  | undefined;
   contact: {
     title: string;
     link: string;
   }[];
 }
 
+interface withUser {
+  with: ['posts', 'followers', 'followings']
+};
+
 export const actions: ActionTree<UserState, RootState> = {
-  [UserActionTypes.fetchUser]: ({ commit }, uuid: string) => {
+  [UserActionTypes.fetchUser]: ({ commit }, payload: { uuid: string, with: withUser }) => {
     commit(UserMutationTypes.fetchUser, {
       loading: true,
       user: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`users/${uuid}`, {
-      method: "GET",
+    $httpsRequest(`users/${payload.uuid}`, {
+      method: "POST",
+      data: { with: payload.with },
     }).then((res: any) => {
       commit(UserMutationTypes.fetchUser, {
         loading: false,
-        user: res.data,
+        user: res.data.user,
       });
     });
   },
