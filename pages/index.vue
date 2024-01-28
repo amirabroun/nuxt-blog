@@ -9,58 +9,69 @@
           >
         </v-tabs>
         <div v-if="authUser && tab == 0">
-          <VCard
-            v-for="post in posts"
-            :key="post.id"
-            class="mb-3 pa-2 rounded-lg"
-            flat
-          >
-            <VImg
-              :src="post.media?.find(() => true)?.original_url"
-              max-height="400"
-              class="rounded-lg"
-            ></VImg>
-            <VCardTitle class="text-h5 my-4">
-              {{ post.title }}
-            </VCardTitle>
-            <VCardText>
-              <div>{{ post.body }}</div>
-              <div class="text-grey mt-3">
-                by
-                <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                  {{ post.user.full_name }}
-                </NuxtLink>
-                <span class="ml-1">at {{ post.created_at }}</span>
-              </div>
-            </VCardText>
-          </VCard>
+          <div v-if="posts">
+            <VCard
+              v-for="post in posts"
+              :key="post.id"
+              class="mb-3 pa-2 rounded-lg"
+              flat
+            >
+              <VImg
+                :src="post.media?.find(() => true)?.original_url"
+                max-height="400"
+                class="rounded-lg"
+              ></VImg>
+              <VCardTitle class="text-h5 my-4">
+                {{ post.title }}
+              </VCardTitle>
+              <VCardText>
+                <div>{{ post.body }}</div>
+                <div class="text-grey mt-3">
+                  by
+                  <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
+                    {{ post.user.full_name }}
+                  </NuxtLink>
+                  <span class="ml-1">at {{ post.created_at }}</span>
+                </div>
+              </VCardText>
+            </VCard>
+          </div>
+          <v-alert v-else title="Empty List" text="There are no posts!" />
         </div>
         <div v-if="authUser && tab == 1">
-          <VCard
-            v-for="post in suggestionPosts"
-            :key="post.id"
-            class="mb-3 pa-2 rounded-lg"
-            flat
-          >
-            <VImg
-              :src="post.media?.find(() => true)?.original_url"
-              max-height="400"
-              class="rounded-lg"
-            ></VImg>
-            <VCardTitle class="text-h5 my-4">
-              {{ post.title }}
-            </VCardTitle>
-            <VCardText>
-              <div>{{ post.body }}</div>
-              <div class="text-grey mt-3">
-                by
-                <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                  {{ post.user.full_name }}
-                </NuxtLink>
-                <span class="ml-1">at {{ post.created_at }}</span>
-              </div>
-            </VCardText>
-          </VCard>
+          <div v-if="suggestionPosts">
+            <VCard
+              v-for="post in suggestionPosts"
+              :key="post.id"
+              class="mb-3 pa-2 rounded-lg"
+              flat
+            >
+              <VImg
+                :src="post.media?.find(() => true)?.original_url"
+                max-height="400"
+                class="rounded-lg"
+              ></VImg>
+              <VCardTitle class="text-h5 my-4">
+                {{ post.title }}
+              </VCardTitle>
+              <VCardText>
+                <div>{{ post.body }}</div>
+                <div class="text-grey mt-3">
+                  by
+                  <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
+                    {{ post.user.full_name }}
+                  </NuxtLink>
+                  <span class="ml-1">at {{ post.created_at }}</span>
+                </div>
+              </VCardText>
+            </VCard>
+          </div>
+
+          <v-alert
+            v-else
+            title="Empty List"
+            text="There are no posts to suggest!"
+          />
         </div>
       </VCol>
       <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-12">
