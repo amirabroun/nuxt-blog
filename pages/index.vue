@@ -4,11 +4,22 @@
       <VCol cols="12" md="8">
         <v-tabs v-model="tab" align-tabs="start" slider-size="2">
           <v-tab class="tab-item rounded">Youre followings</v-tab>
-          <v-tab class="tab-item rounded">Suggestion for you</v-tab>
+          <v-tab class="tab-item rounded" @click.once="fetchSuggestion"
+            >Suggestion for you</v-tab
+          >
         </v-tabs>
         <div v-if="authUser && tab == 0">
-          <VCard v-for="post in posts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
-            <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
+          <VCard
+            v-for="post in posts"
+            :key="post.id"
+            class="mb-3 pa-2 rounded-lg"
+            flat
+          >
+            <VImg
+              :src="post.media?.find(() => true)?.original_url"
+              max-height="400"
+              class="rounded-lg"
+            ></VImg>
             <VCardTitle class="text-h5 my-4">
               {{ post.title }}
             </VCardTitle>
@@ -25,9 +36,20 @@
           </VCard>
         </div>
         <div v-if="authUser && tab == 1">
-          <VCard v-for="post in suggestionPosts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
-            <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
-            <VCardTitle class="text-h5 my-4"> {{ post.title }} </VCardTitle>
+          <VCard
+            v-for="post in suggestionPosts"
+            :key="post.id"
+            class="mb-3 pa-2 rounded-lg"
+            flat
+          >
+            <VImg
+              :src="post.media?.find(() => true)?.original_url"
+              max-height="400"
+              class="rounded-lg"
+            ></VImg>
+            <VCardTitle class="text-h5 my-4">
+              {{ post.title }}
+            </VCardTitle>
             <VCardText>
               <div>{{ post.body }}</div>
               <div class="text-grey mt-3">
@@ -43,16 +65,31 @@
       </VCol>
       <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-12">
         <VCard class="categories-card px-3 rounded-lg" min-width="450">
-          <VList v-for="(user, index) in suggestionUsers" :key="index" class="list">
+          <VList
+            v-for="(user, index) in suggestionUsers"
+            :key="index"
+            class="list"
+          >
             <VAvatar size="50" class="mt-1">
-              <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
+              <img
+                v-if="user.avatar != null"
+                :src="user.avatar"
+                class="avatar-img"
+              />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
             <NuxtLink class="text-info ml-3" :to="`/users/${user.uuid}`">
               {{ user.full_name }}
             </NuxtLink>
-            <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != user?.uuid"
-              @click="toggleFollow(user?.uuid)" class="ml-4 rounded-lg" color="#cdf1c6d2" style="font-size: 0.62rem">
+            <VBtn
+              width="80px"
+              height="25px"
+              v-if="authUser && authUser.uuid != user?.uuid"
+              @click="toggleFollow(user?.uuid)"
+              class="ml-4 rounded-lg"
+              color="#cdf1c6d2"
+              style="font-size: 0.62rem"
+            >
               {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
             </VBtn>
           </VList>
@@ -69,25 +106,20 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
-let suggestionPosts = ref();
+let suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 let posts = ref();
 let suggestionUsers = ref();
 
-console.log(tab.value);
-
 const authUser = computed(() => store.state.auth?.authUser);
 
-if (tab.value == 1) {
+async function fetchSuggestion() {
   await store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
-  suggestionPosts.value = computed(() => store.state.posts?.suggestionPosts);
 }
 
 onMounted(async () => {
   if (authUser) {
-    if (tab.value == 0) {
-      store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
-      posts = computed(() => store.state.posts?.posts);
-    }
+    store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+    posts = computed(() => store.state.posts?.posts);
 
     await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
