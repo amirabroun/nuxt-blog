@@ -134,11 +134,11 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
-let suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 let posts = ref();
 let suggestionUsers = ref();
 
 const authUser = computed(() => store.state.auth?.authUser);
+const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 
 async function fetchSuggestion() {
   await store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
