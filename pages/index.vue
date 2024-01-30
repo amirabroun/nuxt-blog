@@ -2,77 +2,94 @@
   <VContainer>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <v-tabs v-model="tab" align-tabs="start" slider-size="2">
-          <v-tab class="tab-item rounded">Youre followings</v-tab>
-          <v-tab class="tab-item rounded" @click.once="fetchSuggestion"
+        <v-tabs v-model="tab">
+          <v-tab value="followings">Your followings</v-tab>
+          <v-tab
+            class="tab-item rounded"
+            value="suggestion"
+            @click.once="fetchSuggestion"
             >Suggestion for you</v-tab
           >
         </v-tabs>
-        <div v-if="authUser && tab == 0">
-          <div v-if="posts">
-            <VCard
-              v-for="post in posts"
-              :key="post.id"
-              class="mb-3 pa-2 rounded-lg"
-              flat
-            >
-              <VImg
-                :src="post.media?.find(() => true)?.original_url"
-                max-height="400"
-                class="rounded-lg"
-              ></VImg>
-              <VCardTitle class="text-h5 my-4">
-                {{ post.title }}
-              </VCardTitle>
-              <VCardText>
-                <div>{{ post.body }}</div>
-                <div class="text-grey mt-3">
-                  by
-                  <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                    {{ post.user.full_name }}
-                  </NuxtLink>
-                  <span class="ml-1">at {{ post.created_at }}</span>
-                </div>
-              </VCardText>
-            </VCard>
-          </div>
-          <v-alert v-else title="Empty List" text="There are no posts!" />
-        </div>
-        <div v-if="authUser && tab == 1">
-          <div v-if="suggestionPosts">
-            <VCard
-              v-for="post in suggestionPosts"
-              :key="post.id"
-              class="mb-3 pa-2 rounded-lg"
-              flat
-            >
-              <VImg
-                :src="post.media?.find(() => true)?.original_url"
-                max-height="400"
-                class="rounded-lg"
-              ></VImg>
-              <VCardTitle class="text-h5 my-4">
-                {{ post.title }}
-              </VCardTitle>
-              <VCardText>
-                <div>{{ post.body }}</div>
-                <div class="text-grey mt-3">
-                  by
-                  <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                    {{ post.user.full_name }}
-                  </NuxtLink>
-                  <span class="ml-1">at {{ post.created_at }}</span>
-                </div>
-              </VCardText>
-            </VCard>
-          </div>
 
-          <v-alert
-            v-else
-            title="Empty List"
-            text="There are no posts to suggest!"
-          />
-        </div>
+        <v-window v-model="tab">
+          <v-window-item value="followings">
+            <div>
+              <div v-if="posts">
+                <VCard
+                  v-for="post in posts"
+                  :key="post.id"
+                  class="mb-3 pa-2 rounded-lg"
+                  flat
+                >
+                  <VImg
+                    :src="post.media?.find(() => true)?.original_url"
+                    max-height="400"
+                    class="rounded-lg"
+                  ></VImg>
+                  <VCardTitle class="text-h5 my-4">
+                    {{ post.title }}
+                  </VCardTitle>
+                  <VCardText>
+                    <div>{{ post.body }}</div>
+                    <div class="text-grey mt-3">
+                      by
+                      <NuxtLink
+                        class="text-info"
+                        :to="`/users/${post.user.uuid}`"
+                      >
+                        {{ post.user.full_name }}
+                      </NuxtLink>
+                      <span class="ml-1">at {{ post.created_at }}</span>
+                    </div>
+                  </VCardText>
+                </VCard>
+              </div>
+              <v-alert v-else title="Empty List" text="There are no posts!" />
+            </div>
+          </v-window-item>
+
+          <v-window-item value="suggestion">
+            <div>
+              <div v-if="suggestionPosts">
+                <VCard
+                  v-for="post in suggestionPosts"
+                  :key="post.id"
+                  class="mb-3 pa-2 rounded-lg"
+                  flat
+                >
+                  <VImg
+                    :src="post.media?.find(() => true)?.original_url"
+                    max-height="400"
+                    class="rounded-lg"
+                  ></VImg>
+                  <VCardTitle class="text-h5 my-4">
+                    {{ post.title }}
+                  </VCardTitle>
+                  <VCardText>
+                    <div>{{ post.body }}</div>
+                    <div class="text-grey mt-3">
+                      by
+                      <NuxtLink
+                        class="text-info"
+                        :to="`/users/${post.user.uuid}`"
+                      >
+                        {{ post.user.full_name }}
+                      </NuxtLink>
+                      <span class="ml-1">at {{ post.created_at }}</span>
+                    </div>
+                  </VCardText>
+                </VCard>
+              </div>
+
+              <v-alert
+                v-else
+                title="Empty List"
+                text="There are no posts to suggest!"
+              />
+            </div>
+          </v-window-item>
+        </v-window>
       </VCol>
       <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-12">
         <VCard class="categories-card px-3 rounded-lg" min-width="450">
