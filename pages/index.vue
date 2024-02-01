@@ -2,31 +2,17 @@
   <VContainer>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <v-tabs v-model="tab" bg-color="white" class="rounded-t-lg">
+        <v-tabs v-if="authUser" v-model="tab"  bg-color="primary" class="rounded-lg mb-2">
           <v-tab value="followings">Your followings</v-tab>
-          <v-tab
-            class="tab-item rounded"
-            value="suggestion"
-            @click.once="fetchSuggestion"
-            >Suggestion for you</v-tab
-          >
+          <v-tab border="info" value="suggestion" @click.once="fetchSuggestion">Suggestion for you</v-tab>
         </v-tabs>
 
         <v-window v-model="tab" bg-color="red">
-          <v-window-item value="followings">
+          <v-window-item value="followings" v-if="authUser">
             <div>
               <div v-if="posts">
-                <VCard
-                  v-for="post in posts"
-                  :key="post.id"
-                  class="mb-3 pa-2 rounded-lg"
-                  flat
-                >
-                  <VImg
-                    :src="post.media?.find(() => true)?.original_url"
-                    max-height="400"
-                    class="rounded-lg"
-                  ></VImg>
+                <v-card v-for="post in posts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
+                  <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
                   <VCardTitle class="text-h5 my-4">
                     {{ post.title }}
                   </VCardTitle>
@@ -34,24 +20,16 @@
                     <div>{{ post.body }}</div>
                     <div class="text-grey mt-3">
                       by
-                      <NuxtLink
-                        class="text-info"
-                        :to="`/users/${post.user.uuid}`"
-                      >
+                      <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
                         {{ post.user.full_name }}
                       </NuxtLink>
                       <span class="ml-1">at {{ post.created_at }}</span>
                     </div>
                   </VCardText>
-                </VCard>
+                </v-card>
               </div>
               <v-card v-else>
-                <v-alert
-                  type="info"
-                  title="Pay Attention"
-                  text="You have no following!"
-                  variant="tonal"
-                ></v-alert>
+                <v-alert type="info" title="Pay Attention" text="You have no following!" variant="tonal"></v-alert>
               </v-card>
             </div>
           </v-window-item>
@@ -59,17 +37,8 @@
           <v-window-item value="suggestion">
             <div>
               <div v-if="suggestionPosts?.length">
-                <VCard
-                  v-for="post in suggestionPosts"
-                  :key="post.id"
-                  class="mb-3 pa-2 rounded-lg"
-                  flat
-                >
-                  <VImg
-                    :src="post.media?.find(() => true)?.original_url"
-                    max-height="400"
-                    class="rounded-lg"
-                  ></VImg>
+                <v-card v-for="post in suggestionPosts" :key="post.id" class="mb-3 pa-2 rounded-lg">
+                  <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
                   <VCardTitle class="text-h5 my-4">
                     {{ post.title }}
                   </VCardTitle>
@@ -77,61 +46,38 @@
                     <div>{{ post.body }}</div>
                     <div class="text-grey mt-3">
                       by
-                      <NuxtLink
-                        class="text-info"
-                        :to="`/users/${post.user.uuid}`"
-                      >
+                      <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
                         {{ post.user.full_name }}
                       </NuxtLink>
                       <span class="ml-1">at {{ post.created_at }}</span>
                     </div>
                   </VCardText>
-                </VCard>
+                </v-card>
               </div>
 
               <v-card v-else>
-                <v-alert
-                  type="info"
-                  title="Pay Attention"
-                  text="there is no post to show you!"
-                  variant="tonal"
-                ></v-alert>
+                <v-alert type="info" title="Pay Attention" text="there is no post to show you!" variant="tonal"></v-alert>
               </v-card>
             </div>
           </v-window-item>
         </v-window>
       </VCol>
-      <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-12">
-        <VCard class="categories-card px-3 rounded-lg" min-width="450">
-          <VList
-            v-for="(user, index) in suggestionUsers"
-            :key="index"
-            class="list"
-          >
+      <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-14">
+        <v-card class="categories-card px-3 rounded-lg" min-width="450">
+          <VList v-for="(user, index) in suggestionUsers" :key="index" class="list">
             <VAvatar size="50" class="mt-1">
-              <img
-                v-if="user.avatar != null"
-                :src="user.avatar"
-                class="avatar-img"
-              />
+              <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
             <NuxtLink class="text-info ml-3" :to="`/users/${user.uuid}`">
               {{ user.full_name }}
             </NuxtLink>
-            <VBtn
-              width="80px"
-              height="25px"
-              v-if="authUser && authUser.uuid != user?.uuid"
-              @click="toggleFollow(user?.uuid)"
-              class="ml-4 rounded-lg"
-              color="#cdf1c6d2"
-              style="font-size: 0.62rem"
-            >
+            <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != user?.uuid"
+              @click="toggleFollow(user?.uuid)" class="ml-4 rounded-lg"  :color="user?.auth_followed_at == null ? 'success' : 'red'" style="font-size: 0.62rem">
               {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
             </VBtn>
           </VList>
-        </VCard>
+        </v-card>
       </VCol>
     </VRow>
     <createPostBtn :isAuth="authUser" />
@@ -144,6 +90,11 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
+
+if (tab.value === 0) {
+  fetchSuggestion();
+}
+
 const posts = computed(() => store.state.posts?.posts);
 let suggestionUsers = ref();
 
@@ -192,6 +143,10 @@ async function toggleFollow(uuid: string) {
   height: max-content;
 }
 
+.v-tab {
+  text-transform: none !important;
+}
+
 .separator {
   display: flex;
   align-items: center;
@@ -228,8 +183,4 @@ async function toggleFollow(uuid: string) {
   color: #4caf50;
 }
 
-.v-card:first-child {
-  border-top-right-radius: 0 !important;
-  border-top-left-radius: 0 !important;
-}
 </style>
