@@ -2,7 +2,7 @@
   <VContainer>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <v-tabs v-model="tab">
+        <v-tabs v-model="tab" bg-color="white" class="rounded-t-lg">
           <v-tab value="followings">Your followings</v-tab>
           <v-tab
             class="tab-item rounded"
@@ -12,7 +12,7 @@
           >
         </v-tabs>
 
-        <v-window v-model="tab">
+        <v-window v-model="tab" bg-color="red">
           <v-window-item value="followings">
             <div>
               <div v-if="posts">
@@ -216,5 +216,10 @@ async function toggleFollow(uuid: string) {
   border: 1px solid;
   border-color: #4caf50;
   color: #4caf50;
+}
+
+.v-card:first-child {
+  border-top-right-radius: 0 !important;
+  border-top-left-radius: 0 !important;
 }
 </style>
