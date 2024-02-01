@@ -5,6 +5,7 @@ export default {
   build: {
     transpile: ["vuetify"],
   },
+  plugins: ["~/plugins/fetchAuthUser.ts"],
   runtimeConfig: {
     public: {
       API_BASE_URL: process.env.VUE_APP_ROOT_API,
