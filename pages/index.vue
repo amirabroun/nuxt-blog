@@ -134,7 +134,7 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
-let posts = ref();
+const posts = computed(() => store.state.posts?.posts);
 let suggestionUsers = ref();
 
 const authUser = computed(() => store.state.auth?.authUser);
@@ -145,10 +145,8 @@ async function fetchSuggestion() {
 }
 
 onMounted(async () => {
-  if (authUser) {
-    store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
-    posts = computed(() => store.state.posts?.posts);
-
+  if (authUser.value) {
+    await store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
     await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
   }

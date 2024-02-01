@@ -9,5 +9,8 @@ export const getters: GetterTree<AuthState, RootState> = {
     } else {
       return false;
     }
-  }
+  },
+  getAuthUser(state) {
+    return state.authUser;
+  },
 };

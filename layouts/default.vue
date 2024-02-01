@@ -8,15 +8,25 @@
           </NuxtLink>
         </VCol>
         <VCol cols="auto mt-1" v-if="authUser">
-          <span class="pl-4 pr-8 bg-white rounded-lg username-box" style="cursor: pointer;">
+          <span
+            class="pl-4 pr-8 bg-white rounded-lg username-box"
+            style="cursor: pointer"
+          >
             {{ authUser.full_name }}
           </span>
-          <VAvatar size="45" class="navbar-avatar relative ">
+          <VAvatar size="45" class="navbar-avatar relative">
             <NuxtLink v-if="authUser.avatar != null">
-              <img :src="authUser.avatar" class="avatar-img rounded-lg" @error="handleImageError" />
+              <img
+                :src="authUser.avatar"
+                class="avatar-img rounded-lg"
+                @error="handleImageError"
+              />
             </NuxtLink>
             <NuxtLink v-else>
-              <img src="@/assets/images/avatar.png" class="avatar-img rounded-lg" />
+              <img
+                src="@/assets/images/avatar.png"
+                class="avatar-img rounded-lg"
+              />
             </NuxtLink>
           </VAvatar>
           <VMenu activator="parent">
@@ -42,7 +52,11 @@
         </VCol>
         <VCol cols="auto" v-if="!authUser">
           <NuxtLink to="/login" class="navbar-link">Sign In</NuxtLink>
-          <NuxtLink to="/register" class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg">Sign Up</NuxtLink>
+          <NuxtLink
+            to="/register"
+            class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
+            >Sign Up</NuxtLink
+          >
         </VCol>
       </VRow>
     </VContainer>
@@ -53,7 +67,6 @@
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
-import { useCookies } from "vue3-cookies";
 import { AuthActionTypes } from "~/store/auth/action-types";
 const router = useRouter();
 const authUser = computed(() => store.state.auth?.authUser);
@@ -67,11 +80,6 @@ watch(
     }
   }
 );
-const { cookies } = useCookies();
-onMounted(() => {
-  if (cookies.get("theUserToken") != null)
-    store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
-});
 
 const logout = async () => {
   store.dispatch(`auth/${AuthActionTypes.logOut}`);

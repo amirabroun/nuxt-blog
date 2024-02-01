@@ -108,13 +108,13 @@ export const actions: ActionTree<AuthState, RootState> = {
         });
       });
   },
-  [AuthActionTypes.fetchAuthUser]: ({ commit }) => {
+  [AuthActionTypes.fetchAuthUser]: async ({ commit }) => {
     commit(AuthMutationTypes.setLoggingInState, {
       isLoggingIn: true,
       status: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`auth/account`, { method: "GET" })
+    await $httpsRequest(`auth/account`, { method: "GET" })
       .then((res: any) => {
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
