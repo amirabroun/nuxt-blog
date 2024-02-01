@@ -45,13 +45,20 @@
                   </VCardText>
                 </VCard>
               </div>
-              <v-alert v-else title="Empty List" text="There are no posts!" />
+              <v-card v-else>
+                <v-alert
+                  type="info"
+                  title="Pay Attention"
+                  text="You have no following!"
+                  variant="tonal"
+                ></v-alert>
+              </v-card>
             </div>
           </v-window-item>
 
           <v-window-item value="suggestion">
             <div>
-              <div v-if="suggestionPosts">
+              <div v-if="suggestionPosts?.length">
                 <VCard
                   v-for="post in suggestionPosts"
                   :key="post.id"
@@ -82,11 +89,14 @@
                 </VCard>
               </div>
 
-              <v-alert
-                v-else
-                title="Empty List"
-                text="There are no posts to suggest!"
-              />
+              <v-card v-else>
+                <v-alert
+                  type="info"
+                  title="Pay Attention"
+                  text="there is no post to show you!"
+                  variant="tonal"
+                ></v-alert>
+              </v-card>
             </div>
           </v-window-item>
         </v-window>
