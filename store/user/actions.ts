@@ -37,20 +37,15 @@ export interface UserResume {
   }[];
 }
 
-interface withUser {
-  with: ['posts', 'followers', 'followings']
-};
-
 export const actions: ActionTree<UserState, RootState> = {
-  [UserActionTypes.fetchUser]: ({ commit }, payload: { uuid: string, with: withUser }) => {
+  [UserActionTypes.fetchUser]: ({ commit }, uuid: string) => {
     commit(UserMutationTypes.fetchUser, {
       loading: true,
       user: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`users/${payload.uuid}`, {
+    $httpsRequest(`users/${uuid}`, {
       method: "POST",
-      data: { with: payload.with },
     }).then((res: any) => {
       commit(UserMutationTypes.fetchUser, {
         loading: false,

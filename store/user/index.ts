@@ -40,6 +40,7 @@ export interface User {
   media?: [];
   posts?: Post[];
   followings?: User[];
+  followers?: User[];
 }
 
 export interface UserState {

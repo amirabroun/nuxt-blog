@@ -43,7 +43,7 @@
               <VRow v-if="user?.followers">
                 <VCol cols="12" lg="12" md="12" class="px-3 follow-box">
                   <VList
-                    v-for="following in user?.followings"
+                    v-for="following in user?.followers"
                     :key="following.uuid"
                     class="list px-3"
                   >
@@ -195,26 +195,19 @@ import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 const route = useRoute();
-let user = ref();
 const tab: Ref<number> = ref(0);
 
 onMounted(() => {
-  store.dispatch(`user/${UserActionTypes.fetchUser}`, {
-    uuid: route.params.uuid,
-    with: ["posts"],
-  });
+  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 });
 
 async function toggleFollow(uuid: any) {
   await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
 
-  await store.dispatch(`user/${UserActionTypes.fetchUser}`, {
-    uuid: route.params.uuid,
-    with: ["posts", "followers", "followings"],
-  });
+  await store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
 }
 
-user = computed(() => store.state.user?.user);
+const user = computed(() => store.state.user?.user);
 
 const posts = computed(() => store.state.user?.user?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
