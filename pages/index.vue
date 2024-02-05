@@ -7,7 +7,7 @@
           <v-tab border="info" value="suggestion" @click.once="fetchSuggestion">Suggestion for you</v-tab>
         </v-tabs>
 
-        <v-window v-model="tab" bg-color="red">
+        <v-window v-model="tab">
           <v-window-item value="followings" v-if="authUser">
             <div>
               <div v-if="posts">
@@ -62,7 +62,7 @@
           </v-window-item>
         </v-window>
       </VCol>
-      <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex mt-14">
+      <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex">
         <v-card class="categories-card px-3 rounded-lg" min-width="450">
           <VList v-for="(user, index) in suggestionUsers" :key="index" class="list">
             <VAvatar size="50" class="mt-1">
