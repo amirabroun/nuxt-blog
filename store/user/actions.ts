@@ -2,6 +2,8 @@ import { ActionTree } from "vuex";
 import { UserState } from ".";
 import { RootState, Status } from "..";
 import { UserMutationTypes } from "./mutations";
+import { store } from "~/store";
+import { showToastSuccessMessage } from "../app/mutations";
 
 export enum UserActionTypes {
   fetchUser = "fetchUser",
@@ -100,4 +102,40 @@ export const actions: ActionTree<UserState, RootState> = {
       });
     });
   },
+};
+
+export const updateUserProfile = async (uuid: any, firstName: string, lastName: string) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`users/${uuid}/update-profile`, {
+    method: "PUT",
+    data: {
+      'first_name': firstName,
+      'last_name': lastName
+    }
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  });
+};
+
+export const deleteUserAvatar = async (uuid: any) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`users/${uuid}/avatar`, {
+    method: "DELETE",
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  });
+}
+
+export const addUserAvatar = async (uuid: any, payload: any) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  
+  await $httpsRequest(`users/${uuid}/avatar`, {
+    method: "POST",
+    data: payload,
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  });
 };
