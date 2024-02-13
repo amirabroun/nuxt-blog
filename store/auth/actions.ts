@@ -122,7 +122,11 @@ export const actions: ActionTree<AuthState, RootState> = {
         });
         commit(AuthMutationTypes.setAuthUser, res.data.user);
       })
-      .catch(() => {
+      .catch((error: any) => {
+        if (error.status === 401) {
+          commit(AuthMutationTypes.cleanAuthInfo);
+        }
+
         commit(AuthMutationTypes.setLoggingInState, {
           isLoggingIn: false,
           status: Status.failed,

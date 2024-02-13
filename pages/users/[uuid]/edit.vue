@@ -3,34 +3,66 @@
     <v-row>
       <v-col lg="8" cols="12" class="mx-auto">
         <v-card class="px-5 py-10 d-flex flex-column align-center">
-          <div class="d-flex justify-center img-box rounded-circle overflow-hidden mx-auto mb-5">
+          <div
+            class="d-flex justify-center img-box rounded-circle overflow-hidden mx-auto mb-5"
+          >
             <img v-if="authUser?.avatar" :src="authUser?.avatar" />
             <img v-else src="@/assets/images/avatar.png" />
             <div class="camera-icon-box d-flex align-center justify-center">
-              <div class="d-flex flex-column justify-center align-center" v-if="!authUser?.avatar"
-                @click="fileInput.click()">
+              <div
+                class="d-flex flex-column justify-center align-center"
+                v-if="!authUser?.avatar"
+                @click="fileInput.click()"
+              >
                 <v-icon color="blue" size="50px">mdi-camera-outline</v-icon>
                 <p class="text">Add Avatar</p>
               </div>
-              <div class="d-flex flex-column justify-center align-center" v-else @click="removeAvatar()">
+              <div
+                class="d-flex flex-column justify-center align-center"
+                v-else
+                @click="removeAvatar()"
+              >
                 <v-icon color="red" size="50px">mdi-delete-outline</v-icon>
                 <p class="text">Delete Avatar</p>
               </div>
             </div>
-            <VFileInput accept="image/*" type="file" class="d-none" ref="fileInput" @change="uploadAvatar()" />
+            <VFileInput
+              accept="image/*"
+              type="file"
+              class="d-none"
+              ref="fileInput"
+              @change="uploadAvatar()"
+            />
           </div>
           <form ref="form" @submit.prevent="submitForm()">
             <div class="my-4">
-              <v-text-field :rules="firstNameRules" v-model="firstName" label="first name" variant="outlined"
-                ref="firstNameInput"></v-text-field>
+              <v-text-field
+                :rules="firstNameRules"
+                v-model="firstName"
+                label="first name"
+                variant="outlined"
+                ref="firstNameInput"
+              />
             </div>
             <div class="my-4">
-              <v-text-field :rules="lastNameRules" v-model="lastName" label="last name" variant="outlined"
-                ref="lastNameInput"></v-text-field>
+              <v-text-field
+                :rules="lastNameRules"
+                v-model="lastName"
+                label="last name"
+                variant="outlined"
+                ref="lastNameInput"
+              />
             </div>
-            <v-btn color="info" type="submit" class="py-6" block>
-              Edit
-            </v-btn>
+            <div class="my-4">
+              <v-text-field
+                v-model="username"
+                @input="searchHandler"
+                label="username"
+                variant="outlined"
+                ref="usernameInput"
+              />
+            </div>
+            <v-btn color="info" type="submit" class="py-6" block> Edit </v-btn>
           </form>
         </v-card>
       </v-col>
@@ -41,28 +73,41 @@
 <script setup lang="ts">
 import { store } from "~/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
-import { addUserAvatar, deleteUserAvatar, updateUserProfile } from "~/store/user/actions";
-const router = useRouter();
+import {
+  addUserAvatar,
+  checkUniqueUsername,
+  deleteUserAvatar,
+  updateUserProfile,
+} from "~/store/user/actions";
 
 const authUser = computed(() => store.state.auth?.authUser);
 const route = useRoute();
-
-if (authUser.value?.uuid !== route.params.uuid) {
-  navigateTo('/404') 
-}
 
 const form = ref();
 const firstNameInput = ref();
 const lastNameInput = ref();
 const fileInput = ref();
+const usernameInput: Ref<string> = ref("");
 
-const firstName: Ref<string> = ref("");
-const lastName: Ref<string> = ref("");
+const firstName = ref(<string>authUser.value?.first_name);
+const lastName = ref(<string>authUser.value?.last_name);
+const username = ref(<string>authUser.value?.username);
+
+let timeout: any = null;
+
+function searchHandler() {
+  if (timeout) clearTimeout(timeout);
+
+  timeout = setTimeout(() => {
+    checkUniqueUsername(authUser.value?.uuid, username.value);
+  }, 1500);
+}
 
 const firstNameRules = ref([
   (value: string) => !!value.trim() || "This field is required",
   (value: string) =>
-    (value && value.length >= 3) || "first Name cannot have less than 3 letters",
+    (value && value.length >= 3) ||
+    "first Name cannot have less than 3 letters",
   (value: string) =>
     (value && value.length <= 20) ||
     "first Name cannot have more than 20 letters",
@@ -101,11 +146,15 @@ async function submitForm() {
     return;
   }
 
-  await updateUserProfile(authUser.value?.uuid, firstName.value, lastName.value);
+  await updateUserProfile(
+    authUser.value?.uuid,
+    firstName.value,
+    lastName.value,
+    username.value
+  );
 
-  router.push(`/`);
+  navigateTo(`/users/${authUser.value.uuid}`);
 }
-
 </script>
 
 <style scoped>
@@ -119,7 +168,7 @@ form {
   width: max-content;
 }
 
-.img-box>img {
+.img-box > img {
   width: 250px;
 }
 
@@ -132,9 +181,15 @@ form {
   cursor: pointer;
 }
 
-
 .text {
   color: white;
   font-size: 1.2rem;
+}
+
+.search-input {
+  font-size: 1.2rem;
+  outline: none;
+  border: 1px solid;
+  border-radius: 5px;
 }
 </style>

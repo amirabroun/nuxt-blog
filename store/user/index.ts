@@ -6,6 +6,8 @@ import { Post } from "../posts";
 export interface User {
   id?: number;
   uuid: string;
+  first_name?: string;
+  last_name?: string;
   full_name?: string;
   username?: string;
   avatar?: string;
