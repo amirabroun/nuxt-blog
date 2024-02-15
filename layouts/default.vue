@@ -34,6 +34,15 @@
               <VListItem :to="`/users/${authUser?.uuid}`">
                 <VListItemTitle class="text-black">
                   <VIcon class="mr-4"> mdi-account</VIcon>Profile
+                  <NuxtLink
+                    width="80px"
+                    height="25px"
+                    v-if="authUser"
+                    :to="`/users/${authUser.uuid}/edit`"
+                    class="edit-link"
+                  >
+                    Edit
+                  </NuxtLink>
                 </VListItemTitle>
               </VListItem>
               <VListItem :to="`/users/${authUser?.uuid}/resume`">
@@ -147,5 +156,14 @@ a {
   padding-bottom: 6px;
   font-size: 0.9rem;
   background: linear-gradient(to left, #00416ac2, #71a9e075);
+}
+
+.edit-link {
+  background-color: #0c356a;
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 5px 15px;
+  border-radius: 10px;
+  margin-left: 60px;
 }
 </style>
