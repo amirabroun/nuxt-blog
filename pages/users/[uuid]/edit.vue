@@ -8,11 +8,13 @@
           >
             <img v-if="authUser?.avatar" :src="authUser?.avatar" />
             <img v-else src="@/assets/images/avatar.png" />
-            <div class="camera-icon-box d-flex align-center justify-center">
+            <div
+              class="camera-icon-box d-flex align-center justify-center"
+              @click="fileInput.click()"
+            >
               <div
                 class="d-flex flex-column justify-center align-center"
                 v-if="!authUser?.avatar"
-                @click="fileInput.click()"
               >
                 <v-icon color="blue" size="50px">mdi-camera-outline</v-icon>
                 <p class="text">Add Avatar</p>
