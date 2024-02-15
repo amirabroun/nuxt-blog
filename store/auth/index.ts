@@ -1,10 +1,9 @@
 import { Module } from "vuex";
 import { store, RootState, Status } from "..";
 import { actions } from "./actions";
-import { mutations } from "./mutations";
+import { AuthMutationTypes, mutations } from "./mutations";
 import { getters } from "./getters";
 import { AuthActionTypes } from "./action-types";
-import { AuthMutationTypes } from "./mutation-types";
 import { User } from "../user";
 
 export interface AuthState {

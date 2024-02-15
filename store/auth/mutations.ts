@@ -1,9 +1,16 @@
 import { MutationTree } from "vuex";
 import { AuthState } from ".";
 import { Status } from "..";
-import { AuthMutationTypes } from "./mutation-types";
 import { useCookies } from "vue3-cookies";
 import { User } from "../user";
+
+export enum AuthMutationTypes {
+  setAuthUser = "setAuthUser",
+  setLoggingInState = "setLoggingInState",
+  setLoggingOutState = "setLoggingOutState",
+  setToken = "setToken",
+  cleanAuthInfo = "cleanAuthInfo",
+}
 
 export const mutations: MutationTree<AuthState> = {
   [AuthMutationTypes.setLoggingInState]: (
@@ -37,11 +44,5 @@ export const mutations: MutationTree<AuthState> = {
     state.status = null;
     state.theUserToken = null;
     cookies.remove("theUserToken");
-  },
-  [AuthMutationTypes.setLoadingAuthOrganizations]: (
-    state,
-    loading: boolean
-  ) => {
-    state.loadingOrganizations = loading;
-  },
+  }
 };

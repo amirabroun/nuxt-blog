@@ -2,7 +2,7 @@ import { ActionTree } from "vuex";
 import { AuthState } from ".";
 import { RootState, Status } from "..";
 import { AuthActionTypes } from "./action-types";
-import { AuthMutationTypes } from "./mutation-types";
+import { AuthMutationTypes } from "./mutations";
 import {
   showToastErrorMessage,
   showToastSuccessMessage,
