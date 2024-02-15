@@ -3,7 +3,7 @@
     v-if="isAuthUser"
     fab
     dark
-    color="secondary"
+    color="info"
     :to="'/posts/create'"
     class="text-white bg-info fixed-bottom-right btn"
   >

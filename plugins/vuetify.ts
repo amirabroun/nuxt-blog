@@ -18,14 +18,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             secondary: "#707070",
             info: "#0783f1",
             success: "#4caf50",
-            medium: "#f1f4f6",
-            dark: "#f2f2f2",
-            darker: "#707070",
             light: "#f1f4f6",
-            lighter: "#ffffff",
-            "employee-green": "#33d15d",
-            "employee-green-darker": "#53bf77",
-            orange: "#f16b42"
           },
         }
       }
