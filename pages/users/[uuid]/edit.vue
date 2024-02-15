@@ -153,7 +153,10 @@ async function submitForm() {
     username.value
   );
 
-  navigateTo(`/users/${authUser.value.uuid}`);
+  reloadNuxtApp({
+    path: `/users/${authUser.value.uuid}`,
+    force: true,
+  });
 }
 </script>
 

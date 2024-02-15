@@ -4,7 +4,6 @@ import { RootState, Status } from "..";
 import { UserMutationTypes } from "./mutations";
 import { store } from "~/store";
 import { showToastErrorMessage, showToastSuccessMessage } from "../app/mutations";
-import { AuthMutationTypes } from "../auth/mutation-types";
 
 export enum UserActionTypes {
   fetchUser = "fetchUser",
@@ -116,8 +115,6 @@ export const updateUserProfile = async (uuid: any, firstName: string, lastName: 
       'username': username,
     }
   }).then((res: any) => {
-    store.commit(AuthMutationTypes.setAuthUser, res.data.user);
-
     showToastSuccessMessage(store.commit, res.message);
   });
 };
