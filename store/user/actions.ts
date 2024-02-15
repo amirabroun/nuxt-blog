@@ -3,7 +3,7 @@ import { UserState } from ".";
 import { RootState, Status } from "..";
 import { UserMutationTypes } from "./mutations";
 import { store } from "~/store";
-import { showToastSuccessMessage } from "../app/mutations";
+import { showToastErrorMessage, showToastSuccessMessage } from "../app/mutations";
 
 export enum UserActionTypes {
   fetchUser = "fetchUser",
@@ -118,6 +118,21 @@ export const updateUserProfile = async (uuid: any, firstName: string, lastName: 
   });
 };
 
+export const checkUniqueUsername = async (uuid: any, username: string|any) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`users/${uuid}/username/check`, {
+    method: "POST",
+    data: {
+      'username': username
+    }
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  }).catch((res: any) => {
+    showToastErrorMessage(store.commit, res.data.message);
+  });
+};
+
 export const deleteUserAvatar = async (uuid: any) => {
   const { $httpsRequest } = useNuxtApp();
 
@@ -131,7 +146,6 @@ export const deleteUserAvatar = async (uuid: any) => {
 export const addUserAvatar = async (uuid: any, payload: any) => {
   const { $httpsRequest } = useNuxtApp();
 
-  
   await $httpsRequest(`users/${uuid}/avatar`, {
     method: "POST",
     data: payload,
