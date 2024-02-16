@@ -48,10 +48,10 @@ export const actions: ActionTree<PostsState, RootState> = {
           posts: res.data.posts,
         });
 
-        showToastSuccessMessage(store.commit, res.data.message);
+        showToastSuccessMessage(store.commit, res.message);
       })
       .catch((error: any) => {
-        showToastErrorMessage(store.commit, error.data.message);
+        showToastErrorMessage(store.commit, error.message);
       });
   },
 };
