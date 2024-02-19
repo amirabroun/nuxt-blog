@@ -16,17 +16,98 @@
           <v-window v-model="tab">
             <v-window-item value="posts">
               <div v-if="posts?.length">
-                <VCard class="pa-2 mb-3" v-for="post in posts" :key="post.id">
-                  <VImg
-                    :src="post.media?.find(() => true)?.original_url"
-                    max-height="400"
-                    class="rounded-lg"
-                  ></VImg>
-                  <VCardTitle class="text-h5">{{ post.title }}</VCardTitle>
-                  <VCardText>{{ post.body }}</VCardText>
-                  <VCardSubtitle class="mb-1">
-                    <span class="text-grey ml-1">{{ post.created_at }}</span>
-                  </VCardSubtitle>
+                <VCard
+                  class="relative pa-2 mb-3"
+                  v-for="post in posts"
+                  :key="post.id"
+                  style="position: relative"
+                  :id="`post-${post.id}`"
+                >
+                  <div
+                    v-if="authUser && user?.uuid === authUser?.uuid"
+                    class="post-menu"
+                  >
+                    <VIcon @click="showSubMenu(post.id)">
+                      <font-awesome-icon
+                        :icon="['fas', 'ellipsis-v']"
+                        class="post-menu-icon"
+                      />
+                    </VIcon>
+                    <ul class="post-submenu" :id="`post-subMenu-${post.id}`">
+                      <li
+                        @click="changeEditMode(post.id)"
+                        class="edit-post-link"
+                      >
+                        <button>Edit</button>
+                      </li>
+                      <li>
+                        <button
+                          class="delete-post-link"
+                          @click="deletePost(post.uuid)"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="main-post-container">
+                    <VImg
+                      :src="post.media?.find(() => true)?.original_url"
+                      max-height="400"
+                      class="rounded-lg"
+                    ></VImg>
+                    <VCardTitle class="text-h5">{{ post.title }}</VCardTitle>
+                    <VCardText>{{ post.body }}</VCardText>
+                    <VCardSubtitle class="mb-1">
+                      <span class="text-grey ml-1">{{ post.created_at }}</span>
+                    </VCardSubtitle>
+                  </div>
+                  <div class="edit-post-container">
+                    <VForm>
+                      <VRow>
+                        <VCol cols="12">
+                          <VFileInput
+                            label="File input"
+                            accept="image/*"
+                            ref="file"
+                          ></VFileInput>
+                        </VCol>
+                        <VCol cols="12">
+                          <VTextField
+                            :value="post.title"
+                            ref="title"
+                            required
+                            solo
+                            placeholder="title"
+                          />
+                        </VCol>
+
+                        <VCol cols="12">
+                          <VTextarea
+                            :value="post.body"
+                            ref="body"
+                            required
+                            solo
+                            placeholder="Write your body"
+                          />
+                        </VCol>
+
+                        <VCol cols="4">
+                          <VBtn
+                            color="red"
+                            block
+                            @click="cancelEditMode(post.id)"
+                            class="formBtn"
+                          >
+                            Cancel
+                          </VBtn>
+                        </VCol>
+                        <VCol cols="8">
+                          <VBtn color="green" block> Edit </VBtn>
+                        </VCol>
+                      </VRow>
+                    </VForm>
+                  </div>
                 </VCard>
               </div>
               <div v-else>
@@ -43,15 +124,39 @@
 
             <v-window-item value="followers">
               <div v-if="user?.followers">
-                <VList v-for="follower in user?.followers" :key="follower.uuid" class="rounded-lg px-4 mb-2">
-                  <VAvatar size="50 " class="ml-1 mr-3" style="border-radius: 10px">
-                    <img v-if="follower.avatar != null" :src="follower.avatar" class="avatar-img" />
-                    <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
+                <VList
+                  v-for="follower in user?.followers"
+                  :key="follower.uuid"
+                  class="rounded-lg px-4 mb-2"
+                >
+                  <VAvatar
+                    size="50 "
+                    class="ml-1 mr-3"
+                    style="border-radius: 10px"
+                  >
+                    <img
+                      v-if="follower.avatar != null"
+                      :src="follower.avatar"
+                      class="avatar-img"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/images/avatar.png"
+                      class="avatar-img"
+                    />
                   </VAvatar>
                   {{ follower.full_name }}
-                  <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != follower?.uuid"
-                    @click="toggleFollow(follower?.uuid)" class="ml-4 rounded-lg"
-                    :color="follower?.auth_followed_at == null ? 'success' : 'red'" style="font-size: 0.62rem">
+                  <VBtn
+                    width="80px"
+                    height="25px"
+                    v-if="authUser && authUser.uuid != follower?.uuid"
+                    @click="toggleFollow(follower?.uuid)"
+                    class="ml-4 rounded-lg"
+                    :color="
+                      follower?.auth_followed_at == null ? 'success' : 'red'
+                    "
+                    style="font-size: 0.62rem"
+                  >
                     {{
                       follower?.auth_followed_at == null ? "follow" : "unfollow"
                     }}
@@ -72,15 +177,39 @@
 
             <v-window-item value="followings">
               <div v-if="user?.followings">
-                <VList v-for="following in user?.followings" :key="following.uuid" class="rounded-lg px-4 mb-2">
-                  <VAvatar size="50 " class="ml-1 mr-3" style="border-radius: 10px">
-                    <img v-if="following.avatar != null" :src="following.avatar" class="avatar-img" />
-                    <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
+                <VList
+                  v-for="following in user?.followings"
+                  :key="following.uuid"
+                  class="rounded-lg px-4 mb-2"
+                >
+                  <VAvatar
+                    size="50 "
+                    class="ml-1 mr-3"
+                    style="border-radius: 10px"
+                  >
+                    <img
+                      v-if="following.avatar != null"
+                      :src="following.avatar"
+                      class="avatar-img"
+                    />
+                    <img
+                      v-else
+                      src="@/assets/images/avatar.png"
+                      class="avatar-img"
+                    />
                   </VAvatar>
                   {{ following.full_name }}
-                  <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != following?.uuid"
-                    @click="toggleFollow(following?.uuid)" class="ml-4 rounded-lg"
-                    :color="following?.auth_followed_at == null ? 'success' : 'red'" style="font-size: 0.62rem">
+                  <VBtn
+                    width="80px"
+                    height="25px"
+                    v-if="authUser && authUser.uuid != following?.uuid"
+                    @click="toggleFollow(following?.uuid)"
+                    class="ml-4 rounded-lg"
+                    :color="
+                      following?.auth_followed_at == null ? 'success' : 'red'
+                    "
+                    style="font-size: 0.62rem"
+                  >
                     {{
                       following?.auth_followed_at == null
                         ? "follow"
@@ -177,6 +306,24 @@ const user = computed(() => store.state.user?.user);
 
 const posts = computed(() => store.state.user?.user?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
+
+function showSubMenu(id: number | undefined) {
+  const element = document.querySelector(`#post-subMenu-${id}`);
+  if (element) element.classList.toggle("show");
+}
+
+function changeEditMode(id: number | undefined) {
+  const element = document.querySelector(`#post-${id}`);
+  if (element) element.classList.toggle("edit-mode");
+  showSubMenu(id);
+}
+
+async function deletePost(postUUID: string) {}
+
+function cancelEditMode(id: number | undefined) {
+  const element = document.querySelector(`#post-${id}`);
+  if (element) element.classList.remove("edit-mode");
+}
 </script>
 <style scoped>
 .btn {
@@ -209,5 +356,64 @@ const authUser = computed(() => store.state.auth?.authUser);
   padding: 5px 15px;
   border-radius: 10px;
   margin-left: 10px;
+}
+
+.post-menu {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.post-submenu {
+  position: absolute;
+  top: 25px;
+  right: 8px;
+  list-style-type: none;
+  background-color: #fff;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.post-submenu.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.post-submenu li {
+  margin: 5px 0;
+  width: 80px;
+}
+
+.delete-post-link {
+  color: #0783f1;
+}
+.delete-post-link {
+  color: #eb4d4b;
+}
+
+.edit-post-link {
+  cursor: pointer;
+}
+
+.edit-post-link button {
+  pointer-events: none;
+}
+
+.edit-mode .main-post-container {
+  display: none;
+}
+
+.edit-post-container {
+  display: none;
+}
+.edit-mode .edit-post-container {
+  display: block;
 }
 </style>

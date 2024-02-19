@@ -31,8 +31,9 @@ export interface Post {
   body?: string;
   media?: Media[];
   created_at?: Date;
+  uuid: string;
 }
 
 export interface Media {
-  original_url: string
+  original_url: string;
 }

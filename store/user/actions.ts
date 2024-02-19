@@ -3,7 +3,10 @@ import { UserState } from ".";
 import { RootState, Status } from "..";
 import { UserMutationTypes } from "./mutations";
 import { store } from "~/store";
-import { showToastErrorMessage, showToastSuccessMessage } from "../app/mutations";
+import {
+  showToastErrorMessage,
+  showToastSuccessMessage,
+} from "../app/mutations";
 
 export enum UserActionTypes {
   fetchUser = "fetchUser",
@@ -25,14 +28,14 @@ export interface UserResume {
     started_at: string;
   }[];
   education:
-  | {
-    field?: string;
-    university?: string;
-    started_at?: string;
-    finished_at?: string;
-    location?: string;
-  }[]
-  | undefined;
+    | {
+        field?: string;
+        university?: string;
+        started_at?: string;
+        finished_at?: string;
+        location?: string;
+      }[]
+    | undefined;
   contact: {
     title: string;
     link: string;
@@ -40,13 +43,13 @@ export interface UserResume {
 }
 
 export const actions: ActionTree<UserState, RootState> = {
-  [UserActionTypes.fetchUser]: ({ commit }, uuid: string) => {
+  [UserActionTypes.fetchUser]: async ({ commit }, uuid: string) => {
     commit(UserMutationTypes.fetchUser, {
       loading: true,
       user: null,
     });
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`users/${uuid}`, {
+    await $httpsRequest(`users/${uuid}`, {
       method: "POST",
     }).then((res: any) => {
       commit(UserMutationTypes.fetchUser, {
@@ -104,34 +107,44 @@ export const actions: ActionTree<UserState, RootState> = {
   },
 };
 
-export const updateUserProfile = async (uuid: any, firstName: string, lastName: string, username: string) => {
+export const updateUserProfile = async (
+  uuid: any,
+  firstName: string,
+  lastName: string,
+  username: string
+) => {
   const { $httpsRequest } = useNuxtApp();
 
   await $httpsRequest(`users/${uuid}/update-profile`, {
     method: "PUT",
     data: {
-      'first_name': firstName,
-      'last_name': lastName,
-      'username': username,
-    }
+      first_name: firstName,
+      last_name: lastName,
+      username: username,
+    },
   }).then((res: any) => {
     showToastSuccessMessage(store.commit, res.message);
   });
 };
 
-export const checkUniqueUsername = async (uuid: any, username: string | any) => {
+export const checkUniqueUsername = async (
+  uuid: any,
+  username: string | any
+) => {
   const { $httpsRequest } = useNuxtApp();
 
   await $httpsRequest(`users/${uuid}/username/check`, {
     method: "POST",
     data: {
-      'username': username
-    }
-  }).then((res: any) => {
-    showToastSuccessMessage(store.commit, res.message);
-  }).catch((res: any) => {
-    showToastErrorMessage(store.commit, res.data.message);
-  });
+      username: username,
+    },
+  })
+    .then((res: any) => {
+      showToastSuccessMessage(store.commit, res.message);
+    })
+    .catch((res: any) => {
+      showToastErrorMessage(store.commit, res.data.message);
+    });
 };
 
 export const deleteUserAvatar = async (uuid: any) => {
@@ -142,7 +155,7 @@ export const deleteUserAvatar = async (uuid: any) => {
   }).then((res: any) => {
     showToastSuccessMessage(store.commit, res.message);
   });
-}
+};
 
 export const addUserAvatar = async (uuid: any, payload: any) => {
   const { $httpsRequest } = useNuxtApp();
