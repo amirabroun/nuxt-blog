@@ -1,71 +1,83 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row>
       <v-col lg="8" cols="12" class="mx-auto">
-        <v-card class="px-5 py-10 d-flex flex-column align-center">
-          <div
-            class="d-flex justify-center img-box rounded-circle overflow-hidden mx-auto mb-5"
-          >
-            <img v-if="authUser?.avatar" :src="authUser?.avatar" />
-            <img v-else src="@/assets/images/avatar.png" />
-            <div
-              class="camera-icon-box d-flex align-center justify-center"
-              @click="fileInput.click()"
-            >
-              <div
-                class="d-flex flex-column justify-center align-center"
-                v-if="!authUser?.avatar"
-              >
-                <v-icon color="blue" size="50px">mdi-camera-outline</v-icon>
-                <p class="text">Add Avatar</p>
+        <v-card class="px-2 py-8 d-flex align-center">
+          <v-row>
+            <v-col>
+              <div class="d-flex img-box overflow-hidden mx-auto">
+                <img v-if="authUser?.avatar" :src="authUser?.avatar" />
+                <img v-else src="@/assets/images/avatar.png" />
+                <div
+                  class="camera-icon-box d-flex align-center justify-center"
+                  @click="fileInput.click()"
+                >
+                  <div
+                    class="d-flex flex-column justify-center align-center"
+                    v-if="!authUser?.avatar"
+                  >
+                    <v-icon color="blue" size="50px">mdi-camera-outline</v-icon>
+                    <p class="text">Add Avatar</p>
+                  </div>
+                  <div
+                    class="d-flex flex-column justify-center align-center"
+                    v-else
+                    @click="removeAvatar()"
+                  >
+                    <v-icon color="red" size="50px">mdi-delete-outline</v-icon>
+                    <p class="text">Delete Avatar</p>
+                  </div>
+                </div>
+                <VFileInput
+                  accept="image/*"
+                  type="file"
+                  class="d-none"
+                  ref="fileInput"
+                  @change="uploadAvatar()"
+                />
               </div>
-              <div
-                class="d-flex flex-column justify-center align-center"
-                v-else
-                @click="removeAvatar()"
-              >
-                <v-icon color="red" size="50px">mdi-delete-outline</v-icon>
-                <p class="text">Delete Avatar</p>
+            </v-col>
+            <form ref="form" @submit.prevent="submitForm()" class="mx-auto">
+              <div class="my-2">
+                <v-text-field
+                  class="mr-10"
+                  :rules="firstNameRules"
+                  v-model="firstName"
+                  label="first name"
+                  variant="solo-filled"
+                  ref="firstNameInput"
+                />
               </div>
-            </div>
-            <VFileInput
-              accept="image/*"
-              type="file"
-              class="d-none"
-              ref="fileInput"
-              @change="uploadAvatar()"
-            />
-          </div>
-          <form ref="form" @submit.prevent="submitForm()">
-            <div class="my-4">
-              <v-text-field
-                :rules="firstNameRules"
-                v-model="firstName"
-                label="first name"
+              <div class="my-2">
+                <v-text-field
+                  class="mr-10"
+                  :rules="lastNameRules"
+                  v-model="lastName"
+                  label="last name"
+                  variant="solo-filled"
+                  ref="lastNameInput"
+                />
+              </div>
+              <div class="my-2">
+                <v-text-field
+                  class="mr-10"
+                  v-model="username"
+                  @input="searchHandler"
+                  label="username"
+                  variant="solo-filled"
+                  ref="usernameInput"
+                />
+              </div>
+              <v-btn
+                type="submit"
+                class="py-1 border"
+                color="info"
                 variant="outlined"
-                ref="firstNameInput"
-              />
-            </div>
-            <div class="my-4">
-              <v-text-field
-                :rules="lastNameRules"
-                v-model="lastName"
-                label="last name"
-                variant="outlined"
-                ref="lastNameInput"
-              />
-            </div>
-            <div class="my-4">
-              <v-text-field
-                v-model="username"
-                @input="searchHandler"
-                label="username"
-                variant="outlined"
-                ref="usernameInput"
-              />
-            </div>
-            <v-btn color="info" type="submit" class="py-6" block> Edit </v-btn>
-          </form>
+              >
+                Update
+              </v-btn>
+            </form>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -170,6 +182,7 @@ form {
 .img-box {
   position: relative;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  border-radius: 20%;
   width: max-content;
 }
 
@@ -181,11 +194,14 @@ form {
   position: absolute;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 20%;
   background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
+#btn {
+  border: thin solid #00416a;
+}
 .text {
   color: white;
   font-size: 1.2rem;
