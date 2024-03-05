@@ -24,6 +24,7 @@ export interface PostsState {
 }
 
 export interface Post {
+  uuid: string;
   id?: number;
   user: User;
   title?: string;
@@ -31,7 +32,6 @@ export interface Post {
   body?: string;
   media?: Media[];
   created_at?: Date;
-  uuid: string;
 }
 
 export interface Media {
