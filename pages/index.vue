@@ -2,34 +2,31 @@
   <VContainer>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <v-tabs v-if="authUser" v-model="tab"  bg-color="primary" class="rounded-lg mb-2">
+        <v-tabs
+          v-if="authUser"
+          v-model="tab"
+          bg-color="primary"
+          class="rounded-lg mb-2"
+        >
           <v-tab value="followings">Your followings</v-tab>
-          <v-tab border="info" value="suggestion" @click.once="fetchSuggestion">Suggestion for you</v-tab>
+          <v-tab border="info" value="suggestion" @click.once="fetchSuggestion"
+            >Suggestion for you</v-tab
+          >
         </v-tabs>
 
         <v-window v-model="tab">
           <v-window-item value="followings" v-if="authUser">
             <div>
-              <div v-if="posts">
-                <v-card v-for="post in posts" :key="post.id" class="mb-3 pa-2 rounded-lg" flat>
-                  <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
-                  <VCardTitle class="text-h5 my-4">
-                    {{ post.title }}
-                  </VCardTitle>
-                  <VCardText>
-                    <div>{{ post.body }}</div>
-                    <div class="text-grey mt-3">
-                      by
-                      <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                        {{ post.user.full_name }}
-                      </NuxtLink>
-                      <span class="ml-1">at {{ post.created_at }}</span>
-                    </div>
-                  </VCardText>
-                </v-card>
+              <div v-if="posts?.length">
+                <post-card :posts="posts"></post-card>
               </div>
               <v-card v-else>
-                <v-alert type="info" title="Pay Attention" text="You have no following!" variant="tonal"></v-alert>
+                <v-alert
+                  type="info"
+                  title="Pay Attention"
+                  text="You have no following!"
+                  variant="tonal"
+                ></v-alert>
               </v-card>
             </div>
           </v-window-item>
@@ -37,26 +34,16 @@
           <v-window-item value="suggestion">
             <div>
               <div v-if="suggestionPosts?.length">
-                <v-card v-for="post in suggestionPosts" :key="post.id" class="mb-3 pa-2 rounded-lg">
-                  <VImg :src="post.media?.find(() => true)?.original_url" max-height="400" class="rounded-lg"></VImg>
-                  <VCardTitle class="text-h5 my-4">
-                    {{ post.title }}
-                  </VCardTitle>
-                  <VCardText>
-                    <div>{{ post.body }}</div>
-                    <div class="text-grey mt-3">
-                      by
-                      <NuxtLink class="text-info" :to="`/users/${post.user.uuid}`">
-                        {{ post.user.full_name }}
-                      </NuxtLink>
-                      <span class="ml-1">at {{ post.created_at }}</span>
-                    </div>
-                  </VCardText>
-                </v-card>
+                <post-card :posts="suggestionPosts"></post-card>
               </div>
 
               <v-card v-else>
-                <v-alert type="info" title="Pay Attention" text="there is no post to show you!" variant="tonal"></v-alert>
+                <v-alert
+                  type="info"
+                  title="Pay Attention"
+                  text="there is no post to show you!"
+                  variant="tonal"
+                ></v-alert>
               </v-card>
             </div>
           </v-window-item>
@@ -64,16 +51,31 @@
       </VCol>
       <VCol v-if="authUser" cols="12" md="4" class="d-none d-lg-flex">
         <v-card class="categories-card px-3 rounded-lg" min-width="450">
-          <VList v-for="(user, index) in suggestionUsers" :key="index" class="list">
+          <VList
+            v-for="(user, index) in suggestionUsers"
+            :key="index"
+            class="list"
+          >
             <VAvatar size="50" class="mt-1">
-              <img v-if="user.avatar != null" :src="user.avatar" class="avatar-img" />
+              <img
+                v-if="user.avatar != null"
+                :src="user.avatar"
+                class="avatar-img"
+              />
               <img v-else src="@/assets/images/avatar.png" class="avatar-img" />
             </VAvatar>
             <NuxtLink class="text-info ml-3" :to="`/users/${user.uuid}`">
               {{ user.full_name }}
             </NuxtLink>
-            <VBtn width="80px" height="25px" v-if="authUser && authUser.uuid != user?.uuid"
-              @click="toggleFollow(user?.uuid)" class="ml-4 rounded-lg"  :color="user?.auth_followed_at == null ? 'success' : 'red'" style="font-size: 0.62rem">
+            <VBtn
+              width="80px"
+              height="25px"
+              v-if="authUser && authUser.uuid != user?.uuid"
+              @click="toggleFollow(user?.uuid)"
+              class="ml-4 rounded-lg"
+              :color="user?.auth_followed_at == null ? 'success' : 'red'"
+              style="font-size: 0.62rem"
+            >
               {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
             </VBtn>
           </VList>
@@ -99,6 +101,7 @@ const posts = computed(() => store.state.posts?.posts);
 let suggestionUsers = ref();
 
 const authUser = computed(() => store.state.auth?.authUser);
+
 const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 
 async function fetchSuggestion() {
@@ -124,6 +127,24 @@ async function toggleFollow(uuid: string) {
     suggestionUsers.value = store.state.users?.suggestionUsers;
   }
   store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+}
+
+function showSubMenu(id: number | undefined) {
+  const element = document.querySelector(`#post-subMenu-${id}`);
+  if (element) element.classList.toggle("show");
+}
+
+function changeEditMode(id: number | undefined) {
+  const element = document.querySelector(`#post-${id}`);
+  if (element) element.classList.toggle("edit-mode");
+  showSubMenu(id);
+}
+
+async function deletePost(postUUID: string) {}
+
+function cancelEditMode(id: number | undefined) {
+  const element = document.querySelector(`#post-${id}`);
+  if (element) element.classList.remove("edit-mode");
 }
 </script>
 
@@ -183,4 +204,65 @@ async function toggleFollow(uuid: string) {
   color: #4caf50;
 }
 
+.post-menu {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.post-menu-icon {
+  pointer-events: none;
+}
+
+.post-submenu {
+  position: absolute;
+  top: 25px;
+  right: 8px;
+  list-style-type: none;
+  background-color: #fff;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.post-submenu.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.post-submenu li {
+  margin: 5px 0;
+  width: 80px;
+}
+
+.delete-post-link {
+  color: #0783f1;
+}
+.delete-post-link {
+  color: #eb4d4b;
+}
+
+.edit-post-link {
+  cursor: pointer;
+}
+
+.edit-post-link button {
+  pointer-events: none;
+}
+
+.edit-mode .main-post-container {
+  display: none;
+}
+
+.edit-post-container {
+  display: none;
+}
+.edit-mode .edit-post-container {
+  display: block;
+}
 </style>
