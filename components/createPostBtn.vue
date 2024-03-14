@@ -1,17 +1,25 @@
 <template>
-  <VBtn
+  <v-btn
     v-if="isAuthUser"
-    fab
-    dark
-    color="info"
     :to="'/posts/create'"
-    class="text-white bg-info fixed-bottom-right btn"
-  >
-    <VIcon>mdi-plus</VIcon>
-  </VBtn>
+    color="info"
+    size="60"
+    class="btn"
+    position="fixed"
+    icon="mdi-plus"
+    rounded="circle"
+  />
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["isAuth"]);
-const isAuthUser = props.isAuth;
+import { store } from "~/store";
+
+const isAuthUser = store.getters["auth/getAuthUser"];
 </script>
+
+<style>
+.btn {
+  bottom: 30px;
+  right: 30px;
+}
+</style>

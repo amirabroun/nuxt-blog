@@ -59,6 +59,8 @@ const title = ref();
 const body = ref();
 const file = ref();
 
+const authUser = store.getters["auth/getAuthUser"];
+
 async function createPost() {
   let formData = new FormData();
 
@@ -69,5 +71,9 @@ async function createPost() {
   }
 
   store.dispatch(`posts/${PostsActionTypes.createPost}`, formData);
+
+  setTimeout(() => {
+    navigateTo(`/users/${authUser.uuid}`);
+  }, 1000);
 }
 </script>
