@@ -55,3 +55,44 @@ export const actions: ActionTree<PostsState, RootState> = {
       });
   },
 };
+
+export const deletePost = async (uuid: string) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`posts/${uuid}`, {
+    method: "DELETE",
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  }).catch((error: any) => {
+    showToastErrorMessage(store.commit, error.message);
+  });
+};
+
+export const updatePost = async (uuid: string, payload: any) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  return await $httpsRequest(`posts/${uuid}/update`, {
+    method: "POST",
+    data: payload,
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+
+    return res;
+  }).catch((error: any) => {
+    showToastErrorMessage(store.commit, error.message);
+
+    return error;
+  });
+};
+
+export const deletePostImage = async (uuid: string) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`posts/${uuid}/image`, {
+    method: "DELETE",
+  }).then((res: any) => {
+    showToastSuccessMessage(store.commit, res.message);
+  }).catch((error: any) => {
+    showToastErrorMessage(store.commit, error.message);
+  });
+};
