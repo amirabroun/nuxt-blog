@@ -1,8 +1,8 @@
 <template>
   <VContainer fluid>
     <VRow justify="center">
-      <VCol lg="1" class="d-none d-lg-flex"></VCol>
-      <VCol lg="6" md="6">
+      <v-col lg="1" class="d-none d-lg-flex"></v-col>
+      <v-col lg="6" md="6">
         <v-tabs v-model="tab" bg-color="primary" class="rounded-lg mb-2">
           <v-tab value="posts">posts</v-tab>
           <v-tab value="followers"
@@ -21,16 +21,15 @@
               <v-card>
                 <v-alert
                   type="info"
-                  title="Pay Attention"
-                  text="This user has no posts to display and therefore we cannot show you anything!"
-                  variant="tonal"
-                ></v-alert>
+                  text="This user has no posts!"
+                  variant="text"
+                />
               </v-card>
             </div>
           </v-window-item>
 
           <v-window-item value="followers">
-            <div v-if="user?.followers">
+            <div v-if="user?.followers?.length">
               <VList
                 v-for="follower in user?.followers"
                 :key="follower.uuid"
@@ -60,7 +59,7 @@
                   @click="toggleFollow(follower?.uuid)"
                   class="ml-4 rounded-lg"
                   :color="
-                    follower?.auth_followed_at == null ? 'success' : 'red'
+                    follower?.auth_followed_at == null ? 'success' : 'danger'
                   "
                   style="font-size: 0.62rem"
                 >
@@ -74,16 +73,15 @@
               <v-card>
                 <v-alert
                   type="info"
-                  title="Pay Attention"
-                  text="This user has no Followings to display and therefore we cannot show you anything!"
-                  variant="tonal"
-                ></v-alert>
+                  text="This user has no followers!"
+                  variant="text"
+                />
               </v-card>
             </div>
           </v-window-item>
 
           <v-window-item value="followings">
-            <div v-if="user?.followings">
+            <div v-if="user?.followings?.length">
               <VList
                 v-for="following in user?.followings"
                 :key="following.uuid"
@@ -113,7 +111,7 @@
                   @click="toggleFollow(following?.uuid)"
                   class="ml-4 rounded-lg"
                   :color="
-                    following?.auth_followed_at == null ? 'success' : 'red'
+                    following?.auth_followed_at == null ? 'success' : 'danger'
                   "
                   style="font-size: 0.62rem"
                 >
@@ -127,19 +125,18 @@
               <v-card>
                 <v-alert
                   type="info"
-                  title="Pay Attention"
-                  text="This user has no posts to display and therefore we cannot show you anything!"
-                  variant="tonal"
-                ></v-alert>
+                  text="This user has no followings!"
+                  variant="text"
+                />
               </v-card>
             </div>
           </v-window-item>
         </v-window>
-      </VCol>
-      <VCol lg="4" md="6" sm="12">
+      </v-col>
+      <v-col lg="4" md="6" sm="12">
         <VCard class="pa-3 user-info w-100">
           <VRow>
-            <VCol cols="3" lg="3" md="3">
+            <v-col cols="3" lg="3" md="3">
               <img
                 :src="user?.avatar"
                 v-if="user?.avatar"
@@ -152,8 +149,8 @@
                 width="100"
                 class="rounded-xl"
               />
-            </VCol>
-            <VCol cols="9" lg="9" md="9" class="mt-3">
+            </v-col>
+            <v-col cols="9" lg="9" md="9" class="mt-3">
               {{ user?.full_name }}
               <VBtn
                 width="80px"
@@ -162,7 +159,7 @@
                 @click="toggleFollow(user?.uuid)"
                 style="font-size: 0.62rem"
                 class="ml-3 rounded-lg"
-                :color="user?.auth_followed_at == null ? 'success' : 'red'"
+                :color="user?.auth_followed_at == null ? 'success' : 'danger'"
               >
                 {{ user?.auth_followed_at == null ? "follow" : "unfollow" }}
               </VBtn>
@@ -178,11 +175,11 @@
               <div class="mt-3" style="font-size: 20px">
                 {{ user?.username }}
               </div>
-            </VCol>
+            </v-col>
           </VRow>
         </VCard>
-      </VCol>
-      <VCol lg="1" class="d-none d-lg-flex"></VCol>
+      </v-col>
+      <v-col lg="1" class="d-none d-lg-flex"></v-col>
     </VRow>
     <createPostBtn :isAuth="authUser" />
   </VContainer>
@@ -210,7 +207,6 @@ const user = computed(() => store.state.user?.user);
 
 const posts = computed(() => store.state.user?.user?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
-
 </script>
 <style scoped>
 .btn {

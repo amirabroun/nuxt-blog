@@ -24,7 +24,11 @@
                     v-else
                     @click="removeAvatar()"
                   >
-                    <v-icon color="red" size="50px">mdi-delete-outline</v-icon>
+                    <v-icon
+                      color="danger"
+                      size="50px"
+                      icon="mdi-delete-outline"
+                    />
                     <p class="text">Delete Avatar</p>
                   </div>
                 </div>
@@ -62,6 +66,7 @@
                 <v-text-field
                   class="mr-10"
                   v-model="username"
+                  :rules="userNameRules"
                   @input="searchHandler"
                   label="username"
                   variant="solo-filled"
@@ -110,6 +115,7 @@ const username = ref(<string>authUser.value?.username);
 let timeout: any = null;
 
 function searchHandler() {
+  if (username.value == "") return;
   if (timeout) clearTimeout(timeout);
 
   timeout = setTimeout(() => {
@@ -129,6 +135,15 @@ const firstNameRules = ref([
 
 const lastNameRules = ref([
   (value: string) => !!value.trim() || "This field is required",
+  (value: string) =>
+    (value && value.length >= 3) || "User Name cannot have less than 3 letters",
+  (value: string) =>
+    (value && value.length <= 15) ||
+    "User Name cannot have more than 15 letters",
+]);
+
+const userNameRules = ref([
+  (value: string) => !!value.trim() || "Required",
   (value: string) =>
     (value && value.length >= 3) || "User Name cannot have less than 3 letters",
   (value: string) =>
