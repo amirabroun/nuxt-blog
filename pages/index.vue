@@ -70,7 +70,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <create-post-btn />
   </v-container>
 </template>
 

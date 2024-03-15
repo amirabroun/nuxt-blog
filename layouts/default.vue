@@ -1,40 +1,35 @@
 <template>
   <client-only>
-    <VContainer class="py-1 elevation-4 rounded-b-lg navbar" fluid>
-      <VRow justify="space-between" align="center" class="pr-10">
-        <VCol cols="auto">
-          <NuxtLink to="/" class="logo-link">
-            <img src="@/assets/images/logo-e-blog.png" class="logo-img" />
-          </NuxtLink>
-        </VCol>
-        <VCol cols="auto mt-1" v-if="authUser">
+    <v-container class="py-1 elevation-4 rounded-b-lg navbar" fluid>
+      <v-row justify="space-between" align="center" class="pr-10">
+        <v-col cols="auto">
+          <nuxt-link to="/" class="logo-link">
+            <img src="@/assets/images/logo-e-blog.png" width="80" />
+          </nuxt-link>
+        </v-col>
+        <v-col cols="auto" v-if="authUser">
           <span
-            class="pl-4 pr-8 bg-white rounded-lg username-box"
-            style="cursor: pointer"
+            class="pl-4 pr-8 py-1 bg-white rounded-lg username-box"
+            style="cursor: pointer; font-size: 0.9rem"
           >
             {{ authUser.full_name }}
           </span>
-          <VAvatar size="45" class="navbar-avatar relative">
-            <NuxtLink v-if="authUser.avatar != null">
+          <v-avatar size="45" rounded="lg" style="left: -20px">
+            <nuxt-link>
               <img
+                v-if="authUser.avatar"
                 :src="authUser.avatar"
-                class="avatar-img rounded-lg"
-                @error="handleImageError"
+                class="w-100"
               />
-            </NuxtLink>
-            <NuxtLink v-else>
-              <img
-                src="@/assets/images/avatar.png"
-                class="avatar-img rounded-lg"
-              />
-            </NuxtLink>
-          </VAvatar>
-          <VMenu activator="parent">
-            <VList>
-              <VListItem :to="`/users/${authUser?.uuid}`">
-                <VListItemTitle class="text-black">
-                  <VIcon class="mr-4"> mdi-account</VIcon>Profile
-                  <NuxtLink
+              <img v-else src="@/assets/images/avatar.png" class="w-100" />
+            </nuxt-link>
+          </v-avatar>
+          <v-Menu activator="parent">
+            <v-list>
+              <v-list-item :to="`/users/${authUser?.uuid}`">
+                <v-list-item-title class="text-black">
+                  <v-Icon class="mr-4"> mdi-account</v-Icon>Profile
+                  <nuxt-link
                     width="80px"
                     height="25px"
                     v-if="authUser"
@@ -42,50 +37,51 @@
                     class="edit-link"
                   >
                     Edit
-                  </NuxtLink>
-                </VListItemTitle>
-              </VListItem>
-              <VListItem :to="`/users/${authUser?.uuid}/resume`">
-                <VListItemTitle class="text-info">
-                  <VIcon class="mr-4"> mdi-badge-account</VIcon>Resume
-                </VListItemTitle>
-              </VListItem>
-              <VListItem @click="logout">
-                <VListItemTitle class="text-red">
-                  <VIcon class="mr-4">mdi-logout /></VIcon>
+                  </nuxt-link>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item :to="`/users/${authUser?.uuid}/resume`">
+                <v-list-item-title class="text-info">
+                  <v-Icon class="mr-4"> mdi-badge-account</v-Icon>Resume
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="logout">
+                <v-list-item-title class="text-red">
+                  <v-Icon class="mr-4">mdi-logout /></v-Icon>
                   Logout
-                </VListItemTitle>
-              </VListItem>
-            </VList>
-          </VMenu>
-        </VCol>
-        <VCol cols="auto" v-if="!authUser">
-          <NuxtLink to="/login" class="navbar-link">Sign In</NuxtLink>
-          <NuxtLink
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-Menu>
+        </v-col>
+        <v-col cols="auto" v-if="!authUser">
+          <nuxt-link to="/login" class="navbar-link">Sign In</nuxt-link>
+          <nuxt-link
             to="/register"
             class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
-            >Sign Up</NuxtLink
+            >Sign Up</nuxt-link
           >
-        </VCol>
-      </VRow>
-    </VContainer>
-    <VContainer fluid class="mt-12">
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container fluid class="mt-12">
       <slot />
-    </VContainer>
+      <create-post-btn v-if="route.name != 'posts-create'" />
+    </v-container>
   </client-only>
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
-const router = useRouter();
 const authUser = computed(() => store.state.auth?.authUser);
 const loggingOutStatus = computed(() => store.state.auth?.loggingOutStatus);
+const route = useRoute();
 
 watch(
   () => loggingOutStatus.value,
   () => {
     if (loggingOutStatus.value == Status.success) {
-      router.push("/");
+      navigateTo('/');
     }
   }
 );
@@ -93,12 +89,7 @@ watch(
 const logout = async () => {
   store.dispatch(`auth/${AuthActionTypes.logOut}`);
 };
-const handleImageError = (event: any) => {
-  event.target.src = new URL(
-    `@/assets/images/avatar.png`,
-    import.meta.url
-  ).href;
-};
+
 </script>
 
 <style lang="scss">
@@ -111,16 +102,6 @@ a {
   text-decoration: none;
 }
 
-.avatar-img {
-  cursor: pointer;
-  width: 90%;
-}
-
-.navbar-avatar {
-  left: -20px;
-  border-radius: 0px !important;
-}
-
 .logo-link {
   display: block;
   width: 80px;
@@ -130,12 +111,6 @@ a {
   align-items: center;
 }
 
-.logo-img {
-  width: 100%;
-  max-width: 80px;
-  object-fit: cover;
-}
-
 .navbar {
   position: fixed;
   top: 0;
@@ -143,18 +118,11 @@ a {
   background: linear-gradient(to left, #00416a, #e4e5e6);
 }
 
-.navbar-link {
-  color: #fff;
-}
-
 .signUp-link {
   border: 1px solid;
 }
 
 .username-box {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  font-size: 0.9rem;
   background: linear-gradient(to left, #00416ac2, #71a9e075);
 }
 

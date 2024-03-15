@@ -181,7 +181,6 @@
       </v-col>
       <v-col lg="1" class="d-none d-lg-flex"></v-col>
     </VRow>
-    <createPostBtn :isAuth="authUser" />
   </VContainer>
 </template>
 
