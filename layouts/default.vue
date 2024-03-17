@@ -9,22 +9,20 @@
         </v-col>
         <v-col cols="auto" v-if="authUser">
           <span
-            class="pl-4 pr-8 py-1 bg-white rounded-lg username-box"
-            style="cursor: pointer; font-size: 0.9rem"
+            class="pl-4 pr-8 py-1 rounded-lg"
+            style="
+              cursor: pointer;
+              font-size: 0.9rem;
+              background: linear-gradient(to right, #2aa4e1, #00417a);
+            "
           >
             {{ authUser.full_name }}
           </span>
-          <v-avatar size="45" rounded="lg" style="left: -20px">
-            <nuxt-link>
-              <img
-                v-if="authUser.avatar"
-                :src="authUser.avatar"
-                class="w-100"
-              />
-              <img v-else src="@/assets/images/avatar.png" class="w-100" />
-            </nuxt-link>
+          <v-avatar size="50" rounded="lg" style="left: -20px; cursor: pointer">
+            <img v-if="authUser.avatar" :src="authUser.avatar" class="w-100" />
+            <img v-else src="@/assets/images/avatar.png" class="w-100" />
           </v-avatar>
-          <v-Menu activator="parent">
+          <v-menu activator="parent">
             <v-list>
               <v-list-item :to="`/users/${authUser?.uuid}`">
                 <v-list-item-title class="text-black">
@@ -52,19 +50,21 @@
                 </v-list-item-title>
               </v-list-item>
             </v-list>
-          </v-Menu>
+          </v-menu>
         </v-col>
         <v-col cols="auto" v-if="!authUser">
-          <nuxt-link to="/login" class="navbar-link">Sign In</nuxt-link>
+          <nuxt-link to="/login" class="text-white"> Sign In </nuxt-link>
           <nuxt-link
             to="/register"
-            class="signUp-link navbar-link ml-4 py-2 px-4 rounded-lg"
-            >Sign Up</nuxt-link
+            style="border: 1px solid"
+            class="text-white ml-4 py-2 px-4 rounded-lg"
           >
+            Sign Up
+          </nuxt-link>
         </v-col>
       </v-row>
     </v-container>
-    <v-container fluid class="mt-12">
+    <v-container fluid>
       <slot />
       <create-post-btn v-if="route.name != 'posts-create'" />
     </v-container>
@@ -81,7 +81,7 @@ watch(
   () => loggingOutStatus.value,
   () => {
     if (loggingOutStatus.value == Status.success) {
-      navigateTo('/');
+      navigateTo("/");
     }
   }
 );
@@ -89,7 +89,6 @@ watch(
 const logout = async () => {
   store.dispatch(`auth/${AuthActionTypes.logOut}`);
 };
-
 </script>
 
 <style lang="scss">
@@ -103,9 +102,7 @@ a {
 }
 
 .logo-link {
-  display: block;
   width: 80px;
-  overflow-y: hidden;
   height: 50px;
   display: flex;
   align-items: center;
@@ -113,17 +110,8 @@ a {
 
 .navbar {
   position: fixed;
-  top: 0;
   z-index: 9;
   background: linear-gradient(to left, #00416a, #e4e5e6);
-}
-
-.signUp-link {
-  border: 1px solid;
-}
-
-.username-box {
-  background: linear-gradient(to left, #00416ac2, #71a9e075);
 }
 
 .edit-link {

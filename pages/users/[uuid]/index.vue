@@ -1,6 +1,5 @@
 <template>
-  <VContainer fluid>
-    <VRow justify="center">
+    <v-row justify="center" class="mt-10">
       <v-col lg="1" class="d-none d-lg-flex"></v-col>
       <v-col lg="6" md="6">
         <v-tabs v-model="tab" bg-color="primary" class="rounded-lg mb-2">
@@ -43,12 +42,12 @@
                   <img
                     v-if="follower.avatar != null"
                     :src="follower.avatar"
-                    class="avatar-img"
+                    class="w-100"
                   />
                   <img
                     v-else
                     src="@/assets/images/avatar.png"
-                    class="avatar-img"
+                    class="w-100"
                   />
                 </VAvatar>
                 {{ follower.full_name }}
@@ -95,12 +94,12 @@
                   <img
                     v-if="following.avatar != null"
                     :src="following.avatar"
-                    class="avatar-img"
+                    class="w-100"
                   />
                   <img
                     v-else
                     src="@/assets/images/avatar.png"
-                    class="avatar-img"
+                    class="w-100"
                   />
                 </VAvatar>
                 {{ following.full_name }}
@@ -135,19 +134,19 @@
       </v-col>
       <v-col lg="4" md="6" sm="12">
         <VCard class="pa-3 user-info w-100">
-          <VRow>
+          <v-row>
             <v-col cols="3" lg="3" md="3">
               <img
                 :src="user?.avatar"
                 v-if="user?.avatar"
                 width="100"
-                class="rounded-xl"
+                class="rounded-lg w-100"
               />
               <img
                 src="@/assets/images/avatar.png"
                 v-else
                 width="100"
-                class="rounded-xl"
+                class="rounded-lg w-100"
               />
             </v-col>
             <v-col cols="9" lg="9" md="9" class="mt-3">
@@ -176,12 +175,11 @@
                 {{ user?.username }}
               </div>
             </v-col>
-          </VRow>
+          </v-row>
         </VCard>
       </v-col>
       <v-col lg="1" class="d-none d-lg-flex"></v-col>
-    </VRow>
-  </VContainer>
+    </v-row>
 </template>
 
 <script lang="ts" setup>
@@ -220,11 +218,6 @@ const authUser = computed(() => store.state.auth?.authUser);
 
 .user-info {
   height: max-content;
-}
-
-.avatar-img {
-  cursor: pointer;
-  width: 100%;
 }
 
 .v-tab {

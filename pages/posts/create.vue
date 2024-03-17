@@ -1,48 +1,31 @@
 <template>
-  <VContainer>
-    <VRow justify="center">
-      <VCol cols="12" md="8" lg="7">
-        <VCard class="pa-6" elevation="2">
-          <VForm enctype="multipart/form-data">
-            <VRow>
-              <VCol cols="12" lg="4" class="mb-6">
-                <VSelect label="Select" :items="categories" solo />
-              </VCol>
+  <v-row justify="center" class="mt-16">
+    <v-card class="pa-6" elevation="2" width="600">
+      <v-row>
+        <v-col cols="12" lg="4">
+          <v-select label="Select" :items="categories" />
+        </v-col>
 
-              <VCol cols="12" lg="8" class="mb-6">
-                <VTextField ref="title" required solo placeholder="title" />
-              </VCol>
+        <v-col cols="12" lg="8">
+          <v-textField ref="title" required placeholder="title" />
+        </v-col>
 
-              <VCol cols="12" class="mb-6">
-                <VTextarea
-                  ref="body"
-                  required
-                  solo
-                  placeholder="Write your body"
-                />
-              </VCol>
+        <v-col cols="12">
+          <v-textarea ref="body" required placeholder="Write your body" />
+        </v-col>
 
-              <VCol cols="12" class="mb-6">
-                <VFileInput
-                  label="File input"
-                  accept="image/*"
-                  ref="file"
-                ></VFileInput>
-              </VCol>
+        <v-col cols="12">
+          <v-file-input label="File input" accept="image/*" ref="file" />
+        </v-col>
 
-              <VCol cols="12">
-                <VBtn color="info" block class="py-2 mt-2" @click="createPost">
-                  Create
-                </VBtn>
-              </VCol>
-            </VRow>
-          </VForm>
-
-          <VDivider></VDivider>
-        </VCard>
-      </VCol>
-    </VRow>
-  </VContainer>
+        <v-card-actions>
+          <v-btn color="primary" @click="createPost()" variant="flat">
+            Create
+          </v-btn>
+        </v-card-actions>
+      </v-row>
+    </v-card>
+  </v-row>
 </template>
 
 <script lang="ts" setup>
