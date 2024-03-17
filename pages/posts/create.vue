@@ -56,7 +56,7 @@ async function createPost() {
   store.dispatch(`posts/${PostsActionTypes.createPost}`, formData);
 
   setTimeout(() => {
-    navigateTo(`/users/${authUser.uuid}`);
+    navigateTo(`/users/${authUser.uuid}/profile`);
   }, 1000);
 }
 </script>

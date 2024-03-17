@@ -24,7 +24,7 @@
           </v-avatar>
           <v-menu activator="parent">
             <v-list>
-              <v-list-item :to="`/users/${authUser?.uuid}`">
+              <v-list-item :to="`/users/${authUser?.uuid}/profile`">
                 <v-list-item-title class="text-black">
                   <v-Icon class="mr-4"> mdi-account</v-Icon>Profile
                   <nuxt-link

@@ -111,7 +111,7 @@
               <img :src="user?.avatar" v-if="user?.avatar" class="w-100" />
               <img src="@/assets/images/avatar.png" v-else class="w-100" />
             </v-avatar>
-            <nuxt-link class="text-light ml-3" :to="`/users/${user.uuid}`">
+            <nuxt-link class="text-light ml-3" :to="`/users/${user.uuid}/profile`">
               {{ user.username }}
             </nuxt-link>
             <v-btn
