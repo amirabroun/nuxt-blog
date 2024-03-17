@@ -1,12 +1,13 @@
 <template>
-  <VCard class="relative pa-3 py-1 mb-3" v-for="post in posts" :key="post.id" rounded="sm">
-    <div
-      v-if="authUser && (authUser?.uuid === user?.uuid ?? post.user.uuid)"
-      class="pa-2 text-right"
-    >
+  <VCard
+    class="relative pa-3 py-1 mb-3"
+    v-for="post in posts"
+    :key="post.id"
+    rounded="sm"
+  >
+    <div v-if="isOwner(post)" class="pa-2 text-right">
       <post-options :post="post"></post-options>
       <v-divider class="my-3"></v-divider>
-
     </div>
 
     <VImg
@@ -42,4 +43,12 @@ const props = defineProps<{
 const posts = props.posts;
 const user = props.user;
 const authUser = computed(() => store.state.auth?.authUser);
+
+function isOwner(post: Post) {
+  if (typeof post.user !== "undefined") {
+    return post.user.uuid === authUser.value?.uuid;
+  }
+
+  return user?.uuid === authUser.value?.uuid;
+}
 </script>
