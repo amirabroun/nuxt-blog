@@ -1,8 +1,10 @@
 <template>
   <v-row justify="space-between" class="mt-10">
-    <v-col v-if="authUser" lg="2" md="2" class="d-none d-md-block">
-      <v-card variant="text" position="fixed">
+    <v-col v-if="authUser" md="2" class="d-none d-md-block">
+      <v-card variant="text" width="250" position="fixed">
         <v-card-text>
+          <h4 class="mb-3">Quick access</h4>
+          <v-divider length="100" class="mb-3" />
           <v-timeline
             truncate-line="both"
             align="start"
@@ -10,19 +12,19 @@
             line-inset="4"
           >
             <v-timeline-item
-              icon="mdi-home-outline"
-              style="cursor: pointer; background: red"
+              icon="mdi-account-outline"
+              style="cursor: pointer"
               dot-color="light"
               rounded="lg"
-              @click="
-                () => {
-                  tab = 0;
-                }
-              "
               elevation="3"
               size="small"
             >
-              Home
+              <nuxt-link
+                class="text-black"
+                :to="`/users/${authUser?.uuid}/profile`"
+              >
+                Account
+              </nuxt-link>
             </v-timeline-item>
 
             <v-timeline-item
@@ -44,6 +46,7 @@
                   tab = 0;
                 }
               "
+              v-if="tab !== 0"
               icon="mdi-tag-faces"
               dot-color="light"
               size="small"
@@ -59,6 +62,7 @@
                   tab = 1;
                 }
               "
+              v-if="tab !== 1"
               icon="mdi-creation"
               dot-color="light"
               size="small"
@@ -70,7 +74,7 @@
       </v-card>
     </v-col>
 
-    <v-col cols="6">
+    <v-col md="5" lg="6">
       <v-window v-model="tab">
         <v-window-item value="followings" v-if="authUser">
           <post-card v-if="posts?.length" :posts="posts" />
@@ -95,13 +99,7 @@
       </v-window>
     </v-col>
 
-    <v-col
-      md="4"
-      lg="3"
-      v-if="authUser"
-      class="d-none d-md-block"
-      style="display: flex; justify-content: flex-end"
-    >
+    <v-col lg="4" md="4" v-if="authUser" class="d-none d-md-block">
       <v-card position="fixed" style="background: none" variant="flat">
         <v-list density="compact" style="background: none">
           <v-list-subheader color="light"> Suggestion Users </v-list-subheader>
@@ -111,7 +109,10 @@
               <img :src="user?.avatar" v-if="user?.avatar" class="w-100" />
               <img src="@/assets/images/avatar.png" v-else class="w-100" />
             </v-avatar>
-            <nuxt-link class="text-light ml-3" :to="`/users/${user.uuid}/profile`">
+            <nuxt-link
+              class="text-light ml-3"
+              :to="`/users/${user.uuid}/profile`"
+            >
               {{ user.username }}
             </nuxt-link>
             <v-btn
