@@ -1,76 +1,132 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="8">
-        <v-tabs
-          v-if="authUser"
-          v-model="tab"
-          bg-color="primary"
-          class="rounded-t-lg mb-1"
-        >
-          <v-tab value="followings" text="Your followings" />
-          <v-tab
-            value="suggestion"
-            @click.once="fetchSuggestion"
-            text="Suggestion for you"
+  <v-row justify="space-between" class="mt-10">
+    <v-col v-if="authUser" lg="2" md="2" class="d-none d-md-block">
+      <v-card variant="text" position="fixed">
+        <v-card-text>
+          <v-timeline
+            truncate-line="both"
+            align="start"
+            density="compact"
+            line-inset="4"
+          >
+            <v-timeline-item
+              icon="mdi-home-outline"
+              style="cursor: pointer; background: red"
+              dot-color="light"
+              rounded="lg"
+              @click="
+                () => {
+                  tab = 0;
+                }
+              "
+              elevation="3"
+              size="small"
+            >
+              Home
+            </v-timeline-item>
+
+            <v-timeline-item
+              icon="mdi-alarm-light"
+              elevation="3"
+              style="cursor: pointer"
+              rounded="lg"
+              dot-color="light"
+              size="small"
+            >
+              Notifications
+            </v-timeline-item>
+            <v-timeline-item
+              style="cursor: pointer"
+              rounded="lg"
+              elevation="3"
+              @click="
+                () => {
+                  tab = 0;
+                }
+              "
+              icon="mdi-tag-faces"
+              dot-color="light"
+              size="small"
+            >
+              Your followings
+            </v-timeline-item>
+            <v-timeline-item
+              style="cursor: pointer"
+              rounded="lg"
+              elevation="3"
+              @click="
+                () => {
+                  tab = 1;
+                }
+              "
+              icon="mdi-creation"
+              dot-color="light"
+              size="small"
+            >
+              Suggestion for you
+            </v-timeline-item>
+          </v-timeline>
+        </v-card-text>
+      </v-card>
+    </v-col>
+
+    <v-col cols="6">
+      <v-window v-model="tab">
+        <v-window-item value="followings" v-if="authUser">
+          <post-card v-if="posts?.length" :posts="posts" />
+          <v-alert
+            v-else
+            type="info"
+            title="Pay Attention"
+            text="You have no following!"
+            variant="tonal"
           />
-        </v-tabs>
+        </v-window-item>
 
-        <v-window v-model="tab">
-          <v-window-item value="followings" v-if="authUser">
-            <post-card v-if="posts?.length" :posts="posts" />
-            <v-alert
-              v-else
-              type="info"
-              title="Pay Attention"
-              text="You have no following!"
-              variant="tonal"
-            />
-          </v-window-item>
+        <v-window-item value="suggestion">
+          <post-card v-if="suggestionPosts?.length" :posts="suggestionPosts" />
+          <v-alert
+            v-else
+            type="info"
+            text="there is no post to show you!"
+            variant="tonal"
+          />
+        </v-window-item>
+      </v-window>
+    </v-col>
 
-          <v-window-item value="suggestion">
-            <post-card
-              v-if="suggestionPosts?.length"
-              :posts="suggestionPosts"
+    <v-col
+      md="4"
+      lg="3"
+      v-if="authUser"
+      class="d-none d-md-block"
+      style="display: flex; justify-content: flex-end"
+    >
+      <v-card position="fixed" style="background: none" variant="flat">
+        <v-list density="compact" style="background: none">
+          <v-list-subheader color="light"> Suggestion Users </v-list-subheader>
+          <v-divider class="my-3" color="white" />
+          <v-list-item v-for="(user, index) in suggestionUsers" :key="index">
+            <v-avatar size="50" rounded="lg">
+              <img :src="user?.avatar" v-if="user?.avatar" class="w-100" />
+              <img src="@/assets/images/avatar.png" v-else class="w-100" />
+            </v-avatar>
+            <nuxt-link class="text-light ml-3" :to="`/users/${user.uuid}`">
+              {{ user.username }}
+            </nuxt-link>
+            <v-btn
+              width="80px"
+              height="25px"
+              @click="toggleFollow(user?.uuid)"
+              class="ml-4 rounded-md"
+              style="font-size: 0.6rem"
+              text="follow"
             />
-            <v-alert
-              v-else
-              type="info"
-              text="there is no post to show you!"
-              variant="tonal"
-            />
-          </v-window-item>
-        </v-window>
-      </v-col>
-      <v-col v-if="authUser" cols="4">
-        <v-card style="height: max-content">
-          <v-list density="compact">
-            <v-list-subheader color="primary">
-              Suggestion Users
-            </v-list-subheader>
-            <v-divider class="my-3" />
-            <v-list-item v-for="(user, index) in suggestionUsers" :key="index">
-              <v-avatar size="50" rounded="lg">
-                <img :src="user?.avatar" v-if="user?.avatar" class="w-100" />
-                <img src="@/assets/images/avatar.png" v-else class="w-100" />
-              </v-avatar>
-              <nuxt-link class="text-info ml-3" :to="`/users/${user.uuid}`">
-                {{ user.username }}
-              </nuxt-link>
-              <v-btn
-                width="80px"
-                height="25px"
-                @click="toggleFollow(user?.uuid)"
-                class="ml-4 rounded-md"
-                style="font-size: 0.6rem"
-                text="follow"
-              />
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts" setup>
@@ -116,9 +172,3 @@ async function toggleFollow(uuid: string) {
   store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
 }
 </script>
-
-<style scoped>
-.v-tab {
-  text-transform: none !important;
-}
-</style>
