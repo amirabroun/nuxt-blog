@@ -5,9 +5,9 @@
     :key="post.id"
     rounded="sm"
   >
-    <div v-if="isOwner(post)" class="pa-2 text-right">
-      <post-options :post="post"></post-options>
-      <v-divider class="my-3"></v-divider>
+    <div v-if="authUser" class="pa-2 text-right">
+      <post-options :post="post" :isOwner="isOwner(post)" />
+      <v-divider class="my-3" />
     </div>
 
     <VImg

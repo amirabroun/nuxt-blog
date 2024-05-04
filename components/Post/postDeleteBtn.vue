@@ -1,5 +1,5 @@
 <template>
-  <v-btn style="min-width: 0" width="0">
+  <v-btn style="min-width: 0" size="small">
     <v-icon icon="mdi-delete" />
     <v-dialog activator="parent" max-width="500">
       <template v-slot:default="{ isActive }">

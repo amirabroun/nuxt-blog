@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="space-between" class="mt-12">
+  <v-row justify="space-between" class="mt-10">
     <v-col v-if="authUser" md="2" class="d-none d-lg-block">
       <v-card variant="text" width="250" position="fixed">
         <v-card-text>
@@ -150,7 +150,11 @@
                 "
                 style="font-size: 0.52rem"
               >
-                {{ follower?.auth_followed_at == null ? "follow back" : "unfollow" }}
+                {{
+                  follower?.auth_followed_at == null
+                    ? "follow back"
+                    : "unfollow"
+                }}
               </v-btn>
             </v-list>
           </div>

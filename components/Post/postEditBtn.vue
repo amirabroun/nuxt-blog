@@ -1,5 +1,5 @@
 <template>
-  <v-btn style="min-width: 0" width="0">
+  <v-btn style="min-width: 0" size="small">
     <v-icon icon="mdi-pencil" />
     <v-dialog activator="parent" max-width="500">
       <template v-slot:default="{ isActive }">
@@ -78,11 +78,14 @@
 </template>
 
 <script setup lang="ts">
+import { store } from "~/store";
 import { Post } from "~/store/posts";
 import {
+  PostsActionTypes,
   deletePostImage as deletePostImageAction,
   updatePost as updatePostAction,
 } from "~/store/posts/actions";
+import { UserActionTypes } from "~/store/user/actions";
 
 const props = defineProps<{
   post: Post;
@@ -106,17 +109,25 @@ async function updatePost() {
   }
 
   updatePostAction(post.uuid, formData).then(() => {
-    setTimeout(() => {
-      reloadNuxtApp();
-    }, 500);
+    if (typeof post.user !== "undefined") {
+      store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+      return;
+    }
+    
+    const route = useRoute();
+    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
   });
 }
 
 async function deletePostImage() {
   deletePostImageAction(post.uuid).then(() => {
-    setTimeout(() => {
-      reloadNuxtApp();
-    }, 500);
+    if (typeof post.user !== "undefined") {
+      store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+      return;
+    }
+    
+    const route = useRoute();
+    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
   });
 }
 </script>
