@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="space-between" class="mt-10">
+  <v-row justify="space-around" class="mt-10">
     <v-col v-if="authUser" md="2" class="d-none d-md-block">
       <v-card variant="text" width="250" position="fixed">
         <v-card-text>
@@ -136,29 +136,26 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
-
 if (tab.value === 0) {
   fetchSuggestion();
 }
-
-const posts = computed(() => store.state.posts?.posts);
-let suggestionUsers = ref();
-
-const authUser = computed(() => store.state.auth?.authUser);
-
-const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 
 async function fetchSuggestion() {
   await store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
 }
 
-onMounted(async () => {
-  if (authUser.value) {
-    await store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
-    await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
+let suggestionUsers = ref();
+const authUser = computed(() => store.state.auth?.authUser);
+if (authUser.value) {
+  onMounted(async () => {
+    store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+    store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
-  }
-});
+  });
+}
+
+const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
+const posts = computed(() => store.state.posts?.posts);
 
 async function toggleFollow(uuid: string) {
   if (suggestionUsers.value?.length! > 1) {

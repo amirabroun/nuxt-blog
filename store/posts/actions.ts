@@ -14,9 +14,9 @@ export enum PostsActionTypes {
 }
 
 export const actions: ActionTree<PostsState, RootState> = {
-  [PostsActionTypes.fetchPosts]: ({ commit }) => {
+  [PostsActionTypes.fetchPosts]: async ({ commit }) => {
     const { $httpsRequest } = useNuxtApp();
-    $httpsRequest(`posts`, {
+    await $httpsRequest(`posts`, {
       method: "GET",
     }).then((res: any) => {
       commit(PostsMutationTypes.fetchPosts, {
@@ -94,5 +94,13 @@ export const deletePostImage = async (uuid: string) => {
     showToastSuccessMessage(store.commit, res.message);
   }).catch((error: any) => {
     showToastErrorMessage(store.commit, error.message);
+  });
+};
+
+export const toggleLikePost = async (uuid: string) => {
+  const { $httpsRequest } = useNuxtApp();
+
+  await $httpsRequest(`posts/${uuid}/toggle-like`, {
+    method: "PUT",
   });
 };
