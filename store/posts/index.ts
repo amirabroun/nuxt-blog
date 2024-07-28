@@ -26,10 +26,11 @@ export interface PostsState {
 export interface Post {
   uuid: string;
   id?: number;
-  user: User;
+  user?: User;
   title?: string;
   image?: string;
   body?: string;
+  likes_count: number;
   media?: Media[];
   created_at?: Date;
 }

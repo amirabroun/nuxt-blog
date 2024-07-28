@@ -20,9 +20,9 @@
       by
       <NuxtLink
         class="text-info ml-1"
-        :to="`/users/${user?.uuid ?? post.user.uuid}/profile`"
+        :to="`/users/${user?.uuid ?? post.user?.uuid}/profile`"
       >
-        {{ user?.full_name ?? post.user.full_name }}
+        {{ user?.full_name ?? post.user?.full_name }}
       </NuxtLink>
       at
       <span class="text-dark ml-1">{{ post.created_at }}</span>

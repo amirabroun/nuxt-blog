@@ -1,8 +1,6 @@
 import { ActionTree } from "vuex";
 import { AppState } from ".";
 import { RootState } from "..";
-import { AppActionTypes } from "./action-types";
-import { AppMutationTypes } from "./mutation-types";
 
 export const actions: ActionTree<AppState, RootState> = {
   showToast: ({ state, commit }, message) => {
