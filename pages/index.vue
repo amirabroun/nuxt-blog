@@ -53,22 +53,6 @@
             >
               Your followings
             </v-timeline-item>
-            <v-timeline-item
-              style="cursor: pointer"
-              rounded="lg"
-              elevation="3"
-              @click="
-                () => {
-                  tab = 1;
-                }
-              "
-              v-if="tab !== 1"
-              icon="mdi-creation"
-              dot-color="light"
-              size="small"
-            >
-              Suggestion for you
-            </v-timeline-item>
           </v-timeline>
         </v-card-text>
       </v-card>
@@ -77,22 +61,12 @@
     <v-col md="5" lg="6">
       <v-window v-model="tab">
         <v-window-item value="followings" v-if="authUser">
-          <post-card v-if="posts?.length" :posts="posts" />
+          <post-card v-if="posts?.length" :posts-from="'index'" />
           <v-alert
             v-else
             type="info"
             title="Pay Attention"
             text="You have no following!"
-            variant="tonal"
-          />
-        </v-window-item>
-
-        <v-window-item value="suggestion">
-          <post-card v-if="suggestionPosts?.length" :posts="suggestionPosts" />
-          <v-alert
-            v-else
-            type="info"
-            text="there is no post to show you!"
             variant="tonal"
           />
         </v-window-item>
@@ -136,27 +110,17 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let tab = ref(0);
-if (tab.value === 0) {
-  fetchSuggestion();
-}
-
-async function fetchSuggestion() {
-  await store.dispatch(`posts/${PostsActionTypes.fetchSuggestionsPosts}`);
-}
 
 let suggestionUsers = ref();
 const authUser = computed(() => store.state.auth?.authUser);
 if (authUser.value) {
   onMounted(async () => {
     store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
-    store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
   });
 }
 
-const suggestionPosts = computed(() => store.state.posts?.suggestionPosts);
 const posts = computed(() => store.state.posts?.posts);
-
 async function toggleFollow(uuid: string) {
   if (suggestionUsers.value?.length! > 1) {
     await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);

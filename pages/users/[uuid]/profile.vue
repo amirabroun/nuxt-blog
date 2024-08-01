@@ -109,8 +109,56 @@
       </v-tabs>
       <v-window v-model="tab">
         <v-window-item value="posts">
-          <post-card v-if="posts?.length" :posts="posts" :user="user">
-          </post-card>
+          <div v-if="posts?.length">
+            <v-card
+              class="relative pa-3 py-1 mb-3"
+              v-for="post in posts"
+              :key="post.title"
+              rounded="sm"
+            >
+              <div v-if="authUser" class="pa-2 text-right">
+                <v-btn-group density="compact">
+                  <post-delete-btn
+                    v-if="user?.uuid === authUser?.uuid"
+                    :post="post"
+                  />
+                  <post-edit-btn
+                    v-if="user?.uuid === authUser?.uuid"
+                    :post="post"
+                  />
+
+                  <v-btn
+                    @click="toggleLike(post)"
+                    prepend-icon="mdi-heart-outline"
+                    size="small"
+                  >
+                    <span class="py-auto">
+                      {{ post.likes_count }}
+                    </span>
+                  </v-btn>
+                </v-btn-group>
+                <v-divider class="my-3" />
+              </div>
+
+              <v-img
+                :src="post.media?.find(() => true)?.original_url"
+                class="rounded-lg mt-4"
+              />
+              <v-card-title class="text-h5">{{ post.title }}</v-card-title>
+              <v-cardText>{{ post.body }}</v-cardText>
+              <v-cardSubtitle class="mb-3">
+                by
+                <NuxtLink
+                  class="text-info ml-1"
+                  :to="`/users/${user?.uuid ?? post.user?.uuid}/profile`"
+                >
+                  {{ user?.full_name ?? post.user?.full_name }}
+                </NuxtLink>
+                at
+                <span class="text-dark ml-1">{{ post.created_at }}</span>
+              </v-cardSubtitle>
+            </v-card>
+          </div>
           <v-alert
             v-else
             type="info"
@@ -219,6 +267,8 @@
 import { store } from "~/store";
 import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
+import { toggleLikePost } from "~/store/posts/actions";
+import { Post } from "~/store/posts";
 
 const route = useRoute();
 const tab: Ref<number> = ref(0);
@@ -234,9 +284,15 @@ async function toggleFollow(uuid: any) {
 }
 
 const user = computed(() => store.state.user?.user);
-
 const posts = computed(() => store.state.user?.user?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
+
+async function toggleLike(post: Post) {
+  await toggleLikePost(post.uuid).then(() => {
+    const route = useRoute();
+    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+  });
+}
 </script>
 <style scoped>
 .v-tab {

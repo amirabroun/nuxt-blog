@@ -2,11 +2,30 @@
   <VCard
     class="relative pa-3 py-1 mb-3"
     v-for="post in posts"
-    :key="post.id"
+    :key="post.title"
     rounded="sm"
   >
     <div v-if="authUser" class="pa-2 text-right">
-      <post-options :post="post" :isOwner="isOwner(post)" />
+      <v-btn-group density="compact">
+        <div class="mt-1" v-if="post.user?.uuid === authUser?.uuid">
+          <post-delete-btn :post="post" />
+          <post-edit-btn :post="post" />
+        </div>
+
+        <v-btn
+          @click="
+            toggleLikePost(post.uuid).then(() =>
+              store.dispatch(`posts/${PostsActionTypes.fetchPosts}`)
+            )
+          "
+          prepend-icon="mdi-heart-outline"
+          size="small"
+        >
+          <span class="py-auto">
+            {{ post.likes_count }}
+          </span>
+        </v-btn>
+      </v-btn-group>
       <v-divider class="my-3" />
     </div>
 
@@ -20,9 +39,9 @@
       by
       <NuxtLink
         class="text-info ml-1"
-        :to="`/users/${user?.uuid ?? post.user?.uuid}/profile`"
+        :to="`/users/${post.user?.uuid}/profile`"
       >
-        {{ user?.full_name ?? post.user?.full_name }}
+        {{ post.user?.full_name }}
       </NuxtLink>
       at
       <span class="text-dark ml-1">{{ post.created_at }}</span>
@@ -32,23 +51,8 @@
 
 <script setup lang="ts">
 import { store } from "~/store";
-import { Post } from "~/store/posts";
-import { User } from "~/store/user";
+import { PostsActionTypes, toggleLikePost } from "~/store/posts/actions";
 
-const props = defineProps<{
-  user?: User | null;
-  posts: Post[];
-}>();
-
-const posts = props.posts;
-const user = props.user;
+const posts = computed(() => store.state.posts?.posts);
 const authUser = computed(() => store.state.auth?.authUser);
-
-function isOwner(post: Post) {
-  if (typeof post.user !== "undefined") {
-    return post.user.uuid === authUser.value?.uuid;
-  }
-
-  return user?.uuid === authUser.value?.uuid;
-}
 </script>
