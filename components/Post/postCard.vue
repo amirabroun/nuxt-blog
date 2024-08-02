@@ -2,7 +2,7 @@
   <VCard
     class="relative pa-3 py-1 mb-3"
     v-for="post in posts"
-    :key="post.title"
+    :key="post.id"
     rounded="sm"
   >
     <div v-if="authUser" class="pa-2 text-right">

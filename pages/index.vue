@@ -1,7 +1,7 @@
 <template>
   <v-row justify="space-around" class="mt-10">
     <v-col v-if="authUser" md="2" class="d-none d-md-block">
-      <index-quick-access/>
+      <index-quick-access />
     </v-col>
 
     <v-col md="5" lg="6">
@@ -19,8 +19,7 @@
       <v-card position="fixed" style="background: none" variant="flat">
         <v-list density="compact" style="background: none">
           <v-list-subheader color="light"> Suggestion Users </v-list-subheader>
-          <v-divider class="my-3" color="white" />
-          <v-list-item v-for="(user, index) in suggestionUsers" :key="index">
+          <v-list-item v-for="user in suggestionUsers" :key="user.id">
             <v-avatar size="50" rounded="lg">
               <img :src="user?.avatar" v-if="user?.avatar" class="w-100" />
               <img src="@/assets/images/avatar.png" v-else class="w-100" />
@@ -52,13 +51,13 @@ import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
 let suggestionUsers = ref();
-const route = useRoute().name;
 const authUser = computed(() => store.state.auth?.authUser);
 const posts = computed(() => store.state.posts?.posts);
 
 if (authUser.value) {
   onMounted(async () => {
-    store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+    await store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
+    await store.dispatch(`users/${UsersActionTypes.fetchSuggestionsUsers}`);
     suggestionUsers.value = store.state.users?.suggestionUsers;
   });
 }
