@@ -1,45 +1,7 @@
 <template>
   <v-row justify="space-between" class="mt-10">
     <v-col v-if="authUser" md="2" class="d-none d-lg-block">
-      <v-card variant="text" width="250" position="fixed">
-        <v-card-text>
-          <h4 class="mb-3">Quick access</h4>
-          <v-divider length="100" class="mb-3" />
-          <v-timeline
-            truncate-line="both"
-            align="start"
-            density="compact"
-            line-inset="4"
-          >
-            <v-timeline-item
-              icon="mdi-home-outline"
-              style="cursor: pointer"
-              dot-color="light"
-              rounded="lg"
-              @click="
-                () => {
-                  tab = 0;
-                }
-              "
-              elevation="3"
-              size="small"
-            >
-              <nuxt-link class="text-black" to="/"> Home </nuxt-link>
-            </v-timeline-item>
-
-            <v-timeline-item
-              icon="mdi-alarm-light"
-              elevation="3"
-              style="cursor: pointer"
-              rounded="lg"
-              dot-color="light"
-              size="small"
-            >
-              Notifications
-            </v-timeline-item>
-          </v-timeline>
-        </v-card-text>
-      </v-card>
+      <index-quick-access />
     </v-col>
 
     <v-col

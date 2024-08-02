@@ -1,76 +1,18 @@
 <template>
   <v-row justify="space-around" class="mt-10">
     <v-col v-if="authUser" md="2" class="d-none d-md-block">
-      <v-card variant="text" width="250" position="fixed">
-        <v-card-text>
-          <h4 class="mb-3">Quick access</h4>
-          <v-divider length="100" class="mb-3" />
-          <v-timeline
-            truncate-line="both"
-            align="start"
-            density="compact"
-            line-inset="4"
-          >
-            <v-timeline-item
-              icon="mdi-account-outline"
-              style="cursor: pointer"
-              dot-color="light"
-              rounded="lg"
-              elevation="3"
-              size="small"
-            >
-              <nuxt-link
-                class="text-black"
-                :to="`/users/${authUser?.uuid}/profile`"
-              >
-                Account
-              </nuxt-link>
-            </v-timeline-item>
-
-            <v-timeline-item
-              icon="mdi-alarm-light"
-              elevation="3"
-              style="cursor: pointer"
-              rounded="lg"
-              dot-color="light"
-              size="small"
-            >
-              Notifications
-            </v-timeline-item>
-            <v-timeline-item
-              style="cursor: pointer"
-              rounded="lg"
-              elevation="3"
-              @click="
-                () => {
-                  tab = 0;
-                }
-              "
-              v-if="tab !== 0"
-              icon="mdi-tag-faces"
-              dot-color="light"
-              size="small"
-            >
-              Your followings
-            </v-timeline-item>
-          </v-timeline>
-        </v-card-text>
-      </v-card>
+      <index-quick-access/>
     </v-col>
 
     <v-col md="5" lg="6">
-      <v-window v-model="tab">
-        <v-window-item value="followings" v-if="authUser">
-          <post-card v-if="posts?.length" :posts-from="'index'" />
-          <v-alert
-            v-else
-            type="info"
-            title="Pay Attention"
-            text="You have no following!"
-            variant="tonal"
-          />
-        </v-window-item>
-      </v-window>
+      <post-card v-if="posts?.length" />
+      <v-alert
+        v-else
+        type="info"
+        title="Pay Attention"
+        text="You have no following!"
+        variant="tonal"
+      />
     </v-col>
 
     <v-col lg="4" md="4" v-if="authUser" class="d-none d-md-block">
@@ -109,10 +51,11 @@ import { store } from "~/store";
 import { PostsActionTypes } from "~/store/posts/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 
-let tab = ref(0);
-
 let suggestionUsers = ref();
+const route = useRoute().name;
 const authUser = computed(() => store.state.auth?.authUser);
+const posts = computed(() => store.state.posts?.posts);
+
 if (authUser.value) {
   onMounted(async () => {
     store.dispatch(`posts/${PostsActionTypes.fetchPosts}`);
@@ -120,7 +63,6 @@ if (authUser.value) {
   });
 }
 
-const posts = computed(() => store.state.posts?.posts);
 async function toggleFollow(uuid: string) {
   if (suggestionUsers.value?.length! > 1) {
     await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
