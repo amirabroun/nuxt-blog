@@ -1,8 +1,9 @@
 import { Module } from "vuex";
 import { store, RootState, Status } from "..";
 import { UserMutationTypes, mutations } from "./mutations";
-import { UserActionTypes, actions } from "./actions";
+import { actions } from "./actions";
 import { Post } from "../posts";
+
 export interface User {
   id?: number;
   uuid: string;
@@ -45,10 +46,17 @@ export interface User {
   followers?: User[];
 }
 
+export interface Notification {
+  id?: string;
+  text?: string;
+  created_at: Date;
+}
+
 export interface UserState {
   loading: boolean;
   user: User;
   savedUser: User;
+  notifications: Notification[];
   updateResumeStatus: Status | null;
 }
 
@@ -77,6 +85,7 @@ const state: UserState = {
   savedUser: {
     uuid: '',
   },
+  notifications: [],
   updateResumeStatus: null,
 };
 
@@ -85,13 +94,6 @@ export const user: Module<UserState, RootState> = {
   state,
   actions: actions,
   mutations: mutations,
-};
-
-export const userDispatch = <T = any>(
-  action: keyof typeof UserActionTypes,
-  payload?: T
-): Promise<any> => {
-  return store.dispatch(`user/${action}`, payload);
 };
 
 export const userCommit = <T = any>(

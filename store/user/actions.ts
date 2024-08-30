@@ -8,12 +8,6 @@ import {
   showToastSuccessMessage,
 } from "../app/mutations";
 
-export enum UserActionTypes {
-  fetchUser = "fetchUser",
-  fetchUserPosts = "fetchUserPosts",
-  updateUserResume = "updateUserResume",
-}
-
 export interface UserResume {
   uuid: string;
   summary: string;
@@ -28,14 +22,14 @@ export interface UserResume {
     started_at: string;
   }[];
   education:
-    | {
-        field?: string;
-        university?: string;
-        started_at?: string;
-        finished_at?: string;
-        location?: string;
-      }[]
-    | undefined;
+  | {
+    field?: string;
+    university?: string;
+    started_at?: string;
+    finished_at?: string;
+    location?: string;
+  }[]
+  | undefined;
   contact: {
     title: string;
     link: string;
@@ -43,7 +37,7 @@ export interface UserResume {
 }
 
 export const actions: ActionTree<UserState, RootState> = {
-  [UserActionTypes.fetchUser]: async ({ commit }, uuid: string) => {
+  fetchUser: async ({ commit }, uuid: string) => {
     commit(UserMutationTypes.fetchUser, {
       loading: true,
       user: null,
@@ -58,7 +52,7 @@ export const actions: ActionTree<UserState, RootState> = {
       });
     });
   },
-  [UserActionTypes.updateUserResume]: ({ commit }, payload: UserResume) => {
+  updateUserResume: ({ commit }, payload: UserResume) => {
     commit(UserMutationTypes.updateResumeStatus, {
       loading: true,
       sttaus: null,
@@ -89,20 +83,13 @@ export const actions: ActionTree<UserState, RootState> = {
       });
   },
 
-  [UserActionTypes.fetchUserPosts]: async ({ commit }, uuid: string) => {
-    commit(UserMutationTypes.fetchUser, {
-      loading: true,
-      user: null,
-    });
+  fetchNotifications: async ({ commit }, userUuid: string) => {
     const { $httpsRequest } = useNuxtApp();
-    await $httpsRequest(`users/${uuid}/posts`, {
+
+    await $httpsRequest(`users/${userUuid}/notifications`, {
       method: "GET",
     }).then((res: any) => {
-      commit(UserMutationTypes.fetchUserPosts, {
-        loading: false,
-        user: res.data.user,
-        posts: res.data.user.posts,
-      });
+      commit('fetchNotifications', res);
     });
   },
 };

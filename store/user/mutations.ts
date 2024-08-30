@@ -4,7 +4,6 @@ import { Status } from "..";
 
 export enum UserMutationTypes {
   fetchUser = "fetchUser",
-  fetchUserPosts = "fetchUserPosts",
   updateResumeStatus = "updateResumeStatus",
 }
 
@@ -24,13 +23,7 @@ export const mutations: MutationTree<UserState> = {
     state.loading = payload.loading;
     state.updateResumeStatus = payload.status;
   },
-  [UserMutationTypes.fetchUserPosts]: (
-    state,
-    payload: { loading: boolean; user: User; savedData: User; posts: [] }
-  ) => {
-    state.loading = payload.loading;
-    state.user = payload.user;
-    state.user.posts = payload.posts;
-    state.savedUser = payload.savedData;
-  },
+  fetchNotifications(state, payload) {
+    state.notifications = payload.data.notifications;    
+  }
 };

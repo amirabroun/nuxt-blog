@@ -206,7 +206,6 @@
 </template>
 <script lang="ts" setup>
 import { Status, store } from "~/store";
-import { UserActionTypes } from "~/store/user/actions";
 import Loading from "@/components/loading.vue";
 import WorkDate from "./components/WorkDate.vue";
 //@ts-ignore
@@ -257,7 +256,7 @@ const editedData = ref<EditedData>({
   skills: [],
 });
 onMounted(() => {
-  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+  store.dispatch(`user/fetchUser`, route.params.uuid);
 });
 watch(
   () => user.value,
@@ -380,13 +379,13 @@ const save = () => {
       { title: "address", link: editedData.value.address },
     ],
   };
-  store.dispatch(`user/${UserActionTypes.updateUserResume}`, payload);
+  store.dispatch(`user/updateUserResume`, payload);
 };
 const onCloseSaveAlert = () => {
   editMode.value = false;
   saveAlert.value = false;
   hasChanged.value = false;
-  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+  store.dispatch(`user/fetchUser`, route.params.uuid);
 };
 const addEducation = () => {
   hasChanged.value = true;

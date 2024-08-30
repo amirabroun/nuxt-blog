@@ -4,20 +4,16 @@
       <v-timeline density="compact" line-inset="4">
         <v-timeline-item
           :dot-color="route === 'index' ? 'primary' : 'light'"
-          :icon-color="route === 'index' ? 'light' : 'dark'"
           :elevation="route === 'index' ? 10 : 0"
-          icon="mdi-home"
-          rounded="lg"
+          icon="mdi-home-outline"
         >
           <nuxt-link class="text-black" :to="`/`" text="Home" />
         </v-timeline-item>
 
         <v-timeline-item
           :dot-color="route === 'users-uuid-profile' ? 'primary' : 'light'"
-          :icon-color="route === 'users-uuid-profile' ? 'light' : 'dark'"
           :elevation="route === 'users-uuid-profile' ? 10 : 0"
-          icon="mdi-account"
-          rounded="lg"
+          icon="mdi-account-outline"
         >
           <nuxt-link
             class="text-black"
@@ -27,13 +23,17 @@
         </v-timeline-item>
 
         <v-timeline-item
-          dot-color="light"
-          icon-color="dark"
-          :elevation="route === 'notifications' ? 10 : 0"
-          icon="mdi-alarm-light"
-          rounded="lg"
+          :dot-color="
+            route === 'users-uuid-notifications' ? 'primary' : 'light'
+          "
+          :elevation="route === 'users-uuid-notifications' ? 10 : 0"
+          icon="mdi-bell-outline"
         >
-          <nuxt-link class="text-black" to="/" text="Notifications" />
+          <nuxt-link
+            class="text-black"
+            :to="`/users/${authUser?.uuid}/notifications`"
+            text="Notifications"
+          />
         </v-timeline-item>
       </v-timeline>
     </v-card-text>
@@ -44,5 +44,6 @@
 import { store } from "~/store";
 
 const route = useRoute().name;
+
 const authUser = computed(() => store.state.auth?.authUser);
 </script>

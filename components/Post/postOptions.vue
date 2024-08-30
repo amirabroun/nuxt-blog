@@ -15,7 +15,6 @@
 import { store } from "~/store";
 import { Post } from "~/store/posts";
 import { PostsActionTypes, toggleLikePost } from "~/store/posts/actions";
-import { UserActionTypes } from "~/store/user/actions";
 const props = defineProps<{
   post: Post;
   isOwner: boolean;
@@ -30,7 +29,7 @@ async function toggleLike() {
     }
 
     const route = useRoute();
-    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+    store.dispatch(`user/fetchUser`, route.params.uuid);
   });
 }
 </script>

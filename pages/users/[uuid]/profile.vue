@@ -227,7 +227,6 @@
 
 <script lang="ts" setup>
 import { store } from "~/store";
-import { UserActionTypes } from "~/store/user/actions";
 import { UsersActionTypes } from "~/store/users/actions";
 import { toggleLikePost } from "~/store/posts/actions";
 import { Post } from "~/store/posts";
@@ -236,13 +235,13 @@ const route = useRoute();
 const tab: Ref<number> = ref(0);
 
 onMounted(() => {
-  store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+  store.dispatch(`user/fetchUser`, route.params.uuid);
 });
 
 async function toggleFollow(uuid: any) {
   await store.dispatch(`users/${UsersActionTypes.userToggleFollow}`, uuid);
 
-  await store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+  await store.dispatch(`user/fetchUser`, route.params.uuid);
 }
 
 const user = computed(() => store.state.user?.user);
@@ -252,7 +251,7 @@ const authUser = computed(() => store.state.auth?.authUser);
 async function toggleLike(post: Post) {
   await toggleLikePost(post.uuid).then(() => {
     const route = useRoute();
-    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+    store.dispatch(`user/fetchUser`, route.params.uuid);
   });
 }
 </script>

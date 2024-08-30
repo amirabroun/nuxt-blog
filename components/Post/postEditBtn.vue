@@ -85,7 +85,6 @@ import {
   deletePostImage as deletePostImageAction,
   updatePost as updatePostAction,
 } from "~/store/posts/actions";
-import { UserActionTypes } from "~/store/user/actions";
 
 const props = defineProps<{
   post: Post;
@@ -115,7 +114,7 @@ async function updatePost() {
     }
     
     const route = useRoute();
-    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+    store.dispatch(`user/fetchUser`, route.params.uuid);
   });
 }
 
@@ -127,7 +126,7 @@ async function deletePostImage() {
     }
     
     const route = useRoute();
-    store.dispatch(`user/${UserActionTypes.fetchUser}`, route.params.uuid);
+    store.dispatch(`user/fetchUser`, route.params.uuid);
   });
 }
 </script>
