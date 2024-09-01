@@ -1,10 +1,12 @@
 <template>
   <client-only>
     <v-container class="py-1 elevation-4 rounded-b-lg navbar" fluid>
-      <v-row justify="space-between" align="center" class="pr-10">
-        <v-col cols="auto">
-          <nuxt-link to="/" class="logo-link">
-            <img src="@/assets/images/logo-e-blog.png" width="80" />
+      <v-row justify="space-between" align="center">
+        <v-col>
+          <nuxt-link to="/">
+            <v-avatar size="50" rounded="lg">
+              <img width="70" src="@/assets/images/logo-e-blog.png" />
+            </v-avatar>
           </nuxt-link>
         </v-col>
         <v-col cols="auto" v-if="authUser">
@@ -99,13 +101,6 @@ body {
 
 a {
   text-decoration: none;
-}
-
-.logo-link {
-  width: 80px;
-  height: 50px;
-  display: flex;
-  align-items: center;
 }
 
 .navbar {
