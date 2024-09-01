@@ -1,6 +1,10 @@
 <template>
-  <v-row justify="space-around" class="mt-10">
-    <v-col md="6" class="px-14">
+  <v-row class="mt-10">
+    <v-col v-if="authUser" md="2" class="d-none d-md-block">
+      <index-quick-access />
+    </v-col>
+
+    <v-col md="7" class="px-16">
       <v-card>
         <v-row class="my-2 px-2">
           <v-col md="5" cols="12">
@@ -135,6 +139,7 @@
 import { store } from "~/store";
 
 const route = useRoute();
+const authUser = computed(() => store.state.auth?.authUser);
 const user = computed(() => store.state.user?.user);
 
 onMounted(() => {
