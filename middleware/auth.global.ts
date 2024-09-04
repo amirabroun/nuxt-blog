@@ -4,13 +4,17 @@ import { AuthActionTypes } from "~/store/auth/action-types";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (process.server) return;
-  const { cookies } = useCookies();
 
+  const { cookies } = useCookies();
   let authUser = store.getters["auth/getAuthUser"];
+
   if (authUser === null && cookies.get("theUserToken")) {
     await store.dispatch(`auth/${AuthActionTypes.fetchAuthUser}`);
-
     authUser = store.getters["auth/getAuthUser"];
+  }
+
+  if (!authUser && to.name == 'index') {
+    return navigateTo('/about');
   }
 
   if (to.name === "users-uuid-edit") {
