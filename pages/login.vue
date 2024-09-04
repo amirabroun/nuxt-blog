@@ -5,13 +5,10 @@
       style="height: 100vh; overflow: hidden"
     >
       <v-row class="pa-md-9" style="height: 100%">
-        <v-col
-          class="d-none d-md-block"
-          cols="4"
-          style="background: #3573fd; border-radius: 16px; color: white"
-        >
+        <v-col class="d-none d-md-block" cols="4">
           <login-slogan />
         </v-col>
+
         <v-col cols="12" md="8"
           ><div
             class="d-md-none"
@@ -54,7 +51,7 @@
                   >
                     Login
                   </div>
-                  <div style=" normal;font-weight: 400;font-size: 20px;">
+                  <div style="font-weight: 400; font-size: 20px">
                     Don’t have an account?
                     <NuxtLink
                       to="/register"
@@ -86,12 +83,13 @@
                     />
                     <label
                       style="
-                margin-bottom: 14px;margin-top: 30px
-                font-style: normal;
-                font-weight: 400;
-                font-size: 24px;
-                opacity: 60%;
-              "
+                        margin-bottom: 14px;
+                        margin-top: 30px;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 24px;
+                        opacity: 60%;
+                      "
                       >Password</label
                     >
                     <v-text-field
@@ -114,14 +112,10 @@
               <div class="d-none d-md-block">
                 <v-btn
                   @click="login"
-                  style="
-                    height: 60px;
-                    border-radius: 16px;
-                    color: white;
-                    padding-inline: 69px;
-                  "
-                  color="#1167E4
-"
+                  height="50"
+                  size="large"
+                  width="150"
+                  color="info"
                   :loading="loading"
                 >
                   Login
@@ -163,21 +157,19 @@
   </ClientOnly>
 </template>
 <script lang="ts" setup>
-import { store, RootState, Status } from "@/store";
+import { store, Status } from "@/store";
 import { AuthActionTypes } from "~/store/auth/action-types";
 import LoginSlogan from "./components/LoginSlogan.vue";
 definePageMeta({
   layout: false,
 });
 const router = useRouter();
-const valid = ref<boolean>(true);
 const username = ref<string>();
 const password = ref<string>();
 const formRef = ref();
 const showPassword = ref(false);
 const loading = computed(() => store.state.auth?.isLoggingIn);
 const loginStatus = computed(() => store.state.auth?.status);
-const user = computed(() => store.state.auth?.authUser);
 const usernameRules = [(v: any) => !!v || "Username is required"];
 const passwordRules = [
   (value: any) => {
@@ -194,15 +186,6 @@ const login = async () => {
       password: password.value,
     });
   }
-};
-const logout = async () => {
-  store.dispatch(`auth/${AuthActionTypes.logOut}`);
-};
-const reset = () => {
-  formRef.value.reset();
-};
-const resetValidation = () => {
-  formRef.value.resetValidation();
 };
 watch(
   () => loginStatus.value,
